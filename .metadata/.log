@@ -1,0 +1,184 @@
+!SESSION 2020-02-21 14:42:20.300 -----------------------------------------------
+eclipse.buildId=4.13.0.I20190916-1045
+java.version=1.8.0_221
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ko_KR
+Framework arguments:  -product org.eclipse.epp.package.jee.product -product org.eclipse.epp.package.jee.product -product org.eclipse.epp.package.jee.product -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.jee.product -product org.eclipse.epp.package.jee.product -product org.eclipse.epp.package.jee.product -data C:\finalproject\final_00 -product org.eclipse.epp.package.jee.product
+
+!ENTRY org.eclipse.jface 2 0 2020-02-21 14:43:50.802
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2020-02-21 14:43:50.802
+!MESSAGE A conflict occurred for CTRL+SHIFT+T:
+Binding(CTRL+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.navigate.open.type,Open Type,
+		Open a type in a Java editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@db610c3,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(CTRL+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.lsp4e.symbolinworkspace,Go to Symbol in Workspace,
+		,
+		Category(org.eclipse.lsp4e.category,Language Servers,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@254a9f65,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+!SUBENTRY 1 org.eclipse.jface 2 0 2020-02-21 14:43:50.802
+!MESSAGE A conflict occurred for CTRL+SHIFT+V:
+Binding(CTRL+SHIFT+V,
+	ParameterizedCommand(Command(org.eclipse.jdt.debug.ui.command.OpenFromClipboard,Open from Clipboard,
+		Opens a Java element or a Java stack trace from clipboard,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@2f1d2384,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(CTRL+SHIFT+V,
+	ParameterizedCommand(Command(org.jkiss.dbeaver.core.edit.paste.special,Advanced Paste,
+		Paste with extra settings,
+		Category(org.jkiss.dbeaver.core.util,유틸리티,유틸리티 명령어,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@50c20b15,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+!SUBENTRY 1 org.eclipse.jface 2 0 2020-02-21 14:43:50.802
+!MESSAGE A conflict occurred for CTRL+SHIFT+A:
+Binding(CTRL+SHIFT+A,
+	ParameterizedCommand(Command(org.eclipse.pde.ui.openPluginArtifact,Open Plug-in Artifact,
+		Open a plug-in artifact in the manifest editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@6dcf39c6,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(CTRL+SHIFT+A,
+	ParameterizedCommand(Command(org.jkiss.dbeaver.core.navigator.set.active,Set active,
+		Set object active ,
+		Category(org.jkiss.dbeaver.core.navigator,Database Navigator,Database Navigator Commands,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@1c0f32ad,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+
+!ENTRY org.eclipse.egit.ui 2 0 2020-02-21 14:44:21.480
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\강지원'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 0 2020-02-21 14:44:27.299
+!MESSAGE Unexpected error loading extension: org.eclipse.equinox.p2.metadata.repository.compositeRepository
+!STACK 0
+java.lang.NullPointerException
+	at org.osgi.util.tracker.ServiceTracker.<init>(ServiceTracker.java:187)
+	at org.osgi.util.tracker.ServiceTracker.<init>(ServiceTracker.java:250)
+	at org.eclipse.ecf.internal.provider.filetransfer.httpclient45.Activator.getHttpClientFactory(Activator.java:239)
+	at org.eclipse.ecf.internal.provider.filetransfer.httpclient45.Activator.getBrowseHttpClient(Activator.java:264)
+	at org.eclipse.ecf.provider.filetransfer.httpclient45.HttpClientBrowseFileTransferFactory$1.sendBrowseRequest(HttpClientBrowseFileTransferFactory.java:57)
+	at org.eclipse.ecf.provider.filetransfer.browse.MultiProtocolFileSystemBrowserAdapter.sendBrowseRequest(MultiProtocolFileSystemBrowserAdapter.java:95)
+	at org.eclipse.equinox.internal.p2.transport.ecf.FileInfoReader.sendBrowseRequest(FileInfoReader.java:184)
+	at org.eclipse.equinox.internal.p2.transport.ecf.FileInfoReader.getRemoteFiles(FileInfoReader.java:109)
+	at org.eclipse.equinox.internal.p2.transport.ecf.FileInfoReader.getRemoteFile(FileInfoReader.java:125)
+	at org.eclipse.equinox.internal.p2.transport.ecf.FileInfoReader.getLastModified(FileInfoReader.java:130)
+	at org.eclipse.equinox.internal.p2.transport.ecf.RepositoryTransport.getLastModified(RepositoryTransport.java:249)
+	at org.eclipse.equinox.internal.p2.repository.CacheManager.createCache(CacheManager.java:229)
+	at org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepositoryFactory.getLocalFile(CompositeMetadataRepositoryFactory.java:77)
+	at org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepositoryFactory.load(CompositeMetadataRepositoryFactory.java:100)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.factoryLoad(MetadataRepositoryManager.java:63)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:775)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:676)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:110)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:105)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker.getAvailableRepositories(UpdateChecker.java:152)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker.checkForUpdates(UpdateChecker.java:130)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker$UpdateCheckThread.run(UpdateChecker.java:78)
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 0 2020-02-21 14:44:27.312
+!MESSAGE Unexpected error loading extension: org.eclipse.equinox.p2.metadata.repository.simpleRepository
+!STACK 0
+java.lang.NullPointerException
+	at org.osgi.util.tracker.ServiceTracker.<init>(ServiceTracker.java:187)
+	at org.osgi.util.tracker.ServiceTracker.<init>(ServiceTracker.java:250)
+	at org.eclipse.ecf.internal.provider.filetransfer.httpclient45.Activator.getHttpClientFactory(Activator.java:239)
+	at org.eclipse.ecf.internal.provider.filetransfer.httpclient45.Activator.getBrowseHttpClient(Activator.java:264)
+	at org.eclipse.ecf.provider.filetransfer.httpclient45.HttpClientBrowseFileTransferFactory$1.sendBrowseRequest(HttpClientBrowseFileTransferFactory.java:57)
+	at org.eclipse.ecf.provider.filetransfer.browse.MultiProtocolFileSystemBrowserAdapter.sendBrowseRequest(MultiProtocolFileSystemBrowserAdapter.java:95)
+	at org.eclipse.equinox.internal.p2.transport.ecf.FileInfoReader.sendBrowseRequest(FileInfoReader.java:184)
+	at org.eclipse.equinox.internal.p2.transport.ecf.FileInfoReader.getRemoteFiles(FileInfoReader.java:109)
+	at org.eclipse.equinox.internal.p2.transport.ecf.FileInfoReader.getRemoteFile(FileInfoReader.java:125)
+	at org.eclipse.equinox.internal.p2.transport.ecf.FileInfoReader.getLastModified(FileInfoReader.java:130)
+	at org.eclipse.equinox.internal.p2.transport.ecf.RepositoryTransport.getLastModified(RepositoryTransport.java:249)
+	at org.eclipse.equinox.internal.p2.repository.CacheManager.createCache(CacheManager.java:229)
+	at org.eclipse.equinox.internal.p2.metadata.repository.SimpleMetadataRepositoryFactory.getLocalFile(SimpleMetadataRepositoryFactory.java:69)
+	at org.eclipse.equinox.internal.p2.metadata.repository.SimpleMetadataRepositoryFactory.load(SimpleMetadataRepositoryFactory.java:89)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.factoryLoad(MetadataRepositoryManager.java:63)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:775)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:676)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:110)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:105)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker.getAvailableRepositories(UpdateChecker.java:152)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker.checkForUpdates(UpdateChecker.java:130)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker$UpdateCheckThread.run(UpdateChecker.java:78)
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 0 2020-02-21 14:44:27.354
+!MESSAGE Unexpected error loading extension: org.eclipse.equinox.p2.updatesite.metadataRepository
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.equinox.internal.p2.updatesite.metadata.UpdateSiteMetadataRepositoryFactory.getLocalRepositoryLocation(UpdateSiteMetadataRepositoryFactory.java:39)
+	at org.eclipse.equinox.internal.p2.updatesite.metadata.UpdateSiteMetadataRepositoryFactory.loadRepository(UpdateSiteMetadataRepositoryFactory.java:89)
+	at org.eclipse.equinox.internal.p2.updatesite.metadata.UpdateSiteMetadataRepositoryFactory.load(UpdateSiteMetadataRepositoryFactory.java:59)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.factoryLoad(MetadataRepositoryManager.java:63)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:775)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:676)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:110)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:105)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker.getAvailableRepositories(UpdateChecker.java:152)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker.checkForUpdates(UpdateChecker.java:130)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker$UpdateCheckThread.run(UpdateChecker.java:78)
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2020-02-21 14:44:27.373
+!MESSAGE No repository found at http://download.oracle.com/otn_software/oepe/12.2.1.8/oxygen/repository/dependencies/.
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 0 2020-02-21 14:44:27.403
+!MESSAGE Unexpected error loading extension: org.eclipse.equinox.p2.metadata.repository.compositeRepository
+!STACK 0
+java.lang.NullPointerException
+	at org.osgi.util.tracker.ServiceTracker.<init>(ServiceTracker.java:187)
+	at org.osgi.util.tracker.ServiceTracker.<init>(ServiceTracker.java:250)
+	at org.eclipse.ecf.internal.provider.filetransfer.httpclient45.Activator.getHttpClientFactory(Activator.java:239)
+	at org.eclipse.ecf.internal.provider.filetransfer.httpclient45.Activator.getBrowseHttpClient(Activator.java:264)
+	at org.eclipse.ecf.provider.filetransfer.httpclient45.HttpClientBrowseFileTransferFactory$1.sendBrowseRequest(HttpClientBrowseFileTransferFactory.java:57)
+	at org.eclipse.ecf.provider.filetransfer.browse.MultiProtocolFileSystemBrowserAdapter.sendBrowseRequest(MultiProtocolFileSystemBrowserAdapter.java:95)
+	at org.eclipse.equinox.internal.p2.transport.ecf.FileInfoReader.sendBrowseRequest(FileInfoReader.java:184)
+	at org.eclipse.equinox.internal.p2.transport.ecf.FileInfoReader.getRemoteFiles(FileInfoReader.java:109)
+	at org.eclipse.equinox.internal.p2.transport.ecf.FileInfoReader.getRemoteFile(FileInfoReader.java:125)
+	at org.eclipse.equinox.internal.p2.transport.ecf.FileInfoReader.getLastModified(FileInfoReader.java:130)
+	at org.eclipse.equinox.internal.p2.transport.ecf.RepositoryTransport.getLastModified(RepositoryTransport.java:249)
+	at org.eclipse.equinox.internal.p2.repository.CacheManager.createCache(CacheManager.java:229)
+	at org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepositoryFactory.getLocalFile(CompositeMetadataRepositoryFactory.java:77)
+	at org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepositoryFactory.load(CompositeMetadataRepositoryFactory.java:100)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.factoryLoad(MetadataRepositoryManager.java:63)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:775)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:676)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:110)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:105)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker.getAvailableRepositories(UpdateChecker.java:152)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker.checkForUpdates(UpdateChecker.java:130)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker$UpdateCheckThread.run(UpdateChecker.java:78)
+
+!ENTRY org.eclipse.core.jobs 4 2 2020-02-21 14:44:27.521
+!MESSAGE An internal error occurred during: "Deferred Early Start".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.core.internal.runtime.InternalPlatform.getLog(InternalPlatform.java:360)
+	at org.eclipse.core.runtime.Plugin.getLog(Plugin.java:237)
+	at org.eclipse.oomph.util.OomphPlugin.getLog(OomphPlugin.java:210)
+	at org.eclipse.oomph.util.OomphPlugin.log(OomphPlugin.java:225)
+	at org.eclipse.oomph.util.OomphPlugin.log(OomphPlugin.java:236)
+	at org.eclipse.oomph.internal.ui.EarlyStart.run(EarlyStart.java:116)
+	at org.eclipse.oomph.internal.ui.EarlyStart$1.run(EarlyStart.java:91)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
