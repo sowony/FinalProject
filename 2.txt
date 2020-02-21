@@ -1,5 +1,7 @@
 <<<<<<< HEAD
 old notepad
 =======
-asdfasdfdas
+asdfasdfdasfdsafds
+fdsadfsaf
+안녕하세요 테스트 중입니다. 지애지애
 >>>>>>> bdefe61774291b149607475fd4636dcc697c043f
