@@ -6,11 +6,13 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.test.dashboard.model.dao.MemberDao;
 import com.test.dashboard.model.dto.MemberDto;
 
 @Service
+@Transactional
 public class MemberBizImpl implements MemberBiz{
 
 	@Autowired

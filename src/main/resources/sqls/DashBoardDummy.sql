@@ -135,8 +135,6 @@ insert into widget values(
 	'wmemo', 
 	'위젯 테스트1', 
 	'testuser1', 
-	'all', 
-	4,
 	1,
 	0, 73, 250, 300, 0, 
 	'#b9cdcb' , 
@@ -152,8 +150,6 @@ insert into widget values(
 	'wmemo', 
 	'위젯 테스트2', 
 	'testuser2', 
-	'testuser1|testuser4', 
-	4,
 	1,
 	333, 29, 250, 300, 0, 
 	'#b9c5cb50' , 
@@ -162,6 +158,16 @@ insert into widget values(
 	sysdate
 );
 
+-- wrule dummy
+
+-- 위젯1 권한
+insert into wrule values(wruleseq.nextval,1,'individual', 7, 'testuser1',null, null);
+insert into wrule values(wruleseq.nextval,1,'individual', 6, 'testuser2',null, null);
+insert into wrule values(wruleseq.nextval,1,'individual', 6, 'testuser3',null, null);
+insert into wrule values(wruleseq.nextval,1,'group', 4, null, 0, 9);
+
+-- 위젯2 권한
+insert into wrule values(wruleseq.nextval,2,'individual', 7, 'testuser2',null, null);
 
 -- wmemo dummy
 

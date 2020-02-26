@@ -9,8 +9,8 @@ ALTER TABLE dashmember DROP CONSTRAINT dmdgno_fk;
 
 ALTER TABLE widget DROP CONSTRAINT wdno_fk;
 ALTER TABLE widget DROP CONSTRAINT wowner_fk;
-ALTER TABLE widget DROP CONSTRAINT wmingrade_fk;
-ALTER TABLE widget DROP CONSTRAINT wmaxgrade_fk;
+
+ALTER TABLE wrule DROP CONSTRAINT wrmid_fk;
 
 ALTER TABLE wfile DROP CONSTRAINT wfwno_fk;
 
@@ -38,6 +38,8 @@ drop table dashmember;
 -- widget 테이블
 drop sequence widgetseq;
 drop table widget;
+
+-- wrule 테이블
 
 -- wfile 테이블
 drop sequence wfileseq;

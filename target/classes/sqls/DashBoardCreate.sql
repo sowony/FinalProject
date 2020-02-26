@@ -71,9 +71,6 @@ create table widget (
 	wcategory varchar2(1000) not null,
 	wtitle varchar2(2000),
 	wowner varchar2(2000) not null,
-	wmid varchar2(2000),
-	wmingrade number not null,
-	wmaxgrade number not null,
 	wleft number not null,
 	wtop number not null,
 	wwidth number not null,
@@ -84,11 +81,23 @@ create table widget (
 	wposition varchar2(500),
 	wdate date,
 	constraint wdno_fk foreign key(wdno) REFERENCES dashboard(dno) on delete cascade,
-	constraint wowner_fk foreign key(wowner) REFERENCES member(mid),
-	constraint wmingrade_fk foreign key(wmingrade) REFERENCES dashgrade(dgno),
-	constraint wmaxgrade_fk foreign key(wmaxgrade) REFERENCES dashgrade(dgno)
+	constraint wowner_fk foreign key(wowner) REFERENCES member(mid)
 );
 
+
+-- wrule 테이블
+create sequence wruleseq;
+
+create table wrule(
+	wrno number primary key,
+	wrwno number not null,
+	wrcate varchar2(20) not null,
+	wrrwd number not null,
+	wrmid varchar2(500) null,
+	wrminno number null,
+	wrmaxno number null,
+	constraint wrmid_fk foreign key(wrmid) references member(mid) on delete cascade
+);
 
 -- wfile 테이블
 

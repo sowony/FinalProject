@@ -15,9 +15,6 @@ public class WidgetDto {
 	String wcategory;
 	String wtitle;
 	String wowner;
-	String wmid;
-	int wmingrade;
-	int wmaxgrade;
 	int wleft, wtop, wwidth, wheight, wzindex;
 	String wcontentrgb;
 	String wtitlergb;

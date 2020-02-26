@@ -6,11 +6,13 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.test.dashboard.model.dao.WidgetDao;
 import com.test.dashboard.model.dto.WidgetDto;
 
 @Service
+@Transactional
 public class WidgetBizImpl implements WidgetBiz{
 
 	@Autowired
@@ -28,12 +30,11 @@ public class WidgetBizImpl implements WidgetBiz{
 	}
 	
 	@Override
-	public List<WidgetDto> selectList(int wno, int dmdno, String dmmid) {
+	public List<WidgetDto> selectList(int wdno, String mid) {
 		// TODO Auto-generated method stub
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("dmdno", dmdno);
-		params.put("dmmid", dmmid);
-		params.put("wno", wno);
+		params.put("wdno", wdno);
+		params.put("mid", mid);
 		return widgetDao.selectList(params);
 	}
 	@Override

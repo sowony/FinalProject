@@ -13,20 +13,53 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+
+
+// 해당 파일이 설정 파일임을 가르키는 어노테이션
 @Configuration
-@PropertySources({ // classpath : main/resources/
+
+//해당 DispatcherServlet에서는 트랜잭션 설정을 한다.
+//<tx:annotation-driven/> 대체
+@EnableTransactionManagement
+
+// properties 파일을 읽어주는 어노테이션
+// classpath : main/resources/
+// <context:property-placeholder location="classpath:./properties/*.properties"/> 대체
+@PropertySources({ 
 	@PropertySource("classpath:properties/db.properties")
 })
+
+// Mapper가 되는 클래스가 모여 있는 패키지 경로 ( mybatis_mapper.xml 대체)
+// <mybatis-spring:scan base-package="com.test.mvc.model.dao" factory-ref="sqlSessionFactoryBean" template-ref="sqlSessionTemplate"/> 대체
 @MapperScan("com.test.dashboard.model.dao")
+
+// ApplicationContext.xml 설정 파일
 public class ApplicationContent {
 	
 	private Logger logger = LoggerFactory.getLogger(ApplicationContent.class);
 	
+	
 	@Autowired
+	// 읽어들인 properties 파일들을 제어하기 위한 객체
 	private Environment env;
 	
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// Bean 어노테이션은 외부 클래스를 개발자가 Component를 어노테이션을 사용해서 스프링 IOC 컨테이너에 등록하기 어려울 경우 사용한다.
+	// Bean은 메소드에서 걸어서 해당 리턴 값으로 외부 클래스 타입의 객체 되돌려주는 식으로 만들고
+	// Component는 클래스 위에 선언한다.
 	@Bean
+	/*
+	여기선 common-dbcp2을 사용하여 BasicDataSource 빈 객체를 만들었다.
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+		<property name="driverClassName" value="${jdbc.driver}"/>
+		<property name="url" value="${jdbc.url}"/>
+		<property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+	</bean>
+	 */
 	public BasicDataSource dataSource() {
 		BasicDataSource bean = new BasicDataSource();
 		bean.setDriverClassName(env.getProperty("jdbc.driver"));
@@ -36,6 +69,16 @@ public class ApplicationContent {
 		return bean;
 	}
 	
+	
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/*
+	<bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean" autowire="byType">
+		<property name="typeAliasesPackage" value="com.test.mvc.model.dto"/>
+	</bean>
+	https://mybatis.org/spring/ko/factorybean.html 참조
+	 */
 	@Bean
 	public SqlSessionFactoryBean sqlSession() {
 		SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
@@ -44,6 +87,15 @@ public class ApplicationContent {
 		return bean;
 	}
 	
+	
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/*
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactoryBean"/>
+	</bean> 
+	*/
 	@Bean
 	public SqlSessionTemplate sqlSessionTemplate() {
 		SqlSessionTemplate bean = null;
@@ -57,6 +109,15 @@ public class ApplicationContent {
 		return bean;
 	}
 	
+	
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	/*
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+  		<constructor-arg ref="dataSource" />
+	</bean>
+	https://mybatis.org/spring/ko/transactions.html 참조
+	 */
 	@Bean
 	public DataSourceTransactionManager dataSourceTransactionManager() {
 		return new DataSourceTransactionManager(dataSource());
