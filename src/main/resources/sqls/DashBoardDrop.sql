@@ -16,7 +16,6 @@ ALTER TABLE wfile DROP CONSTRAINT wfwno_fk;
 
 ALTER TABLE wmemo DROP CONSTRAINT wmwno_fk;
 ALTER TABLE wmemo DROP CONSTRAINT wmdno_fk;
-ALTER TABLE wmemo DROP CONSTRAINT wmwfno_fk;
 
 
 -- member 테이블

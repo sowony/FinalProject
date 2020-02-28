@@ -119,13 +119,9 @@ create sequence wmemoseq;
 create table wmemo (
 	wmno number primary key,
 	wmwno number not null,
-	wmdno number not null,
 	wmtitle varchar2(2000),
 	wmcontent clob,
 	wmcreatedate date not null,
 	wmmodifydate date,
-	wmwfno number,
-	constraint wmwno_fk foreign key(wmwno) references widget(wno) on delete cascade,
-	constraint wmdno_fk foreign key(wmdno) references dashboard(dno) on delete cascade,
-	constraint wmwfno_fk foreign key(wmwfno) references wfile(wfno)
+	constraint wmwno_fk foreign key(wmwno) references widget(wno) on delete cascade
 );
