@@ -7,14 +7,20 @@
 
 */
 
+let dashAddObject = {
+		'rule' : {}
+};
+
 function dashBoardSort(dashboard, status){
 
     const {dno, dtitle, ddesc, downer} = dashboard;
 
     const div = document.getElementById(status + '_dash');
-    
+    const dashAddBtn = document.getElementById('dashAddBtn');
+    const dashItem = document.createElement('div');
+    dashItem.setAttribute('class','dashitem');
+    dashItem.setAttribute('data-dno',dno);
     const inputCon = `
-    <div class="dashitem" data-dno="${dno}">
         <div class="dashitem_head">
             <p>${dtitle}</p>
         </div>
@@ -23,11 +29,11 @@ function dashBoardSort(dashboard, status){
         </div>
         <div class="dashitem_foot">
             <p>${downer}</p>
-        </div>
-    </div>
-    `;
+        </div>`;
+    dashItem.innerHTML = inputCon;
     
-    div.appendChild(inputCon);
+    div.insertBefore(dashItem,dashAddBtn);
+
 }
 
 function xhrLoad(method, url, loadTarget){
@@ -67,12 +73,125 @@ function xhrLoad(method, url, loadTarget){
 
 }
 
+function dashAddClose(){
+	
+	const section = document.getElementsByTagName('section')[0];
+	const article_chk = document.getElementById('dashAddarticle');
+	section.removeChild(article_chk);
+	
+}
+
 function dashAddForm(){
-
-    const form = `
-        
+	
+	const section = document.getElementsByTagName('section')[0];
+	const mid = document.getElementById('mid').dataset.mid;
+	const article_chk = document.getElementById('dashAddarticle');
+	
+	if(article_chk) article_chk.remove();
+	
+	const article = document.createElement('article');
+	
+	article.setAttribute('id','dashAddarticle');
+	
+    const form0 = `
+			<form id="dashAddForm">
+				<input type="hidden" name="downer" value="${mid}"/>
+				<p>DASHBOARD ADD</p>
+				<div id="dashAddDiv">
+					<p>DASHBOARD TITLE</p>
+					<input type="text" name="dtitle"/>
+					<p>DASHBOARD INFO</p>
+					<textarea name="ddesc"></textarea>
+				</div>
+				<div id="dashRuleDiv">
+					<p>DASHBOARD RULE ADD</p>
+					<p>등급 순위<input type="number" name="dggrade" size="9999"/></p>
+					<p>등급 별칭<input type="text" name="dgalias"/></p>
+					<input type="button" value="권한 추가"/>
+					<p>DASHBOARD RULE LIST</p>
+					<div id="dashRuleArea">
+						 <div class="dashRuleItem" data-dgalias="default" data-dggrade="0">DEFAULT<a class="delDRule">X</a></div>
+					</div>
+				</div>
+				<div id="dashAddSubmit">
+					<input type="button" onclick="dashAddClose();" value="CLOSE"/>
+					<input type="button" class="next1" value="NEXT"/>
+				</div>
+			</form>
     `;
+    
+    
+    article.innerHTML = form0;
+    section.appendChild(article);
+   
+    const dashRuleItem = document.getElementsByClassName('dashRuleItem');
+    
+    for(let v of dashRuleItem){
+    	const str = `${v.dataset.dgalias}(${v.dataset.dggrade})`;
+    	infoBar(v,str);
+    }
+    
+    const next1Btn = document.getElementsByClassName('next1')[0];
+    next1Btn.addEventListener('click',(e)=>{
+    	
+    	const article = document.getElementById('dashAddarticle');
+    	const dashRuleItems = document.getElementsByClassName('dashRuleItem');
+    	
+    	for(let item of dashRuleItems){
+    		dashAddObject.rule[item.dataset.dgalias]=item.dataset.dggrade;
+    	}
+    	
+    	const form1 = `
+        	<form id="dashAddForm">
+        		<p>DASHBOARD ADD</p>
+        		<div id="dashAddMemberSearch">
+        			<p>DASHBOARD MEMBER ADD</p>
+        			<p>ID 검색<input type="text" name="mid"/></p>
+        			<input type="button" value="ID 검색"/>
+        			<p>DASHBOARD RULE</p>
+        			<div id="dashRuleArea">
+        			</div>
+        		</div>
+        		<div id="dashAddMemberList">
+        			<p>DASHBOARD MEMBER LIST</p>
+        			<div id="dashMemberArea">
+        			</div>
+        		</div>
+        		<div id="dashAddSubmit">
+					<input type="button" onclick="dashAddClose();" value="CLOSE"/>
+					<input style="float:right;" type="button" class="create" value="CREATE"/>
+					<input style="float:right;" type="button" class="prev" value="PREV"/>
+				</div>
+        	</form>
+        `;
+    	
+    	article.innerHTML = form1;
+    	
+    	const dashRuleArea = document.getElementById('dashRuleArea');
+    	
+    	let ruleDiv = '';
+    	
+    	const keyArray = Object.keys(dashAddObject.rule);
+    	keyArray.forEach((v)=>{
+    		ruleDiv += `<div class="dashRuleItem" data-dgalias="${v}" data-dggrade="${dashAddObject.rule[v]}">DEFAULT<a class="delDRule">X</a></div>`
+    	});
+    	
+    	dashRuleArea.innerHTML = ruleDiv;
+    	
+    	const prevBtn = document.getElementsByClassName('prev')[0];
+    	prevBtn.addEventListener('click',()=>{
+    		dashAddForm();
+    	});
 
+    	const createBtn = document.getElementsByClassName('create')[0];
+    	createBtn.addEventListener('click',()=>{
+    		console.log('아직 안 만듬');
+    	});
+    	
+    	return false;
+    });
+    
+    
 };
 
 window.onload = function(){
@@ -85,6 +204,8 @@ window.onload = function(){
 
     const dashAddBtn = document.getElementById('dashAddBtn');
     
+    dashAddBtn.addEventListener('click', dashAddForm);
+    
     xhrLoad('get','mypage/dashload', loadTargetObj.dashboard);
 
-};
+}
