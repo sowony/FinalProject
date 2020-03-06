@@ -42,6 +42,12 @@ public class MemberBizImpl implements MemberBiz{
 	}
 	
 	@Override
+	public MemberDto selectById(String mid) {
+		// TODO Auto-generated method stub
+		return memberDao.selectById(mid);
+	}
+	
+	@Override
 	public MemberDto selectByMNo(int mno) {
 		// TODO Auto-generated method stub
 		return null;
@@ -58,5 +64,6 @@ public class MemberBizImpl implements MemberBiz{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
 	
 }

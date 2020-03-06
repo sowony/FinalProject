@@ -22,6 +22,10 @@ public interface MemberDao {
 	@Select("select * from member where mdel='N' and mno = #{mno}")
 	public MemberDto selectByMNo(int mno);
 	
+	// id 조회
+	@Select("select * from member where mid = #{mid}")
+	public MemberDto selectById(String mid);
+	
 	// 비밀번호 아이디
 	@Select("select * from member where mid = #{mid} and mpw = #{mpw}")
 	public MemberDto selectByIdAndPw(Map<String, Object> params);

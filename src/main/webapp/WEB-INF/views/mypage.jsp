@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="./resources/css/defaultstyle.css" type="text/css">
 <link rel="stylesheet" href="./resources/css/mypage.css" type="text/css">
 <link rel="stylesheet" href="./resources/css/Header.css" type="text/css">
+<script type="text/javascript" src="./resources/js/xhr.js"></script>
 <script type="text/javascript" src="./resources/js/util.js"></script>
 <script type="text/javascript" src="./resources/js/mypage.js"></script>
 </head>
@@ -26,7 +27,7 @@
 		<article id="content">
 			<div id="dashboard">
 				<div id="owner_dash">
-					<div id="dashAddBtn" class="dashitem"><span>+</span></div>
+					<div id="dashAddBtn" class="dashItem"><span>+</span></div>
 				</div>
 				<div id="belong_dash">
 				

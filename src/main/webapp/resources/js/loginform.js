@@ -15,23 +15,7 @@ window.onload = () => {
 
         const data = { mid, mpw };
 
-        const xhr = new XMLHttpRequest();
-
-        xhr.open('post', 'login');
-
-        xhr.onreadystatechange = function(){
-            let {readyState, status, responseText} = xhr;
-            if(readyState === xhr.DONE){
-                if(status === 200){
-                    if(responseText){
-                        location.reload();
-                    }
-                }
-            }
-        };
-
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify(data));
+        xhrLoad('post','login','login',data);
 
     });
 

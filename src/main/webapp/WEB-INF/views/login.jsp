@@ -6,6 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="stylesheet" href="./resources/css/defaultstyle.css" type="text/css">
+<script type="text/javascript" src="./resources/js/xhr.js"></script>
 <script type="text/javascript" src="./resources/js/loginform.js"></script>
 </head>
 <body>

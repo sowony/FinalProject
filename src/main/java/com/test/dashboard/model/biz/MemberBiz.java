@@ -2,6 +2,7 @@ package com.test.dashboard.model.biz;
 
 import java.util.List;
 
+
 import com.test.dashboard.model.dto.MemberDto;
 
 public interface MemberBiz {
@@ -14,6 +15,9 @@ public interface MemberBiz {
 	
 	// 비밀번호 아이디
 	public MemberDto selectByIdAndPw(String mid, String mpw);
+	
+	// 이이디 조회
+	public MemberDto selectById(String mid);
 	
 	public int insert(MemberDto memberDto);
 	
