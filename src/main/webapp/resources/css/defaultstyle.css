@@ -1,8 +1,43 @@
 @charset "UTF-8";
 
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+KR:400,500,700&display=swap');
+
 * {
+	font-family: 'Noto Sans KR', sans-serif;
+	letter-spacing : 0.5pt;
+	font-weight: 500;
     padding: 0;
     margin: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+.fadeOut{
+	opacity: 0;
+}
+
+.backgroundImg {
+    background-image: url(../images/bg_1.jpg);
+    background-size: 100% 100%;
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: fixed;
+    top: 0;
+    z-index: 1;
+}
+
+.backgroundDiv {
+	background-color : #32323299;
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: fixed;
+    top: 0;
+    z-index: 2;
 }
 
 header {
@@ -10,14 +45,35 @@ header {
     height: 32px;
     display: block;
     background-color: #B0BEC5;
+    position: absolute;
+    z-index: 4;
 }
 section {
     display: block;
-    margin: auto;
     width: 100%;
-    height: 655px;
-    background-color: #0000001a;
+    height: 100%;
+    position: absolute;
+    z-index: 3;
 }
+
+footer {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: max-content;
+    background-color: #323232;
+    padding: 10px 0;
+    z-index: 4;
+}
+
+footer pre {
+    text-align: center;
+    font-size: 8pt;
+    line-height: 12pt;
+    color: #838384;
+}
+
 article#content {
     display: block;
     position: absolute;
@@ -28,7 +84,7 @@ article#content {
 div.infoBox {
     display: block;
     position: absolute;
-    z-index: 10002;
+    z-index: 10009;
     width: max-content;
     height: max-content;
     background-color: #ffffe6;
@@ -78,7 +134,7 @@ div.customMenu{
     margin: 8px auto;
 }
 
-button#utilBoxCloseBtn {
+.grayBtn {
     display: inline-block;
     border: 0px solid;
     border-radius: 5px;
@@ -103,4 +159,40 @@ li.menuLi {
 li.menuLi:hover{
 	color : #fff;
 	background-color: #536fae;
+}
+
+input {
+    display: block;
+    padding: 5px;
+    margin: 10px 0;
+    font-size: 11pt;
+    font-weight: 600;
+    letter-spacing: 1pt;
+}
+
+input::placeholder {
+    -webkit-text-fill-color : #aaaaaa !important;
+}
+
+input[type="text"],
+input[type="text"]:active,
+input[type="text"]:focus,
+input[type="password"], 
+input[type="password"]:active,
+input[type="password"]:focus,
+input[type="email"],
+input[type="number"] 
+{
+    box-shadow: 0 0 0 1000px #eee inset, 0 0 4px #989898;
+    border: 0;
+    background-color: #eee;
+    border-radius: 5px;
+    padding-left: 12px;
+    -webkit-text-fill-color : #3d3d3d;
+}
+
+input[type="submit"], input[type="button"] {
+    width: 100%;
+    border: 0px;
+    border-radius: 5px;
 }

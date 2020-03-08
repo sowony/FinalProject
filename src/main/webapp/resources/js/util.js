@@ -2,40 +2,74 @@
  * http://usejsdoc.org/
  */
 
-const backgroundDiv = `<div id="bgBlack"></div>`;
+// 검정색 백그라운드
+const backgroundDiv = addObject(null,'div',null,false,(t)=>{
+	t.setAttribute('id','bgBlack');
+});
 
+
+// 페이지 부드럽게 로드
+
+function pageLoad(){
+	
+	const body = document.querySelector('body');
+	
+	body.setAttribute('style', 'display:block;transition-duration:1.5s;opacity:1;');
+	
+	
+}
+
+// 오브젝트 중앙 정렬
 function middlePositionFun(obj){
-	const body = document.getElementsByTagName('body')[0];
 	const width = obj.offsetWidth;
 	const height = obj.offsetHeight;
 	
-	console.log(body.offsetWidth);
-	
-	obj.style.top = body.offsetHeight/2 - height/2 + 'px';
-	obj.style.left = body.offsetWidth/2 - width/2 + 'px';
+	obj.style.top = window.innerHeight/2 - height/2 - 30 + 'px';
+	obj.style.left = window.innerWidth/2 - width/2 + 'px';
 }
 
+// 유틸 오브젝트 모두 삭제 함수
 function utilBoxDelete(){
 	const div = document.getElementById('utilDiv');
 	div.remove();
 }
 
+
+// 툴팁 함수
 function infoBar(obj, text){
 	
 	obj.addEventListener('mousemove',(e)=>{
+		e.preventDefault();
+		e.stopPropagation();
 		
 		const x = e.pageX+10;
 		const y = e.pageY+10;
-		const infoBox = document.getElementsByClassName('infoBox')[0];
+		const infoBox = document.querySelector('.infoBox');
+		
+		const body = document.querySelector('body');
+		let utilBox = document.getElementById('utilDiv');
+		
+		if(!utilBox){
+			utilBox = addObject(body,'div',null,true,(t)=>{
+				t.setAttribute('id','utilDiv');
+			});
+		}
+		
 		if(!infoBox){
-			const contentBox = `
-				<div class='infoBox' style="top:${y}px; left:${x}px;">${text}</div>
-			`
-			const body = document.getElementsByTagName('body')[0];
-			const div = document.createElement('div');
-			div.setAttribute('id','utilDiv');
-			div.innerHTML = contentBox;
-			body.appendChild(div);
+			
+			const contentBox = addObject(utilBox,'div','infoBox',false,(t)=>{
+					t.style.top = y + 'px';
+					t.style.left = x + 'px';
+					t.innerHTML = text;
+				});
+				
+			const bg = document.getElementById('bgBlack');
+			if(bg){
+				utilBox.insertBefore(contentBox,bg);
+			} else {
+				utilBox.appendChild(contentBox);
+			}
+			
 		} else {
 			infoBox.style.top = y + 'px';
 			infoBox.style.left = x + 'px';
@@ -43,43 +77,65 @@ function infoBar(obj, text){
 	});
 	
 	obj.addEventListener('mouseout',(e)=>{
+		e.preventDefault();
+		e.stopPropagation();
 		
-		const div = document.getElementById('utilDiv');
-		div.remove();
-	
+		const utilBox = document.getElementById('utilDiv');
+		
+		if(utilBox.childNodes.length < 2){
+			utilBox.remove();
+		} else {
+			const infoBox = document.querySelector('.infoBox');
+			if(infoBox) infoBox.remove();
+		}
+		
 	});
 }
 
-function boxFun(text,bg, btnAdd){
-	
-	const box = document.getElementsByClassName('boxOpen')[0];
+// 박스 만들기 함수
+function boxFun(text,bg, addTagObject, closeBtnDelete, boxName){
+
+	let boxSelector = (boxName)? boxName : '.boxOpen';
+	const box = document.querySelector(boxSelector);
 	
 	if(!box){
-		const contentBox = `
-			<div class='boxOpen'>
-				<p>${text}</p>`+ (btnAdd? btnAdd : ``) +`
-				<button id="utilBoxCloseBtn">CLOSE</button> 
-			</div>
-			` + (bg === true? backgroundDiv : ``);
+		const contentBox = addObject(null, 'div', 'boxOpen', false, (t)=>{
+			t.classList.add(boxSelector.substring(1,boxSelector.length));
+			t.innerHTML = `<p>${text}</p>`+ ((closeBtnDelete)? `` : `<button class="grayBtn" id="utilBoxCloseBtn">CLOSE</button>`);
+		});
 		
-		const body = document.getElementsByTagName('body')[0];
-		const div = document.createElement('div');
+		const body = document.querySelector('body');
 		
-		div.setAttribute('id','utilDiv');
-		div.innerHTML = contentBox;
+		let utilBox = document.getElementById('utilDiv');
 		
-		body.appendChild(div);
+		if(!utilBox){
+			utilBox = addObject(body,'div',null,true,(t)=>{
+				t.setAttribute('id','utilDiv');
+			});
+		}
 		
-		const boxOpen = document.getElementsByClassName('boxOpen')[0];
+		utilBox.appendChild(contentBox);
+		if(bg) utilBox.appendChild(backgroundDiv);
+		
+		const boxOpen = document.querySelector(boxSelector);
+		const utilBoxCloseBtn = document.getElementById('utilBoxCloseBtn');
+		if(utilBoxCloseBtn){
+			utilBoxCloseBtn.addEventListener('click',()=>{
+				if(utilBox.childNodes.length < 3){
+					utilBox.remove();
+				} else {
+					if(boxOpen) boxOpen.remove();
+				}
+			});
+		}
+		if(addTagObject){
+			for(let tag of addTagObject){
+				if(utilBoxCloseBtn) boxOpen.insertBefore(tag, utilBoxCloseBtn);
+				else boxOpen.appendChild(tag);
+			}
+		}
 		
 		middlePositionFun(boxOpen);
-		
-		const utilBoxCloseBtn = document.getElementById('utilBoxCloseBtn');
-		
-		utilBoxCloseBtn.addEventListener('click',()=>{
-			const div = document.getElementById('utilDiv');
-			div.remove();
-		});
 		
 	} else {
 		const div = document.getElementById('utilDiv');
@@ -89,6 +145,7 @@ function boxFun(text,bg, btnAdd){
 	
 }
 
+// 편하게 오브젝트 만들기
 function addObject(parentNode, tagName, className, defaultLocation, callback){
 	
 	const tag = document.createElement(tagName);
@@ -105,6 +162,8 @@ function addObject(parentNode, tagName, className, defaultLocation, callback){
 	
 }
 
+
+// 객체에 메뉴 등록 함수
 function contextMenuFun(target, menu, setting){
 	
 	target.addEventListener('contextmenu',(e)=>{

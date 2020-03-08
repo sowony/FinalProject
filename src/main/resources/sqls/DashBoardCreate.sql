@@ -46,6 +46,7 @@ create table dashgrade (
 	dgalias varchar2(1000) not null,
 	constraint dgdno_fk foreign key(dgdno) REFERENCES dashboard(dno) on delete cascade
 );
+alter table dashgrade add constraint dg_uq unique(dgdno, dggrade, dgalias);
 
 -- dashmember 테이블
 
@@ -60,7 +61,7 @@ create table dashmember (
 	constraint dmmid_fk foreign key(dmmid) REFERENCES member(mid) on delete cascade,
 	constraint dmdgno_fk foreign key(dmdgno) REFERENCES dashgrade(dgno)
 );
-
+alter table dashmember add constraint dm_uq unique(dmdno, dmmid, dmdgno);
 
 -- widget 테이블
 

@@ -27,7 +27,6 @@
 		<article id="content">
 			<div id="dashboard">
 				<div id="owner_dash">
-					<div id="dashAddBtn" class="dashItem"><span>+</span></div>
 				</div>
 				<div id="belong_dash">
 				

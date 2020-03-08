@@ -1,8 +1,9 @@
 package com.test.dashboard.model.biz;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
-import com.test.dashboard.model.dao.DashMemberDao;
 import com.test.dashboard.model.dto.DashMemberDto;
 
 public interface DashMemberBiz {
@@ -13,7 +14,7 @@ public interface DashMemberBiz {
 
 	public DashMemberDto selectById(int dmdno, String dmid);
 
-	public int insert(DashMemberDto dto);
+	public int insert(Map<String, Object>[] params, int dno) throws SQLException;
 	
 	public int update(DashMemberDto dto);
 	

@@ -1,13 +1,6 @@
-/*
-    loadTarget 종류
-
-    - dashboard 대쉬보드 로드 -> div (id = owner_dash / belong_dash)
-    - account 회원 정보 로드 -> div (id = accountinfo)
-    - accountupdate 회원 정보 수정 로드 -> div (id = accountupdate)
-
-*/
 
 
+// 만들 대시보드 정보 담아놓는 오브젝트
 let dashAddObject = {
 		'dtitle' : '',
 		'ddesc' : '',
@@ -35,7 +28,7 @@ function dashBoardSort(dashboard, status){
         </div>`;
     dashItem.innerHTML = inputCon;
     
-    div.insertBefore(dashItem,dashAddBtn);
+    div.appendChild(dashItem);
     
     const menu = document.querySelector('.customMenu');
 	contextMenuFun(dashItem,menu,{
@@ -50,6 +43,12 @@ function dashAddClose(){
 	
 	const section = document.querySelector('section');
 	const article_chk = document.getElementById('dashAddarticle');
+	dashAddObject = {
+			'dtitle' : '',
+			'ddesc' : '',
+			'member' : [],
+			'rule' : []
+	};
 	article_chk.remove();
 }
 
@@ -97,9 +96,10 @@ function dashAddForm(){
     middlePositionFun(article);
     
     // 룰 추가 함수
-    function ruleAddFun(dggrade,dgalias,page){
-    	
-    	const dashRuleArea = document.getElementById('dashRuleArea');
+    function ruleAddFun(dggrade,dgalias,page,area){
+    	let dashRuleArea 
+    	if(!area) dashRuleArea = document.getElementById('dashRuleArea');
+    	else dashRuleArea = area;
     	const deleteDiv = `<a class="delDRule">X</a>`;
     	const ruleDiv = addObject(dashRuleArea,'div','dashRuleItem',true);
     	ruleDiv.dataset.dggrade = dggrade;
@@ -122,9 +122,14 @@ function dashAddForm(){
     	} else if(page === 2){
     		
     		ruleDiv.addEventListener('click',()=>{
-    			const chk = document.querySelector('.ruleCheck');
-    			if(chk) chk.classList.remove('ruleCheck');
-    			ruleDiv.classList.add('ruleCheck');
+    		
+    			if(ruleDiv.classList.contains('ruleCheck')){
+    				ruleDiv.classList.remove('ruleCheck');
+    			} else {
+    				const chk = document.querySelector('.ruleCheck');
+        			if(chk) chk.classList.remove('ruleCheck');
+    				ruleDiv.classList.add('ruleCheck');
+    			}
     		});
     		
     	}
@@ -137,8 +142,11 @@ function dashAddForm(){
     
     addRuleBtn.addEventListener('click',()=>{
     	
-    	const dggrade = document.querySelector('input[name="dggrade"]').value;
-    	const dgalias = document.querySelector('input[name="dgalias"]').value;
+    	const inputDggrade = document.querySelector('input[name="dggrade"]');
+    	const inputDgalias = document.querySelector('input[name="dgalias"]');
+    	
+    	const dggrade = inputDggrade.value;
+    	const dgalias = inputDgalias.value;
     	
     	if(!dggrade) { boxFun('등급을 입력해주세요.', true); return false }
     	else if(!dgalias) { boxFun('명칭을 입력해주세요.', true); return false }
@@ -151,6 +159,9 @@ function dashAddForm(){
     			return false;
     		}
     	}
+    	
+    	inputDggrade.value = '';
+    	inputDgalias.value = '';
     	
     	ruleAddFun(dggrade, dgalias, 1);
     	
@@ -217,7 +228,7 @@ function dashAddForm(){
     	
     	article.innerHTML = form1;
     	
-    	
+    	middlePositionFun(article);
     	
     	
     	// 2page 룰 리스트 출력
@@ -253,10 +264,6 @@ function dashAddForm(){
     		addMemberItem(v);
     	}
     	
-    	
-    	
-    	
-    	
     	// 맴버 추가 & 맴버에 권한 부여
     	const idSearchBtn = document.querySelector('input[name="idSearchBtn"]');
     	idSearchBtn.addEventListener('click',()=>{
@@ -274,7 +281,16 @@ function dashAddForm(){
         	}
     		
     		// ID Search AJAX
-    		xhrLoad('post','mypage/idsearch','idSearch',{ 'mid' : mid.value  },()=>{
+    		xhrLoad('post','mypage/idsearch',{ 'mid' : mid.value  },(responseText)=>{
+    			
+    			const resCheck = (responseText === 'true');
+    			// 아이디가 존재 유무 판별
+    			if(resCheck){
+            		boxFun('아이디가 존재합니다.', true);
+            	} else {
+            		boxFun('아이디가 존재하지 않습니다.',true);
+            		return false;
+            	}
     			// ID가 있을 시 맴버 추가 버튼 생성하는 콜백 함수
     			const addBtn = addObject(idSearchBtn.parentNode, 'input', '', true, (t)=>{
     				t.setAttribute('type','button');
@@ -323,7 +339,126 @@ function dashAddForm(){
     	// 만들기 버튼
     	const createBtn = document.querySelector('.create');
     	createBtn.addEventListener('click',()=>{
-    		boxFun('아직 안 만듬',true);
+    		
+    		let ruleCheck = document.querySelector('.ruleCheck');
+    		if(ruleCheck) ruleCheck.classList.remove('ruleCheck');
+    		
+    		// 필수 정보 확인
+    		if(!dashAddObject.dtitle){
+    			boxFun('대시보드명을 정해주세요.', true);
+    			dashAddForm();
+    			return false;
+    		}
+    		
+    		
+    		// 버튼 커스텀
+    		const ruleArea = addObject(null,'div',null,false, (t)=>{
+    			
+    			t.setAttribute('id','dashRuleArea2')
+    			dashAddObject.rule.forEach((v)=>{
+    	    		ruleAddFun(v.dggrade,v.dgalias,2,t);
+    	    	});
+    			
+    		});
+    		
+    		const dggradeBtn = addObject(null, 'button', 'grayBtn', false, (t)=>{
+    			
+    			t.innerHTML = '권한 등록';
+    			t.addEventListener('click', ()=>{
+    				ruleCheck = document.querySelector('.ruleCheck');
+    				
+    				let midRuleCheck = true;
+    				
+    				if(ruleCheck) {
+    					dashAddObject.member.forEach((v)=>{
+    						if(v.dmmid === mid){
+    							v.dgalias = ruleCheck.dataset.dgalias;
+    							v.dggrade = ruleCheck.dataset.dggrade;
+    							midRuleCheck = false;
+    							return;
+    						}
+    					});
+    					
+    					if(midRuleCheck){
+    						dashAddObject.member.push({
+    							'dmmid' : mid,
+								'dgalias' : ruleCheck.dataset.dgalias,
+								'dggrade' : ruleCheck.dataset.dggrade
+    						});
+    					}
+    					
+    					boxFun('권한 설정이 되었습니다.', false, null, false, '.successBox');
+    					
+    				} else {
+    					
+    					boxFun('권한을 선택해주세요.', false, null, false, '.falseBox');
+    					
+    				}
+    				console.log(dashAddObject);
+    			});
+    			
+    		});
+    		
+    		const submitBtn = addObject(null, 'button', 'grayBtn', false, (t)=>{
+    			
+    			t.innerHTML = '대시보드 만들기';
+    			t.style.marginLeft = '5px';
+    			t.style.marginRight = '5px';
+    			
+    			t.addEventListener('click', ()=>{
+    				
+    				let midRuleCheck = false;
+    				
+    				dashAddObject.member.forEach((v)=>{
+    					if(v.dmmid === mid){
+    						midRuleCheck = true;
+    						return;
+    					}
+    				});
+    				
+    				if(midRuleCheck){
+
+    					xhrLoad('post', 'mypage/dashboard',dashAddObject,(responseText)=>{
+    						
+    						const resCheck = (responseText === 'true');
+    						
+    						if(resCheck){
+    							boxFun('대시보드 만들기에 성공했습니다.',true);
+    						}
+    	    			
+    					});
+
+    					const utilDiv = document.getElementById('utilDiv');
+    					const dashAddarticle = document.getElementById('dashAddarticle');
+    					utilDiv.remove();
+    					dashAddarticle.remove();
+    					
+    				} else {
+    					
+    					boxFun('본인의 대시보드 내에서 권한 등급을 선택해주세요.',false, null, false, '.createFalse');
+    					
+    				}
+    			});
+    		});
+    		
+    		const closeBtn = addObject(null, 'button', 'grayBtn', false, (t)=>{
+    			t.innerHTML = '취소';
+    			t.addEventListener('click',()=>{
+    				
+    				dashAddObject.member.forEach((v,i)=>{
+    					if(v.dmmid === mid){
+    						dashAddObject.member.splice(i,1);
+    					}
+    				});
+    				console.log(dashAddObject);
+    				utilBoxDelete();
+    			});
+    		});
+    		
+    		// 커스텀 박스 등록
+    		boxFun('대시보드 내에서 자신의 권한 등급을 선택해주세요.', true, [ruleArea, dggradeBtn, submitBtn, closeBtn], true);
+    		
+    		
     	});
     	return false;
     });
@@ -333,28 +468,34 @@ function dashAddForm(){
 
 window.onload = function(){
 
-	
-	// section 객체에 커스텀 메뉴 등록
+	// 대시보드 로드
+    xhrLoad('get','mypage/dashboard',null, (responseText)=>{
+    	
+    	const jsonResult = JSON.parse(responseText);
+
+        const mid = document.getElementById('mid');
+    	
+    	for(let i = 0 ; i < jsonResult.length ; i++){
+    		
+            const dashObj = jsonResult[i];
+            if(dashObj.downer === mid.dataset.mid){
+                dashBoardSort(dashObj,'owner');
+            } else {
+                dashBoardSort(dashObj,'belong');
+            }
+        
+    	}
+    });
+    
+    // 커스텀 메뉴 오브젝트 생성
+	// content article 태그 영역에 커스텀 메뉴 연결
 	const menuObject = addObject(document.querySelector('body'), 'div', 'customMenu', true, (t)=>{
 		t.style.display='none';
-		const section = document.querySelector('section');
+		const body = document.querySelector('body');
 		
-		contextMenuFun(section,t,{
+		contextMenuFun(body,t,{
 			'대시보드 추가' : dashAddForm
 		});
 		
 	});
-	
-    const loadTargetObj = {
-        dashboard : 'dashb',
-        account : 'acc',
-        accountupdate : 'accup'
-    };
-
-    const dashAddBtn = document.getElementById('dashAddBtn');
-    
-    dashAddBtn.addEventListener('click', dashAddForm);
-    
-    xhrLoad('get','mypage/dashload', loadTargetObj.dashboard);
-
 }

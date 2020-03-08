@@ -5,7 +5,10 @@ import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
@@ -26,7 +29,8 @@ public interface DashBoardDao {
 	@Select("select * from dashboard where dno = #{dno}")
 	public DashBoardDto selectOne(int dno);
 	
-	@Insert("insert into dashboard values(dashboardseq.nextval, #{dtitle}, #{downer}, #{ddesc}, sysdate, null)")
+	@SelectKey(statement = "select dashboardseq.nextval from dual", keyProperty = "dno", resultType = Integer.class, before = true)
+	@Insert("insert into dashboard values(#{dno}, #{dtitle}, #{downer}, #{ddesc}, sysdate, null)")
 	public int insert(DashBoardDto dto);
 	
 	@Update("update dashboard set dtitle = #{dtitle}, ddesc = #{ddesc}, dmodifydate = sysdate where dno = #{dno}")
@@ -34,6 +38,6 @@ public interface DashBoardDao {
 	
 	@Delete("delete from dashboard where dno = #{dno}")
 	public int delete(int dno);
-	
+		
 }
 
