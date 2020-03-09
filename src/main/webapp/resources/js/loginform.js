@@ -2,10 +2,13 @@
  * http://usejsdoc.org/
  */
 
+
 window.onload = () => {
-
-    const loginForm = document.getElementById('loginForm');
-
+	
+	pageLoad();
+	
+	const loginForm = document.getElementById('loginForm');
+	
     loginForm.addEventListener('submit', (e)=>{
 
         e.preventDefault();
@@ -15,26 +18,44 @@ window.onload = () => {
 
         const data = { mid, mpw };
 
-        const xhr = new XMLHttpRequest();
-
-        xhr.open('post', 'login');
-
-        xhr.onreadystatechange = function(){
-            let {readyState, status, responseText} = xhr;
-            if(readyState === xhr.DONE){
-                if(status === 200){
-                    if(responseText){
-                        location.reload();
-                    }
-                }
-            }
-        };
-
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify(data));
+        xhrLoad('post','login',data, (responseText)=>{
+        	
+        	const resCheck = (responseText === 'true');
+        	if(resCheck){
+        		location.reload();
+        	} else {
+        		boxFun('입력이 잘못되었습니다.',true);
+        	}
+        });
 
     });
-
+    
+    const signUpBtn = document.querySelector('.signUpBtn');
+    signUpBtn.addEventListener('click',(e)=>{
+    	
+    	e.preventDefault();
+    	const signUpForm = addObject(null,'div','signUpDiv',false,(t)=>{
+    		t.innerHTML = `
+    			<input type="text" name="mid" placeholder="아이디"/>
+    			<input type="password" name="mpw" autocomplete="new-password" placeholder="패스워드"/>
+    			<input type="password" name="mpw_chk" autocomplete="new-password" placeholder="패스워드 확인"/>
+    			<input type="text" name="mid" placeholder="닉네임"/>
+    			<input type="email" name="mid" placeholder="E-mail"/>
+    		`;
+    	});
+    	
+    	const signUpCloseBtn = addObject(null,'input','grayBtn',false,(t)=>{
+    		t.setAttribute('type','button');
+    		t.style.width = 'max-content';
+    		t.value='취소';
+    		t.addEventListener('click', ()=>{
+    			utilBoxDelete();
+    		});
+    	});
+    	
+    	boxFun('회원가입', true, [signUpForm, signUpCloseBtn], true, '.signUpDivBox');
+    	
+    });
 
 };
 

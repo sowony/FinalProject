@@ -1,0 +1,97 @@
+@charset "UTF-8";
+
+div#con {
+    width: max-content;
+    height: max-content;
+    padding: 30px;
+    background-color: #fff;
+    border: 1px solid #cccccb;
+    border-radius: 5px;
+    box-shadow: 0px 0px 4px #999999;
+    text-align: center;
+    margin: 40px auto;
+}
+
+p {
+	position:relative;
+	color : #3d3d3d;
+}
+
+p#siteName {
+    letter-spacing: 1.5pt;
+    font-size: 20pt;
+    font-weight: 600;
+}
+
+fieldset {
+    border: 0;
+    border-top: 1px solid #bbbbbb;
+    padding: 10px 5px 0 5px;
+    margin: 10px 0;
+}
+
+legend {
+    text-align: center;
+    padding: 0 20px;
+    font-size: 11pt;
+    font-weight: 600;
+    color: #bbbbbb;
+}
+
+input.signInBtn {
+    color: #fff;
+    background-color: #37c6f4;
+}
+
+input.signUpBtn {
+    color: #fff;
+    background-color: #ed1f59;
+}
+
+
+#idAndPwFind {
+    color: #599ed6;
+    font-size: 8pt;
+    letter-spacing: 1pt;
+    text-align: center;
+}
+
+span.icon {
+    background-size: 100%;
+    background-repeat: no-repeat;
+    position: absolute;
+    z-index: 5;
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    margin: 4.5px 0px 0px 0px;
+    left: 20px;
+}
+
+input.faceSignInBtn {
+    background-color: #3c5999;
+    color: #fff;
+}
+
+span.facebookIcon {
+    background-image: url(../images/icon/facebookIcon.svg);
+}
+
+input.kakaoSignInBtn {
+    background-color: #fff100;
+    color: #391f1f;
+}
+
+span.kakaoIcon {
+    background-image: url(../images/icon/kakaoIcon.svg);
+}
+
+input.googleSignInBtn {
+    color: #3d3d3d;
+    background-color: #fff;
+    border: 1px solid #ccc !important;
+}
+
+span.googleIcon {
+    background-image: url(../images/icon/googleIcon.svg);
+}

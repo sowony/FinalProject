@@ -10,7 +10,7 @@ public class DashMemberDto {
 
 	int dmno;
 	int dmdno;
-	String dmid;
+	String dmmid;
 	int dmgrade;
 	
 }

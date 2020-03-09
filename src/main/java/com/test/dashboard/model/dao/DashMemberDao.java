@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
@@ -26,8 +27,9 @@ public interface DashMemberDao {
 	@Select("select * from dashmember where dmdno = #{dmdno} and dmmid = #{dmmid}")
 	public DashMemberDto selectById(Map<String, Object> params);
 	
+	@SelectKey(statement = "select dgno from dashgrade where dgdno = #{dmdno} and dggrade = #{dggrade} and dgalias = #{dgalias}", before = true, keyProperty = "dmdgno", resultType = Integer.class)
 	@Insert("insert into dashmember values(dashmemberseq.nextval, #{dmdno}, #{dmmid}, #{dmdgno})")
-	public int insert(DashMemberDto dto);
+	public int insert(Map<String, Object> params);
 	
 	@Update("update dashmember set dmdgno = #{dmdgno} where dmno = #{dmno}")
 	public int update(DashMemberDto dto);

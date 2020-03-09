@@ -19,7 +19,7 @@ public interface WMemoDao {
 	@Select("select * from wmemo where wmwno = #{wmwno}")
 	public WMemoDto selectOne(int wmwno);
 	
-	@Insert("insert into wmemo values(wmemoseq.nextval, #{wmwno}, #{wmdno}, #{wmtitle}, #{wmcontent}, sysdate, null, #{wmwfno})")
+	@Insert("insert into wmemo values(wmemoseq.nextval, #{wmwno}, #{wmtitle}, #{wmcontent}, sysdate, null)")
 	public int insert(WMemoDto wMemoDto);
 	
 	@Update("update wmemo set wmtitle = #{wmtitle}, wmcontent = #{wmcontent}, wmmodifydate = sysdate where wmwno = #{wmwno}")

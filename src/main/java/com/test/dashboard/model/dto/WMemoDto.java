@@ -17,6 +17,5 @@ public class WMemoDto {
 	String wmcontent;
 	Date wmcreatedate;
 	Date wmmodifydate;
-	int wmwfno;
 	
 }

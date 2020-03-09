@@ -6,7 +6,7 @@ import com.test.dashboard.model.dto.WidgetDto;
 
 public interface WidgetBiz {
 
-	public List<WidgetDto> selectList(int wno, int dmdno, String dmid);
+	public List<WidgetDto> selectList(int wdno, String mid);
 	
 	public WidgetDto selectOne(int wno);
 	

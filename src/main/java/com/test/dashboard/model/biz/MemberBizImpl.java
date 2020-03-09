@@ -6,11 +6,13 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.test.dashboard.model.dao.MemberDao;
 import com.test.dashboard.model.dto.MemberDto;
 
 @Service
+@Transactional
 public class MemberBizImpl implements MemberBiz{
 
 	@Autowired
@@ -40,6 +42,12 @@ public class MemberBizImpl implements MemberBiz{
 	}
 	
 	@Override
+	public MemberDto selectById(String mid) {
+		// TODO Auto-generated method stub
+		return memberDao.selectById(mid);
+	}
+	
+	@Override
 	public MemberDto selectByMNo(int mno) {
 		// TODO Auto-generated method stub
 		return null;
@@ -56,5 +64,6 @@ public class MemberBizImpl implements MemberBiz{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
 	
 }
