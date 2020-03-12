@@ -64,6 +64,22 @@ public class MemberBizImpl implements MemberBiz{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public MemberDto selectByNick(String mnick) {
+		// TODO Auto-generated method stub
+		return memberDao.selectByNick(mnick);
+	}
+
+	@Override
+	public int selectByName(String mname) {
+		// TODO Auto-generated method stub
+		return memberDao.selectByName(mname);
+	}
 	
-	
+	@Override
+	public int maboutUpdate(MemberDto memberDto) {
+		// TODO Auto-generated method stub
+		return memberDao.maboutUpdate(memberDto);
+	}
 }

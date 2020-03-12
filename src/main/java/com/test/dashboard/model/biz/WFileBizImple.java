@@ -29,9 +29,9 @@ public class WFileBizImple implements WFileBiz{
 	}
 	
 	@Override
-	public List<WFileDto> selectByWNo(int wfwno) {
+	public List<WFileDto> selectByWNo(int wno) {
 		// TODO Auto-generated method stub
-		return wFileDao.selectByWNo(wfwno);
+		return wFileDao.selectByWNo(wno);
 	}
 	
 	@Override

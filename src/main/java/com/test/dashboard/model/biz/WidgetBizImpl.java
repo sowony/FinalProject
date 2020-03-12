@@ -30,10 +30,10 @@ public class WidgetBizImpl implements WidgetBiz{
 	}
 	
 	@Override
-	public List<WidgetDto> selectList(int wdno, String mid) {
+	public List<WidgetDto> selectList(int dno, String mid) {
 		// TODO Auto-generated method stub
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("wdno", wdno);
+		params.put("dno", dno);
 		params.put("mid", mid);
 		return widgetDao.selectList(params);
 	}

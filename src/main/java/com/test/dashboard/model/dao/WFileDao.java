@@ -14,14 +14,14 @@ import com.test.dashboard.model.dto.WFileDto;
 public interface WFileDao {
 
 	// 위젯 번호로 찾기
-	@Select("select * from wfile where wfwno = #{wfwno}")
-	public List<WFileDto> selectByWNo(int wfwno);
+	@Select("select * from wfile where wno = #{wno}")
+	public List<WFileDto> selectByWNo(int wno);
 	
 	// 파일번호로 하나 찾기
 	@Select("select * from wfile where wfno = #{wfno}")
 	public WFileDto selectOne(int wfno);
 	
-	@Insert("insert into wfile values(wfileseq.nextval, #{wfwno}, #{wfpath}, #{wffakefname}, #{wfrealfname}, #{wfext}")
+	@Insert("insert into wfile values(wfile_seq.nextval, #{wno}, #{wfpath}, #{wffakefname}, #{wfrealfname}, #{wfext}")
 	public int insert(WFileDto wFileDto);
 	
 	@Update("update wfile set wfpath=#{wfpath}, wffakefname=#{wffakefname}, wfrealfname=#{wfrealfname}, wfext=#{wfext} where wfno = #{wfno}")

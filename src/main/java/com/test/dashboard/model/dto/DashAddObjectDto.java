@@ -11,4 +11,6 @@ public class DashAddObjectDto {
 	Map<String, Object>[] member;
 	DashGradeDto[] rule;
 	
+	
+	
 }

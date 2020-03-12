@@ -16,16 +16,16 @@ public interface WMemoDao {
 	@Select("select * from wmemo")
 	public List<WMemoDto> selectList();
 	
-	@Select("select * from wmemo where wmwno = #{wmwno}")
-	public WMemoDto selectOne(int wmwno);
+	@Select("select * from wmemo where wno = #{wno}")
+	public WMemoDto selectOne(int wno);
 	
-	@Insert("insert into wmemo values(wmemoseq.nextval, #{wmwno}, #{wmtitle}, #{wmcontent}, sysdate, null)")
+	@Insert("insert into wmemo values(wmemo_seq.nextval, #{wno}, #{wmtitle}, #{wmcontent}, sysdate, null)")
 	public int insert(WMemoDto wMemoDto);
 	
-	@Update("update wmemo set wmtitle = #{wmtitle}, wmcontent = #{wmcontent}, wmmodifydate = sysdate where wmwno = #{wmwno}")
+	@Update("update wmemo set wmtitle = #{wmtitle}, wmcontent = #{wmcontent}, wmwritedate = sysdate where wno = #{wno}")
 	public int update(WMemoDto wMemoDto);
 	
-	@Delete("delete from wmemo where wmwno = #{wmwno}")
-	public int delete(int wmwno);
+	@Delete("delete from wmemo where wno = #{wno}")
+	public int delete(int wno);
 	
 }

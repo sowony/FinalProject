@@ -6,7 +6,8 @@ import com.test.dashboard.model.dto.DashGradeDto;
 
 public interface DashGradeBiz {
 
-	public List<DashGradeDto> selectList(int dgdno);
+	// 특정 대쉬보드의 등급 목록
+	public List<DashGradeDto> selectList(int dno);
 	
 	public int insert(DashGradeDto dto);
 	

@@ -1,6 +1,7 @@
 package com.test.dashboard.common.config;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.ibatis.type.JdbcType;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
@@ -84,6 +85,11 @@ public class ApplicationContent {
 		SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
 		bean.setDataSource(dataSource());
 		bean.setTypeAliasesPackage("com.test.dashboard.model.dto");
+		
+		org.apache.ibatis.session.Configuration config = new org.apache.ibatis.session.Configuration();
+		config.setJdbcTypeForNull(JdbcType.NULL);;
+		bean.setConfiguration(config);
+		
 		return bean;
 	}
 	
@@ -122,5 +128,6 @@ public class ApplicationContent {
 	public DataSourceTransactionManager dataSourceTransactionManager() {
 		return new DataSourceTransactionManager(dataSource());
 	}
+	
 	
 }

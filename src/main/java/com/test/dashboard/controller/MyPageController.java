@@ -60,9 +60,10 @@ public class MyPageController {
 		logger.info("[ INFO ] : MyPageController > getDashBoard [path : /mypage/dashboard]");
 		
 		MemberDto user = (MemberDto) session.getAttribute("user");
+		
 		DashBoardDto dashBoardDto = new DashBoardDto();
 		dashBoardDto.setDdesc(dashAddObjectDto.getDdesc());
-		dashBoardDto.setDowner(user.getMid());
+		dashBoardDto.setMid(user.getMid());
 		dashBoardDto.setDtitle(dashAddObjectDto.getDtitle());
 		
 		logger.info("[ INFO ] DashInfo :" + dashBoardDto);
@@ -79,7 +80,7 @@ public class MyPageController {
 		
 		for(DashGradeDto out : dashAddObjectDto.getRule()) {
 			logger.info("[ INFO ] DashGradeList :" + out);
-			out.setDgdno(dno);
+			out.setDno(dno);
 			res = dashGradeBiz.insert(out);
 		}
 		
@@ -98,14 +99,48 @@ public class MyPageController {
 		}
 	}
 	
+	
+	@PostMapping("/nicksearch")
+	public boolean postNickSearch(@RequestBody MemberDto memberDto) {
+		
+		logger.info("[ INFO ] : MyPageController > postIdSearch [path : /mypage/nicksearch]");
+		logger.info("[ INFO ] : SearchNick > " + memberDto.getMnick());
+		
+		MemberDto user = memberBiz.selectByNick(memberDto.getMnick());
+		
+		logger.info("[ INFO ] : USER > " + user );
+		
+		if(user != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@PostMapping("/namesearch")
+	public boolean postNameSearch(@RequestBody MemberDto memberDto) {
+		logger.info("[ INFO ] : MyPageController > postIdSearch [path : /mypage/NameSearch]");
+		logger.info("[ INFO ] : SearchName > " + memberDto.getMname());
+		
+		int res = memberBiz.selectByName(memberDto.getMname());
+		
+		if(res > 0) {
+			return false;
+		} else {
+			return true;
+		}
+		
+	}
+	
 	@PostMapping("/idsearch")
 	public boolean postIdSearch(@RequestBody MemberDto memberDto) {
 		
 		logger.info("[ INFO ] : MyPageController > postIdSearch [path : /mypage/idsearch]");
 		logger.info("[ INFO ] : SearchID > " + memberDto.getMid());
+		
 		MemberDto user = memberBiz.selectById(memberDto.getMid());
 		
-		logger.info("[ INFO ] : SearchID > " + user );
+		logger.info("[ INFO ] : USER > " + user );
 		
 		if(user != null) {
 			return true;

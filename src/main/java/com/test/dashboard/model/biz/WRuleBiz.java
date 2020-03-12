@@ -6,7 +6,7 @@ import com.test.dashboard.model.dto.WRuleDto;
 
 public interface WRuleBiz {
 
-	List<WRuleDto> selectList(int wrwno);
+	List<WRuleDto> selectList(int wno);
 	
 	WRuleDto selectOne(int wrno);
 	

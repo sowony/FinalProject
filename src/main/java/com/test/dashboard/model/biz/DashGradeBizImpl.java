@@ -29,9 +29,9 @@ public class DashGradeBizImpl implements DashGradeBiz{
 	}
 	
 	@Override
-	public List<DashGradeDto> selectList(int dgdno) {
+	public List<DashGradeDto> selectList(int dno) {
 		// TODO Auto-generated method stub
-		return dashGradeDao.selectList(dgdno);
+		return dashGradeDao.selectList(dno);
 	}
 	
 	@Override

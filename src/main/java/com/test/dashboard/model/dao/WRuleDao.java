@@ -13,16 +13,16 @@ import com.test.dashboard.model.dto.WRuleDto;
 @Repository
 public interface WRuleDao {
 
-	@Select("select * from wrule where wrwno = #{wrwno}")
-	List<WRuleDto> selectList(int wrwno);
+	@Select("select * from wrule where wno = #{wno}")
+	List<WRuleDto> selectList(int wno);
 	
 	@Select("select * from wrule where wrno = #{wrno}")
 	WRuleDto selectOne(int wrno);
 	
-	@Insert("insert into wrule values(wruleseq.nextval,#{wrwno},#{wrcate},#{wrrwd},#{wrmid},#{wrminno},#{wrmaxno})")
+	@Insert("insert into wrule values(wrule_seq.nextval,#{wno},#{wrcategory},#{wrrwd},#{mid},#{wrmin},#{wrmax})")
 	int insert(WRuleDto wRuleDto);
 	
-	@Update("update wrule set wrcate=#{wrcate}, wrrwd=#{wrrwd}, wrmid=#{wrmid}, wrminno=#{wrminno}, wrmaxno=#{wrmaxno} where wrno = #{wrno}")
+	@Update("update wrule set wrcategory=#{wrcategory}, wrrwd=#{wrrwd}, mid=#{mid}, wrmin=#{wrmin}, wrmax=#{wrmax} where wrno = #{wrno}")
 	int update(WRuleDto wRuleDto);
 	
 	@Delete("delete from wrule where wrno = #{wrno}")
