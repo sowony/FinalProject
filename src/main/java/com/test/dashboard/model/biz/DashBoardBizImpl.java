@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.test.dashboard.model.dao.DashBoardDao;
 import com.test.dashboard.model.dto.DashBoardDto;
 
 @Service
+@Transactional
 public class DashBoardBizImpl implements DashBoardBiz{
 
 	@Autowired
@@ -32,15 +34,15 @@ public class DashBoardBizImpl implements DashBoardBiz{
 	}
 	
 	@Override
-	public List<DashBoardDto> selectByBelong(String dmmid) {
+	public List<DashBoardDto> selectByBelong(String mid) {
 		// TODO Auto-generated method stub
-		return dashBoardDao.selectByBelong(dmmid);
+		return dashBoardDao.selectByBelong(mid);
 	}
 	
 	@Override
-	public List<DashBoardDto> selectByOwner(String downer) {
+	public List<DashBoardDto> selectByOwner(String mid) {
 		// TODO Auto-generated method stub
-		return dashBoardDao.selectByOwner(downer);
+		return dashBoardDao.selectByOwner(mid);
 	}
 	
 	@Override

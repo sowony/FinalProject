@@ -1,0 +1,12 @@
+@charset "UTF-8";
+
+li {
+    float: left;
+    padding: 5px 20px;
+    list-style: none;
+    font-size: 12pt;
+    font-weight: 600;
+    letter-spacing: 1pt;
+    border-left: 1px solid #67827f;
+    color: #eceff1;
+}

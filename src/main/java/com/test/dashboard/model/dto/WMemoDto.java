@@ -10,13 +10,19 @@ import lombok.Data;
 @Alias("wMemoDto")
 public class WMemoDto {
 
-	int wmno;
-	int wmwno;
-	int wmdno;
-	String wmtitle;
-	String wmcontent;
-	Date wmcreatedate;
-	Date wmmodifydate;
-	int wmwfno;
+	// 메모 테이블 번호 
+    private int wmno;
+
+    // 소속 위젯 번호 
+    private int wno;
+
+    // 메모 제목 
+    private String wtitle;
+
+    // 메모 내용 
+    private String wmcontent;
+
+    // 메모 작성일 
+    private Date wmwritedate;
 	
 }

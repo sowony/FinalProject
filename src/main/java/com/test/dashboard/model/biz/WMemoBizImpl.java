@@ -4,20 +4,22 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.test.dashboard.model.dao.WMemoDao;
 import com.test.dashboard.model.dto.WMemoDto;
 
 @Service
+@Transactional
 public class WMemoBizImpl implements WMemoBiz{
 
 	@Autowired
 	private WMemoDao wMemoDao;
 	
 	@Override
-	public int delete(int wmwno) {
+	public int delete(int wno) {
 		// TODO Auto-generated method stub
-		return wMemoDao.delete(wmwno);
+		return wMemoDao.delete(wno);
 	}
 	
 	@Override
@@ -32,9 +34,9 @@ public class WMemoBizImpl implements WMemoBiz{
 	}
 	
 	@Override
-	public WMemoDto selectOne(int wmwno) {
+	public WMemoDto selectOne(int wno) {
 		// TODO Auto-generated method stub
-		return wMemoDao.selectOne(wmwno);
+		return wMemoDao.selectOne(wno);
 	}
 	
 	@Override

@@ -14,10 +14,10 @@ import com.test.dashboard.model.dto.DashGradeDto;
 public interface DashGradeDao {
 
 	// 특정 대쉬보드의 등급 목록
-	@Select("select * from dashgrade where dgdno = #{dgdno}")
-	public List<DashGradeDto> selectList(int dgdno);
+	@Select("select * from dashgrade where dno = #{dno}")
+	public List<DashGradeDto> selectList(int dno);
 	
-	@Insert("insert into dashgrade values(dashgradeseq.nextval, #{dgdno}, #{dggrade}, #{dgalias})")
+	@Insert("insert into dashgrade values(dashgrade_seq.nextval, #{dno}, #{dggrade}, #{dgalias})")
 	public int insert(DashGradeDto dto);
 	
 	@Update("update dashgrade set dggrade = #{dggrade}, dgalias = #{dgalias} where dgno = #{dgno}")

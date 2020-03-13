@@ -134,10 +134,7 @@ insert into widget values(
 	1, 
 	'wmemo', 
 	'위젯 테스트1', 
-	'testuser1', 
-	'all', 
-	4,
-	1,
+	'testuser1',
 	0, 73, 250, 300, 0, 
 	'#b9cdcb' , 
 	null, 
@@ -151,10 +148,7 @@ insert into widget values(
 	1, 
 	'wmemo', 
 	'위젯 테스트2', 
-	'testuser2', 
-	'testuser1|testuser4', 
-	4,
-	1,
+	'testuser2',
 	333, 29, 250, 300, 0, 
 	'#b9c5cb50' , 
 	null, 
@@ -162,17 +156,27 @@ insert into widget values(
 	sysdate
 );
 
+-- wrule dummy
+
+-- 위젯1 권한
+insert into wrule values(wruleseq.nextval,1,'individual', 7, 'testuser1',null, null);
+insert into wrule values(wruleseq.nextval,1,'individual', 6, 'testuser2',null, null);
+insert into wrule values(wruleseq.nextval,1,'individual', 6, 'testuser3',null, null);
+insert into wrule values(wruleseq.nextval,1,'group', 4, null, 0, 9);
+
+-- 위젯2 권한
+insert into wrule values(wruleseq.nextval,2,'individual', 7, 'testuser2',null, null);
 
 -- wmemo dummy
 
 
 -- 대쉬보드1 위젯1 메모
-insert into wmemo values( wmemoseq.nextval, 1, 1, '대쉬보드1 위젯1 메모1', '콘텐츠 테스트 중입니다1', sysdate, null, null);
-insert into wmemo values( wmemoseq.nextval, 1, 1, '대쉬보드1 위젯1 메모2', '콘텐츠 테스트 중입니다2', sysdate, null, null);
-insert into wmemo values( wmemoseq.nextval, 1, 1, '대쉬보드1 위젯1 메모3', '콘텐츠 테스트 중입니다3.', sysdate, null, null);
+insert into wmemo values( wmemoseq.nextval, 1, '대쉬보드1 위젯1 메모1', '콘텐츠 테스트 중입니다1', sysdate, null);
+insert into wmemo values( wmemoseq.nextval, 1, '대쉬보드1 위젯1 메모2', '콘텐츠 테스트 중입니다2', sysdate, null);
+insert into wmemo values( wmemoseq.nextval, 1, '대쉬보드1 위젯1 메모3', '콘텐츠 테스트 중입니다3.', sysdate, null);
 
 
 -- 대쉬보드1 위젯2 메모
-insert into wmemo values( wmemoseq.nextval, 2, 1, '대쉬보드1 위젯2 메모1', '콘텐츠 테스트 중입니다1-1', sysdate, null, null);
-insert into wmemo values( wmemoseq.nextval, 2, 1, '대쉬보드1 위젯2 메모2', '콘텐츠 테스트 중입니다2-1', sysdate, null, null);
+insert into wmemo values( wmemoseq.nextval, 2, '대쉬보드1 위젯2 메모1', '콘텐츠 테스트 중입니다1-1', sysdate, null);
+insert into wmemo values( wmemoseq.nextval, 2, '대쉬보드1 위젯2 메모2', '콘텐츠 테스트 중입니다2-1', sysdate, null);
 

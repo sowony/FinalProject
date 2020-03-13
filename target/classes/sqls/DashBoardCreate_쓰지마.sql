@@ -18,7 +18,7 @@ create table member (
 	mdel varchar2(5) not null,
 	CONSTRAINT mdel_chk Check (mdel in ('Y','N'))
 );
-
+alter table member add(mname varchar2(300));
 
 -- dashboard 테이블
 
@@ -46,6 +46,7 @@ create table dashgrade (
 	dgalias varchar2(1000) not null,
 	constraint dgdno_fk foreign key(dgdno) REFERENCES dashboard(dno) on delete cascade
 );
+alter table dashgrade add constraint dg_uq unique(dgdno, dggrade, dgalias);
 
 -- dashmember 테이블
 
@@ -60,7 +61,7 @@ create table dashmember (
 	constraint dmmid_fk foreign key(dmmid) REFERENCES member(mid) on delete cascade,
 	constraint dmdgno_fk foreign key(dmdgno) REFERENCES dashgrade(dgno)
 );
-
+alter table dashmember add constraint dm_uq unique(dmdno, dmmid, dmdgno);
 
 -- widget 테이블
 
@@ -71,9 +72,6 @@ create table widget (
 	wcategory varchar2(1000) not null,
 	wtitle varchar2(2000),
 	wowner varchar2(2000) not null,
-	wmid varchar2(2000),
-	wmingrade number not null,
-	wmaxgrade number not null,
 	wleft number not null,
 	wtop number not null,
 	wwidth number not null,
@@ -84,11 +82,23 @@ create table widget (
 	wposition varchar2(500),
 	wdate date,
 	constraint wdno_fk foreign key(wdno) REFERENCES dashboard(dno) on delete cascade,
-	constraint wowner_fk foreign key(wowner) REFERENCES member(mid),
-	constraint wmingrade_fk foreign key(wmingrade) REFERENCES dashgrade(dgno),
-	constraint wmaxgrade_fk foreign key(wmaxgrade) REFERENCES dashgrade(dgno)
+	constraint wowner_fk foreign key(wowner) REFERENCES member(mid)
 );
 
+
+-- wrule 테이블
+create sequence wruleseq;
+
+create table wrule(
+	wrno number primary key,
+	wrwno number not null,
+	wrcate varchar2(20) not null,
+	wrrwd number not null,
+	wrmid varchar2(500) null,
+	wrminno number null,
+	wrmaxno number null,
+	constraint wrmid_fk foreign key(wrmid) references member(mid) on delete cascade
+);
 
 -- wfile 테이블
 
@@ -110,13 +120,9 @@ create sequence wmemoseq;
 create table wmemo (
 	wmno number primary key,
 	wmwno number not null,
-	wmdno number not null,
 	wmtitle varchar2(2000),
 	wmcontent clob,
 	wmcreatedate date not null,
 	wmmodifydate date,
-	wmwfno number,
-	constraint wmwno_fk foreign key(wmwno) references widget(wno) on delete cascade,
-	constraint wmdno_fk foreign key(wmdno) references dashboard(dno) on delete cascade,
-	constraint wmwfno_fk foreign key(wmwfno) references wfile(wfno)
+	constraint wmwno_fk foreign key(wmwno) references widget(wno) on delete cascade
 );

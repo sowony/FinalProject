@@ -35,8 +35,17 @@ public class LoginInterceptor implements HandlerInterceptor{
 		logger.info("[requestURI] : "+ request.getRequestURI());
 		
 		if(request.getRequestURI().endsWith("login")) return true;
+		else if(request.getRequestURI().endsWith("idsearch")) return true;
+		else if(request.getRequestURI().endsWith("nicksearch")) return true;
+		else if(request.getRequestURI().endsWith("signup")) return true;
+		else if(request.getRequestURI().endsWith("mabout")) return true;
 		else if(request.getRequestURI().endsWith(".js")) return true;
 		else if(request.getRequestURI().endsWith(".css")) return true;
+		else if(request.getRequestURI().endsWith(".jpg")) return true;
+		else if(request.getRequestURI().endsWith(".jpeg")) return true;
+		else if(request.getRequestURI().endsWith(".png")) return true;
+		else if(request.getRequestURI().endsWith(".gif")) return true;
+		else if(request.getRequestURI().endsWith(".svg")) return true;
 		else {
 			HttpSession session = request.getSession();
 			MemberDto user = (MemberDto) session.getAttribute("user");
