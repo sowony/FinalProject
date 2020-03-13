@@ -1,6 +1,5 @@
 -- 모든 제약 조건 삭제
 ALTER TABLE dashboard DROP CONSTRAINT downer_fk;
-
 ALTER TABLE dashgrade DROP CONSTRAINT dgdno_fk;
 
 ALTER TABLE dashmember DROP CONSTRAINT dmdno_fk;

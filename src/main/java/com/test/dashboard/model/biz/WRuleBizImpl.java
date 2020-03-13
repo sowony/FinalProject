@@ -27,9 +27,9 @@ public class WRuleBizImpl implements WRuleBiz{
 	}
 	
 	@Override
-	public List<WRuleDto> selectList(int wrwno) {
+	public List<WRuleDto> selectList(int wno) {
 		// TODO Auto-generated method stub
-		return wRuleDao.selectList(wrwno);
+		return wRuleDao.selectList(wno);
 	}
 	
 	@Override

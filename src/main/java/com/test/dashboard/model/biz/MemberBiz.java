@@ -19,7 +19,15 @@ public interface MemberBiz {
 	// 이이디 조회
 	public MemberDto selectById(String mid);
 	
+	// 닉네임 조회
+	public MemberDto selectByNick(String mnick);
+	
+	// 이름 조회
+	public int selectByName(String mname);
+	
 	public int insert(MemberDto memberDto);
+	
+	public int maboutUpdate(MemberDto memberDto);
 	
 	public int update(MemberDto memberDto);
 	

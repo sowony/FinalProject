@@ -66,7 +66,7 @@ function dashAddForm(){
 	
     const form0 = `
 			<form id="dashAddForm">
-				<input type="hidden" name="downer" value="${mid}"/>
+				<input type="hidden" name="mid" value="${mid}"/>
 				<p>DASHBOARD ADD</p>
 				<div id="dashAddDiv">
 					<p>DASHBOARD TITLE</p>
@@ -97,11 +97,17 @@ function dashAddForm(){
     
     // 룰 추가 함수
     function ruleAddFun(dggrade,dgalias,page,area){
+    	
     	let dashRuleArea 
+    	
     	if(!area) dashRuleArea = document.getElementById('dashRuleArea');
+    	
     	else dashRuleArea = area;
+    	
     	const deleteDiv = `<a class="delDRule">X</a>`;
+    	
     	const ruleDiv = addObject(dashRuleArea,'div','dashRuleItem',true);
+    	
     	ruleDiv.dataset.dggrade = dggrade;
     	ruleDiv.dataset.dgalias = dgalias;
     	ruleDiv.innerHTML = `${dgalias}` + ((page === 1)? deleteDiv : ``);
@@ -111,12 +117,15 @@ function dashAddForm(){
     	if(page === 1){
     		
     		const delDRule = document.getElementsByClassName('delDRule');
+    		
     		for(let item of delDRule){
+    			
     			item.addEventListener('click',()=>{
     				const target = item.parentNode;
     				target.remove();
     				utilBoxDelete();
     			});
+    			
     		}
     		
     	} else if(page === 2){
@@ -187,6 +196,7 @@ function dashAddForm(){
     // 다음 페이지 체크
     
     const next1Btn = document.querySelector('.next1');
+    
     next1Btn.addEventListener('click',(e)=>{
     	
     	const article = document.getElementById('dashAddarticle');
@@ -198,8 +208,10 @@ function dashAddForm(){
     	dashAddObject.rule = [];
     	
     	for(let item of dashRuleItems){
+    		
     		const dggrade = item.dataset.dggrade;
     		const dgalias = item.dataset.dgalias;
+    		
     		dashAddObject.rule.push({ dggrade, dgalias });
     	}
     	
@@ -233,7 +245,9 @@ function dashAddForm(){
     	
     	// 2page 룰 리스트 출력
     	dashAddObject.rule.forEach((v)=>{
+    		
     		ruleAddFun(v.dggrade,v.dgalias,2);
+    		
     	});
     	
     	
@@ -255,26 +269,33 @@ function dashAddForm(){
 						utilBoxDelete();
 					});
 				});
-				infoBar(t, `${obj.dmmid}(${obj.dgalias} | ${obj.dggrade})`);
+				infoBar(t, `${obj.mid}(${obj.dgalias} | ${obj.dggrade})`);
 			});
     	}
     	
     	// 맴버 리스트 출력
     	for(let v of dashAddObject.member){
+    		
     		addMemberItem(v);
+    		
     	}
     	
     	// 맴버 추가 & 맴버에 권한 부여
     	const idSearchBtn = document.querySelector('input[name="idSearchBtn"]');
+    	
     	idSearchBtn.addEventListener('click',()=>{
+    		
     		const mid = document.querySelector('input[name="mid"]');
+    		
     		if(mid.value === document.getElementById('mid').dataset.mid){
+    			
     			boxFun('본인의 아이디 입니다.',true);
     			return false;
+    			
     		}
     		
     		for(let v of dashAddObject.member){
-        		if(mid.value === v.dmmid){
+        		if(mid.value === v.mid){
         			boxFun('등록된 아이디 입니다.',true);
         			return false;
         		}
@@ -293,23 +314,26 @@ function dashAddForm(){
             	}
     			// ID가 있을 시 맴버 추가 버튼 생성하는 콜백 함수
     			const addBtn = addObject(idSearchBtn.parentNode, 'input', '', true, (t)=>{
+    				
     				t.setAttribute('type','button');
     				t.value='맴버 추가';
     				t.style.marginLeft = '8px';
     				
     				// 버튼에 이벤트 연결
     				t.addEventListener('click',()=>{
+    					
     					const ruleCheck = document.querySelector('.ruleCheck');
+    					
     					if(ruleCheck){
     						
     						addMemberItem({
-								'dmmid' : mid.value,
+								'mid' : mid.value,
 								'dgalias' : ruleCheck.dataset.dgalias,
 								'dggrade' : ruleCheck.dataset.dggrade
 							});
     						
     						dashAddObject.member.push({
-								'dmmid' : mid.value,
+								'mid' : mid.value,
 								'dgalias' : ruleCheck.dataset.dgalias,
 								'dggrade' : ruleCheck.dataset.dggrade
 							});
@@ -370,8 +394,9 @@ function dashAddForm(){
     				let midRuleCheck = true;
     				
     				if(ruleCheck) {
+    					
     					dashAddObject.member.forEach((v)=>{
-    						if(v.dmmid === mid){
+    						if(v.mid === mid){
     							v.dgalias = ruleCheck.dataset.dgalias;
     							v.dggrade = ruleCheck.dataset.dggrade;
     							midRuleCheck = false;
@@ -381,7 +406,7 @@ function dashAddForm(){
     					
     					if(midRuleCheck){
     						dashAddObject.member.push({
-    							'dmmid' : mid,
+    							'mid' : mid,
 								'dgalias' : ruleCheck.dataset.dgalias,
 								'dggrade' : ruleCheck.dataset.dggrade
     						});
@@ -395,6 +420,7 @@ function dashAddForm(){
     					
     				}
     				console.log(dashAddObject);
+    				
     			});
     			
     		});
@@ -410,7 +436,7 @@ function dashAddForm(){
     				let midRuleCheck = false;
     				
     				dashAddObject.member.forEach((v)=>{
-    					if(v.dmmid === mid){
+    					if(v.mid === mid){
     						midRuleCheck = true;
     						return;
     					}
@@ -446,7 +472,7 @@ function dashAddForm(){
     			t.addEventListener('click',()=>{
     				
     				dashAddObject.member.forEach((v,i)=>{
-    					if(v.dmmid === mid){
+    					if(v.mid === mid){
     						dashAddObject.member.splice(i,1);
     					}
     				});

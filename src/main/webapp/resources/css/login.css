@@ -14,7 +14,6 @@ div#con {
 
 p {
 	position:relative;
-	color : #3d3d3d;
 }
 
 p#siteName {
@@ -94,4 +93,61 @@ input.googleSignInBtn {
 
 span.googleIcon {
     background-image: url(../images/icon/googleIcon.svg);
+}
+
+.signUpImgDiv {
+	display: block;
+    width: 100%;
+    height: 80px;
+    text-align: center;
+    padding: 6px 0;
+}
+
+.signUpImg {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    border: 1.5px solid #aaa;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+}
+
+.proImg {
+	position: absolute;
+    width: 83px;
+    height: 83px;
+    left: -1.5px;
+    top: -1.5px;
+    border: 0;
+}
+
+input[type="file"] {
+    width: 500px;
+    height: 500px;
+    display: block;
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    opacity: 0;
+}
+
+span.ImgText {
+    color: #ccc;
+    position: relative;
+    top: 15px;
+    font-size : 9pt;
+	font-weight : 300;
+}
+
+span.noneCheck {
+    position: absolute;
+    display: block;
+    width: 15px;
+    height: 15px;
+    border: 0;
+    background-color: #ccc;
+    border-radius: 50%;
+    top: 7px;
+    right: -2px;
 }

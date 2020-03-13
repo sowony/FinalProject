@@ -7,6 +7,7 @@
 <title>Insert title here</title>
 <link rel="stylesheet" href="./resources/css/login.css" type="text/css"/>
 <link rel="stylesheet" href="./resources/css/defaultstyle.css" type="text/css"/>
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript" src="./resources/js/util.js"></script>
 <script type="text/javascript" src="./resources/js/xhr.js"></script>
 <script type="text/javascript" src="./resources/js/loginform.js"></script>
@@ -27,7 +28,7 @@
 							<input type="text" name="mid" autocomplete="false" placeholder="아이디" required/>
 							<input type="password" name="mpw" autocomplete="new-password" placeholder="패스워드"/>
 							<input type="submit" class="signInBtn" value="로그인"/>
-							<input type="button" class="signUpBtn" value="회원가입"/>
+							<input type="button" id="signUp" class="signUpBtn" value="회원가입"/>
 						</form>
 						<p><a id="idAndPwFind">아이디 / 비밀번호 를 잊어버리셨나요?</a></p>
 					</fieldset>

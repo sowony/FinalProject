@@ -2,20 +2,22 @@ package com.test.dashboard.model.biz;
 
 import java.util.List;
 
-
 import com.test.dashboard.model.dto.DashBoardDto;
 
 public interface DashBoardBiz {
 
-	public List<DashBoardDto> selectByOwner(String downer);
+	//본인 소유 보드 조회
+	public List<DashBoardDto> selectByOwner(String mid);
 	
-	public List<DashBoardDto> selectByBelong(String dmmid);
-	
+	//본인 소속 보드 조회
+	public List<DashBoardDto> selectByBelong(String mid);
+
+	//보드 입장
 	public DashBoardDto selectOne(int dno);
 	
 	public int insert(DashBoardDto dto);
 	
 	public int update(DashBoardDto dto);
-
+	
 	public int delete(int dno);
 }

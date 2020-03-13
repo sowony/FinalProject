@@ -6,8 +6,17 @@
 	font-family: 'Noto Sans KR', sans-serif;
 	letter-spacing : 0.5pt;
 	font-weight: 500;
+	color : #3d3d3d;
     padding: 0;
     margin: 0;
+}
+
+a,
+a:link,
+a:hover,
+a:visited 
+{
+	text-decoration: none;
 }
 
 html, body {
@@ -58,7 +67,7 @@ section {
 
 footer {
     display: block;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     width: 100%;
     height: max-content;
@@ -99,8 +108,8 @@ div#bgBlack {
     left: 0;
     top: 0;
     z-index: 10001;
-    width: 100%;
-    height: 100%;
+    width: 120%;
+    height: 120%;
     background-color: #00000090;
 }
 
@@ -138,9 +147,9 @@ div.customMenu{
     display: inline-block;
     border: 0px solid;
     border-radius: 5px;
-    background-color: #bfbfbf;
+    background-color: #599ed6;
     padding: 4px 8px;
-    color: #545050;
+    color: #fff;
     font-size: 10pt;
     font-weight: 600;
     letter-spacing: 0.5pt;
@@ -163,14 +172,16 @@ li.menuLi:hover{
 
 input {
     display: block;
-    padding: 5px;
+    width: 185px;
+    padding: 7px;
     margin: 10px 0;
-    font-size: 11pt;
+    font-size: 9pt;
     font-weight: 600;
     letter-spacing: 1pt;
 }
 
-input::placeholder {
+input::placeholder,textarea::placeholder {
+	font-size:9pt;
     -webkit-text-fill-color : #aaaaaa !important;
 }
 
@@ -181,7 +192,9 @@ input[type="password"],
 input[type="password"]:active,
 input[type="password"]:focus,
 input[type="email"],
-input[type="number"] 
+input[type="number"], 
+input[type="tel"],
+textarea
 {
     box-shadow: 0 0 0 1000px #eee inset, 0 0 4px #989898;
     border: 0;
@@ -195,4 +208,8 @@ input[type="submit"], input[type="button"] {
     width: 100%;
     border: 0px;
     border-radius: 5px;
+}
+
+.displayNone {
+	display: none;
 }

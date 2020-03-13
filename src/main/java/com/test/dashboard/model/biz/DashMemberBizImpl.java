@@ -30,7 +30,7 @@ public class DashMemberBizImpl implements DashMemberBiz {
 		// TODO Auto-generated method stub
 		int res = 0;
 		for(Map<String, Object> param : params) {
-			param.put("dmdno", dno);
+			param.put("dno", dno);
 			res = dashMemberDao.insert(param);
 		}
 		if(res == 0) {
@@ -40,12 +40,12 @@ public class DashMemberBizImpl implements DashMemberBiz {
 	}
 	
 	@Override
-	public DashMemberDto selectById(int dmdno, String dmmid) {
+	public DashMemberDto selectById(int dno, String mid) {
 		// TODO Auto-generated method stub
 		
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("dmdno", dmdno);
-		params.put("dmmid", dmmid);
+		params.put("dmdno", dno);
+		params.put("dmmid", mid);
 		
 		return dashMemberDao.selectById(params);
 	}
@@ -57,9 +57,9 @@ public class DashMemberBizImpl implements DashMemberBiz {
 	}
 	
 	@Override
-	public List<DashMemberDto> selectList(int dmdno) {
+	public List<DashMemberDto> selectList(int dno) {
 		// TODO Auto-generated method stub
-		return dashMemberDao.selectList(dmdno);
+		return dashMemberDao.selectList(dno);
 	}
 	@Override
 	public int update(DashMemberDto dto) {

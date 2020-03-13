@@ -34,15 +34,15 @@ public class DashBoardBizImpl implements DashBoardBiz{
 	}
 	
 	@Override
-	public List<DashBoardDto> selectByBelong(String dmmid) {
+	public List<DashBoardDto> selectByBelong(String mid) {
 		// TODO Auto-generated method stub
-		return dashBoardDao.selectByBelong(dmmid);
+		return dashBoardDao.selectByBelong(mid);
 	}
 	
 	@Override
-	public List<DashBoardDto> selectByOwner(String downer) {
+	public List<DashBoardDto> selectByOwner(String mid) {
 		// TODO Auto-generated method stub
-		return dashBoardDao.selectByOwner(downer);
+		return dashBoardDao.selectByOwner(mid);
 	}
 	
 	@Override

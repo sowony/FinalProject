@@ -18,7 +18,7 @@ create table member (
 	mdel varchar2(5) not null,
 	CONSTRAINT mdel_chk Check (mdel in ('Y','N'))
 );
-
+alter table member add(mname varchar2(300));
 
 -- dashboard 테이블
 

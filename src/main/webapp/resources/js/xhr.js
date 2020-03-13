@@ -17,4 +17,5 @@ function xhrLoad(method, url, reqeustObjet,callBack){
     xhr.setRequestHeader('Content-Type', 'application/json');
     if(reqeustObjet) xhr.send(JSON.stringify(reqeustObjet));
     else xhr.send();
+    
 }

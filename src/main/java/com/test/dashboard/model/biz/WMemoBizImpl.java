@@ -17,9 +17,9 @@ public class WMemoBizImpl implements WMemoBiz{
 	private WMemoDao wMemoDao;
 	
 	@Override
-	public int delete(int wmwno) {
+	public int delete(int wno) {
 		// TODO Auto-generated method stub
-		return wMemoDao.delete(wmwno);
+		return wMemoDao.delete(wno);
 	}
 	
 	@Override
@@ -34,9 +34,9 @@ public class WMemoBizImpl implements WMemoBiz{
 	}
 	
 	@Override
-	public WMemoDto selectOne(int wmwno) {
+	public WMemoDto selectOne(int wno) {
 		// TODO Auto-generated method stub
-		return wMemoDao.selectOne(wmwno);
+		return wMemoDao.selectOne(wno);
 	}
 	
 	@Override
