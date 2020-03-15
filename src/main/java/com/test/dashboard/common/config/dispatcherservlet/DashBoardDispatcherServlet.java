@@ -1,10 +1,10 @@
 package com.test.dashboard.common.config.dispatcherservlet;
 
+
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -15,15 +15,12 @@ import org.springframework.web.servlet.view.JstlView;
 import com.test.dashboard.common.interceptor.LoginInterceptor;
 
 @Configuration
-
 // 해당 클래스는 Spring MVC 설정 클래스임을 가르킨다. implements로 WebMvcConfigurer 해주어야 한다.
 // <annotation-driven /> 대체
 @EnableWebMvc
-
 // Component, Bean, Autowired 어노테이션 설정되어 있는 메소드 및 클래스를 읽어 IOC 컨테이너에 Bean 객체 등록
 // <context:component-scan base-package="com.test.mvc" /> 대체
 @ComponentScan("com.test.dashboard")
-
 // DispatcherServlet 설정 파일
 public class DashBoardDispatcherServlet implements WebMvcConfigurer {
 
@@ -36,8 +33,8 @@ public class DashBoardDispatcherServlet implements WebMvcConfigurer {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		// TODO DispatcherServlet ResourceHandler
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+		
 	}
-	
 	
 	
 	/*
@@ -68,4 +65,6 @@ public class DashBoardDispatcherServlet implements WebMvcConfigurer {
 		registry.addInterceptor(new LoginInterceptor());
 		
 	}
+
+	
 }
