@@ -86,8 +86,9 @@
            										'mpw' : info['info']['id']+info['info']['connected_at'],
            										'mname' : document.querySelector('input[name="mname"]').value,
            										'mnick' : document.querySelector('input[name="mnick"]').value,
-           										'memail' : document.querySelector('textarea[name="mabout"]').value,
+           										'memail' : document.querySelector('input[name="memail"]').value,
            										'mimgpath' : info['info']['properties']['profile_image'],
+           										'mabout' : document.querySelector('textarea[name="mabout"]').value,
            										'mplatform' : 'kakao'
            								}
            								
@@ -98,7 +99,8 @@
            											
            											const btn = document.querySelector('._close_'+s);
            											btn.addEventListener('click', ()=>{
-           												
+           												signUpCheck = false;
+           												mailCheck = false;
            												utilBoxDelete(true);
            												
            											});

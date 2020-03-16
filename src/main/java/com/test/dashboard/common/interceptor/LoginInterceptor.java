@@ -47,6 +47,7 @@ public class LoginInterceptor implements HandlerInterceptor{
 		else if(request.getRequestURI().endsWith("kakaologout")) return true;
 		else if(request.getRequestURI().endsWith("kakaoout")) return true;
 		else if(request.getRequestURI().endsWith("kakaosignup")) return true;
+		else if(request.getRequestURI().endsWith("test")) return true;
 		else if(request.getRequestURI().endsWith(".js")) return true;
 		else if(request.getRequestURI().endsWith(".css")) return true;
 		else if(request.getRequestURI().endsWith(".jpg")) return true;
