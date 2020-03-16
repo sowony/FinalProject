@@ -81,17 +81,24 @@ COMMENT ON COLUMN member.mcreatedate IS '회원 가입일'
 COMMENT ON COLUMN member.mdel IS 'Check(Y,N)'
 /
 
-ALTER TABLE member
-    ADD CONSTRAINT UC_mid UNIQUE (mid)
-/
 
 ALTER TABLE member
     ADD CONSTRAINT UC_mnick UNIQUE (mnick)
 /
 
 ALTER TABLE member
-    ADD CONSTRAINT UC_mname UNIQUE (mname)
+    ADD CONSTRAINT UC_mname_mphone UNIQUE (mname, mphone)
 /
+
+ALTER TABLE member
+	ADD (mplatform varchar(50))
+/
+
+ALTER TABLE member
+    ADD CONSTRAINT UC_mid_mplatform UNIQUE (mid, mplatform)
+/
+
+
 
 -- 대시보드
 CREATE TABLE DashBoard
@@ -461,7 +468,7 @@ CREATE TABLE wmemo
 (
     wmno           NUMBER            NOT NULL, 
     wno            NUMBER            NOT NULL, 
-    wtitle         VARCHAR2(2000)    NOT NULL, 
+    wmtitle        VARCHAR2(2000)    NOT NULL, 
     wmcontent      CLOB              NOT NULL, 
     wmwritedate    DATE              NOT NULL, 
     CONSTRAINT WMEMO_PK PRIMARY KEY (wmno)
@@ -498,7 +505,7 @@ COMMENT ON COLUMN wmemo.wmno IS '메모 테이블 번호'
 COMMENT ON COLUMN wmemo.wno IS '소속 위젯 번호'
 /
 
-COMMENT ON COLUMN wmemo.wtitle IS '메모 제목'
+COMMENT ON COLUMN wmemo.wmtitle IS '메모 제목'
 /
 
 COMMENT ON COLUMN wmemo.wmcontent IS '메모 내용'

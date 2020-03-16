@@ -29,9 +29,6 @@ import com.test.dashboard.model.dto.MemberDto;
 public class MyPageController {
 	
 	@Autowired
-	private MemberBiz memberBiz;
-	
-	@Autowired
 	private DashBoardBiz dashBoardBiz;
 	
 	@Autowired
@@ -99,55 +96,5 @@ public class MyPageController {
 		}
 	}
 	
-	
-	@PostMapping("/nicksearch")
-	public boolean postNickSearch(@RequestBody MemberDto memberDto) {
-		
-		logger.info("[ INFO ] : MyPageController > postIdSearch [path : /mypage/nicksearch]");
-		logger.info("[ INFO ] : SearchNick > " + memberDto.getMnick());
-		
-		MemberDto user = memberBiz.selectByNick(memberDto.getMnick());
-		
-		logger.info("[ INFO ] : USER > " + user );
-		
-		if(user != null) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	@PostMapping("/namesearch")
-	public boolean postNameSearch(@RequestBody MemberDto memberDto) {
-		logger.info("[ INFO ] : MyPageController > postIdSearch [path : /mypage/NameSearch]");
-		logger.info("[ INFO ] : SearchName > " + memberDto.getMname());
-		
-		int res = memberBiz.selectByName(memberDto.getMname());
-		
-		if(res > 0) {
-			return false;
-		} else {
-			return true;
-		}
-		
-	}
-	
-	@PostMapping("/idsearch")
-	public boolean postIdSearch(@RequestBody MemberDto memberDto) {
-		
-		logger.info("[ INFO ] : MyPageController > postIdSearch [path : /mypage/idsearch]");
-		logger.info("[ INFO ] : SearchID > " + memberDto.getMid());
-		
-		MemberDto user = memberBiz.selectById(memberDto.getMid());
-		
-		logger.info("[ INFO ] : USER > " + user );
-		
-		if(user != null) {
-			return true;
-		} else {
-			return false;
-		}
-		
-	}
 	
 }

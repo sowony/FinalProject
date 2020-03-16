@@ -1,10 +1,15 @@
 package com.test.dashboard.common.config;
 
+import java.util.EnumSet;
+
+import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
+import javax.servlet.http.HttpSession;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -16,8 +21,8 @@ import com.test.dashboard.common.filter.LogFilter;
 
 // Web.xml 파일 Class화
 // WebApplicationInitializer implements 필요
-public class WebAppConfig  implements WebApplicationInitializer{
-
+public class WebAppConfig implements WebApplicationInitializer {
+	
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		// TODO WebAppConfig init
@@ -79,10 +84,12 @@ public class WebAppConfig  implements WebApplicationInitializer{
 		
 		// Filter 설정
 		FilterRegistration.Dynamic encodingFilter = servletContext.addFilter("encodingFilter", new CharacterEncodingFilter("UTF-8",true));
-		encodingFilter.addMappingForServletNames(null, true, "/*");
+		encodingFilter.addMappingForUrlPatterns(null, true, "/*");
 		
-		FilterRegistration.Dynamic hiddenHttpMethodFilter = servletContext.addFilter("hiddenHttpMethodFilter",new HiddenHttpMethodFilter());
-		hiddenHttpMethodFilter.addMappingForServletNames(null, true, "/*");
+		
+		FilterRegistration.Dynamic hiddenHttpMethodFilter = servletContext.addFilter("hiddenHttpMethodFilter", new HiddenHttpMethodFilter());
+		hiddenHttpMethodFilter.addMappingForUrlPatterns(null, true,"/*");
+		
 		
 		FilterRegistration.Dynamic logFilter = servletContext.addFilter("logFilter", new LogFilter());
 		logFilter.addMappingForServletNames(null, true, "/*");
