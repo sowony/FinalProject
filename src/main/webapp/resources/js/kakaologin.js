@@ -11,15 +11,16 @@
       container: '#kakao-login-btn',
       success: function(authObj) {
         
-    	
     	console.log(authObj);
     	
         xhrLoad('get', 'kakaologin', authObj, (data)=>{
         	
         	const info = JSON.parse(data);
+        	console.log(data);
         	
         	if(info['signcheck'] === 'true'){
-        		xhrLoad('post', 'login', {mid : info['info']['id'], mpw : info['info']['id']+info['info']['connected_at']}, (data)=>{
+        		
+        		xhrLoad('post', 'login', { mid : info['info']['id']+'_kakao', mpw : window.btoa(unescape(encodeURIComponent(info['info']['id']+'_kakao'))) }, (data)=>{
         			
         			if(data === 'true'){
         				location.reload();
@@ -43,7 +44,7 @@
         					<input type="email" name="memail" placeholder="E-mail" style="width: 140px;display: inline-block;margin: 0; margin-bottom: 0.7em;"/>
         					<input type="button" name="memail_chk" class="grayBtn" style="width:max-content;padding:6px 5px;margin: 0; background-color:#ccc;" value="메일 인증" disabled/>
         				</div>
-        				<p><textarea style="width:206px; height:85px; padding: 10px;" name="mabout" placeholder="자신을 소개해주세요!"></textarea><p>
+        				<p><textarea style="width:90%; height:85px; padding: 10px;" name="mabout" placeholder="자신을 소개해주세요!"></textarea><p>
 						<input type="button" class="grayBtn" name="signUp" value="가입"/>
 				   </fieldset>`;
         		});
@@ -82,8 +83,8 @@
            							if(mailCheck) {
            								
            								const memberInfo = {
-           										'mid' : info['info']['id'],
-           										'mpw' : info['info']['id']+info['info']['connected_at'],
+           										'mid' : info['info']['id']+'_kakao',
+           										'mpw' : window.btoa(unescape(encodeURIComponent(info['info']['id']+'_kakao'))),
            										'mname' : document.querySelector('input[name="mname"]').value,
            										'mnick' : document.querySelector('input[name="mnick"]').value,
            										'memail' : document.querySelector('input[name="memail"]').value,

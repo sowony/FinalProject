@@ -29,18 +29,37 @@ html, body {
 }
 
 .backgroundImg {
-    background-image: url(../images/bg_1.jpg);
     background-size: 100% 100%;
     width: 100%;
     height: 100%;
     display: block;
     position: fixed;
     top: 0;
+    opacity:0;
     z-index: 1;
+    transition-duration : 5s;
 }
 
+.img1 {
+	background-image: url(../images/bg_1.jpg);
+}
+.img2 {
+	background-image: url(../images/bg_2.jpg);
+}
+.img3 {
+	background-image: url(../images/bg_3.jpg);
+}
+.img4 {
+	background-image: url(../images/bg_4.jpg);
+}
+.img5 {
+	background-image: url(../images/bg_5.jpg);
+}
+.img6 {
+	background-image: url(../images/bg_6.jpg);
+}
 .backgroundDiv {
-	background-color : #32323299;
+	background-color : #323232d4;
     width: 100%;
     height: 100%;
     display: block;
@@ -76,10 +95,10 @@ footer {
     z-index: 4;
 }
 
-footer pre {
+footer p {
     text-align: center;
-    font-size: 8pt;
-    line-height: 12pt;
+    font-weight : 100;
+    font-size: 7pt;
     color: #838384;
 }
 

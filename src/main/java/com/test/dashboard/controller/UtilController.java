@@ -33,8 +33,8 @@ public class UtilController {
 		
 		logger.info("[ INFO ] : MainController > getSmsCheck [path : /smscheck]");
 		logger.info("[ INFO ] : MainController > phone > " + memberDto.getMphone());
-		return "1";
-		//return new Util().smsCheckFun(memberDto.getMphone(), "웹에서 온 인증번호 입니다. 확인해주세요.");
+//		return "1";
+		return new Util().smsCheckFun(memberDto.getMphone(), "웹에서 온 인증번호 입니다. 확인해주세요.");
 	}
 	
 
@@ -125,7 +125,7 @@ public class UtilController {
 			
 			String id = String.valueOf(jObj.get("id"));
 			
-			memberDto = memberBiz.selectById(id);
+			memberDto = memberBiz.selectById(id+"_kakao");
 			
 			
 		} catch (ParseException e) {

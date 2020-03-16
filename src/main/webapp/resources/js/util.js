@@ -10,6 +10,31 @@ const backgroundDiv = addObject(null,'div',null,false,(t)=>{
 });
 
 
+function backgroundMotion(){
+	
+	const backgroundImg = document.querySelectorAll('.backgroundImg');
+	
+	let count = 0;
+	
+	window.setInterval(()=>{
+		
+		backgroundImg[0].style.opacity = 0;
+		backgroundImg[1].style.opacity = 0;
+		backgroundImg[2].style.opacity = 0;
+		backgroundImg[3].style.opacity = 0;
+		backgroundImg[4].style.opacity = 0;
+		backgroundImg[count].style.opacity = 1;
+		
+		if(count < backgroundImg.length) count++;
+		else count = 0;
+		
+	}, 5000);
+	
+
+	
+}
+
+
 // 정규표현식 확인 함수
 function valueCheck(o, str, success, fail){
 	
@@ -33,26 +58,6 @@ function valueCheck(o, str, success, fail){
 	
 }
 
-/*
-function motionClose(obj, time, distance, complete){
-	
-	let loc = (distance)? distance : '10';
-	
-	const top = obj.style.top;
-	const left = obj.style.left;
-	
-	obj.style.opacity = '0';
-	obj.style.top = Number(obj.style.top.substring(0,obj.style.top.indexOf('px'))) - loc +'px';
-	obj.style.transitionDuration = time + 's';
-	
-	if(complete){
-		window.setTimeout(()=>{
-			complete(obj);
-		}, time*1000);
-	}
-	
-}
-*/
 function motionOnOff(obj, time, bg, option, addMotion, complete){
 	
 	if(addMotion) addMotion['after'](obj) || '';
@@ -153,7 +158,6 @@ function motionOnOff(obj, time, bg, option, addMotion, complete){
 				obj.style.top = Number(obj.style.top.substring(0,obj.style.top.indexOf('%'))) + ((y instanceof Object ? 0 : y) + (y.num1 || 0)) + '%';
 				obj.style.left = Number(obj.style.left.substring(0,obj.style.left.indexOf('%'))) + ((x instanceof Object ? 0 : x) + (x.num1 || 0)) + '%';
 				
-				console.log(obj.style.top, obj.style.left);
 				
 			} else {
 				
