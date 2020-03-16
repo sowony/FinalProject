@@ -49,4 +49,7 @@ public class MemberDto {
     // 회원 탈퇴 유무 Check(Y,N)
     private String mdel;
 	
+    // 회원 접근 플랫폼
+    private String mplatform;
+    
 }

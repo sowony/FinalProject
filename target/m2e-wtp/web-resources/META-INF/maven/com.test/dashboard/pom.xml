@@ -41,6 +41,7 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
+		
 
 		<!-- AspectJ -->
 		<dependency>
@@ -201,6 +202,21 @@
 		</dependency>
 
 
+		<!-- SMS API -->
+		<!-- https://mvnrepository.com/artifact/net.nurigo/javaSDK -->
+		<dependency>
+			<groupId>net.nurigo</groupId>
+			<artifactId>javaSDK</artifactId>
+			<version>2.2</version>
+		</dependency>
+		<!-- json-simple1.1.1 -->
+		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
 		<!-- 편의 기능 -->
 		<!-- lombok : model 관리 시스템 -->
 		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
@@ -209,6 +225,20 @@
 			<artifactId>lombok</artifactId>
 			<version>1.18.12</version>
 			<scope>provided</scope>
+		</dependency>
+
+		<!-- 이메일 인증 2018.11.20 KW -->
+		<!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${org.springframework-version}</version>
 		</dependency>
 
 	</dependencies>

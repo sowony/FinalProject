@@ -2,6 +2,8 @@
  * http://usejsdoc.org/
  */
 
+
+
 // 검정색 백그라운드
 const backgroundDiv = addObject(null,'div',null,false,(t)=>{
 	t.setAttribute('id','bgBlack');
@@ -10,6 +12,8 @@ const backgroundDiv = addObject(null,'div',null,false,(t)=>{
 
 // 정규표현식 확인 함수
 function valueCheck(o, str, success, fail){
+	
+	let c;
 	
 	o.addEventListener('keyup',()=>{
 		if(str.test(o.value)){
@@ -86,10 +90,31 @@ function motionOnOff(obj, time, bg, option, addMotion, complete){
 	let top, left;
 	let marginLeft, marginTop;
 	let tmp;
+	let disabledDiv = document.querySelector('.disabledDiv');
 	
 	const mpp = op['property']? (op['property']['mpp'] || 'position' ) : 'position';
 	
-	console.log(op);
+	if(op['onOff'] === 'off' && !disabledDiv){
+		
+		disabledDiv = addObject(document.querySelector('body'), 'div', 'disabledDiv', true, (o)=>{
+			
+			console.log(obj.offsetWidth,obj.offsetHeight);
+			o.style.position = 'fixed';
+			o.style.width = obj.offsetWidth + 'px';
+			o.style.height = obj.offsetHeight + 'px';
+			o.style.top = obj.style.top;
+			o.style.left = obj.style.left;
+			o.style.backgroundColor = 'red';
+			o.style.transform = obj.style.transform;
+			o.style.opacity = 0;
+			o.style.zIndex = 20000;
+			o.addEventListener('click',(e)=>{
+				e.preventDefault();
+				e.stopPropagation();
+			});
+			
+		});
+	}
 	
 	if(op['property']){
 		
@@ -102,13 +127,13 @@ function motionOnOff(obj, time, bg, option, addMotion, complete){
 			obj.style.left = Number(obj.style.left.substring(0,obj.style.left.indexOf('%'))) - ((x instanceof Object ? 0 : x) + (x.num0 || 0)) + '%';
 			
 		} else {
-			
+				
 			tmp = (obj.style[mpp]? obj.style[mpp] : '0px 0px').split(' ');
 			marginLeft = x !== 0 ? (Number(tmp[0].substring(0, tmp[0].indexOf('px'))) - ((x instanceof Object ? 0 : x) + (x.num0 || 0))) + 'px' : 'auto';
 			marginTop = y !== 0 ? (Number(tmp[1].substring(0, tmp[1].indexOf('px'))) - ((y instanceof Object ? 0 : y) + (y.num0 || 0))) + 'px' : 'auto';
-			console.log(marginTop + ' ' + marginLeft);
 			obj.style[mpp] = marginTop + ' ' + marginLeft;
 		}
+		
 	}
 	
 	if(!op['onOff'] || op['onOff']=== 'on'){
@@ -128,6 +153,8 @@ function motionOnOff(obj, time, bg, option, addMotion, complete){
 				obj.style.top = Number(obj.style.top.substring(0,obj.style.top.indexOf('%'))) + ((y instanceof Object ? 0 : y) + (y.num1 || 0)) + '%';
 				obj.style.left = Number(obj.style.left.substring(0,obj.style.left.indexOf('%'))) + ((x instanceof Object ? 0 : x) + (x.num1 || 0)) + '%';
 				
+				console.log(obj.style.top, obj.style.left);
+				
 			} else {
 				
 				tmp = obj.style[mpp];
@@ -146,32 +173,24 @@ function motionOnOff(obj, time, bg, option, addMotion, complete){
 	}
 	
 	if(bg){
-		
-		if(op['onOff'] === 'on') motionOnOff(backgroundDiv, time, null, { opacity : { num0 : 0, num1 : 1 }}, null, complete);
-		else motionOnOff(backgroundDiv, time, null, { opacity : { num0 : 0 }}, null, complete);
-		
+		if(!op['onOff'] || op['onOff']=== 'on') motionOnOff(backgroundDiv, time, null, { onOff : 'on', opacity : { num0 : 0, num1 : 1 }}, null, complete);
+		else motionOnOff(backgroundDiv, time, null, { onOff : 'off', opacity : { num0 : 0 }}, null, complete);
 	}
 	
 	if(complete){
 		
 		window.setTimeout(()=>{
-			
 			complete(obj);
 			
 		}, time*1000);
 	}
-	
+	if(disabledDiv){
+		window.setTimeout(()=>{
+			disabledDiv.remove();
+		}, time*1000);
+	}
 }
 
-// 페이지 부드럽게 로드
-function pageLoad(){
-	
-	const body = document.querySelector('body');
-	
-	body.setAttribute('style', 'display:block;transition-duration:1.5s;opacity:1;');
-	
-	
-}
 
 // 오브젝트 중앙 정렬
 function middlePositionFun(obj){
@@ -200,7 +219,7 @@ function utilBoxDelete(slide){
 	
 	if(slide){
 		for(let n of childNode){
-			motionOnOff(n, 1, true, {
+			motionOnOff(n, 1, null, {
 				onOff : 'off',
 				opacity :{ num0 : 0 },
 				property : {
@@ -270,14 +289,8 @@ function infoBar(obj, text){
 		e.preventDefault();
 		e.stopPropagation();
 		
-		const utilBox = document.getElementById('utilDiv');
-		
-		if(utilBox.childNodes.length < 2){
-			utilBox.remove();
-		} else {
-			const infoBox = document.querySelector('.infoBox');
-			if(infoBox) infoBox.remove();
-		}
+		const infoBox = document.querySelector('.infoBox');
+		if(infoBox) infoBox.remove();
 		
 	}
 	
@@ -295,18 +308,19 @@ function infoBar(obj, text){
 		obj.addEventListener('mousemove',tooltipDisabled);
 		obj.addEventListener('mouseout',tooltipDisabled);
 	}
+	
 }
 
 // 박스 만들기 함수
 function boxFun(text,bg, addTagObject, closeBtnDelete, boxSelector, callback, autoMotion){
 
-	const box = document.querySelector(boxSelector);
+	const box = document.querySelector((boxSelector)? '.'+ boxSelector : '.boxOpen');
 	
 	if(!box){
 		
 		const contentBox = addObject(null, 'div', 'boxOpen', false, (t)=>{
 			if(boxSelector) t.classList.add(boxSelector);
-			t.innerHTML = ((text)? `<p>${text}</p>` : ``)+ ((closeBtnDelete)? `` : `<button class="grayBtn" id="utilBoxCloseBtn">CLOSE</button>`);
+			t.innerHTML = ((text)? `<p>${text}</p>` : ``)+ ((closeBtnDelete)? `` : `<button class="___utilBoxCloseBtn grayBtn ${"_close_"+boxSelector}" id="utilBoxCloseBtn">닫기</button>`);
 		});
 		
 		const body = document.querySelector('body');
@@ -323,59 +337,53 @@ function boxFun(text,bg, addTagObject, closeBtnDelete, boxSelector, callback, au
 		if(bg) utilBox.appendChild(backgroundDiv);
 		
 		const boxOpen = document.querySelector((boxSelector)? '.'+ boxSelector : '.boxOpen');
-		const utilBoxCloseBtn = document.getElementById('utilBoxCloseBtn');
-		if(utilBoxCloseBtn){
-			utilBoxCloseBtn.addEventListener('click',()=>{
-				if(utilBox.childNodes.length < 3){
-					if(autoMotion){
-						utilBoxDelete(autoMotion);
-					} else {
-						utilBox.remove();
-					}
-				} else {
-					if(boxOpen) {
-						if(autoMotion) {
-							if(bg){ 
-								motionOnOff(boxOpen, 0.8, true, { setting : 'offDefault' }, null, (o)=>{
-									o.remove();
-								});
-							}
-							else { 
-								motionOnOff(boxOpen, 0.8, false, { setting : 'offDefault' }, null, (o)=>{
-									o.remove();
-								});
-							}
-						} else boxOpen.remove();
-					}
+		const closeBtnAll = document.querySelectorAll('.___utilBoxCloseBtn');
+		
+		let closeBtn;
+		
+		if(boxSelector){
+			for(let item of closeBtnAll){
+				if(item.classList.contains("_close_"+boxSelector)){
+					closeBtn = item;
+				}
+			}
+		} else {
+			closeBtn = closeBtnAll[0];
+		}
+		
+		if(closeBtn){
+			closeBtn.addEventListener('click',()=>{
+				if(boxOpen) {
+					if(autoMotion) {
+						motionOnOff(boxOpen, 0.8, bg, { setting : 'offDefault' }, null, (o)=>{
+							o.remove();
+						});
+					} else boxOpen.remove();
 				}
 			});
 		}
 		if(addTagObject){
 			for(let tag of addTagObject){
-				if(utilBoxCloseBtn) boxOpen.insertBefore(tag, utilBoxCloseBtn);
+				if(closeBtn) boxOpen.insertBefore(tag, closeBtn);
 				else boxOpen.appendChild(tag);
 			}
 		}
 		
 		
-		
-		if(callback){
-			callback(contentBox, contentBox.childNodes);
+		if(autoMotion) {
+			motionOnOff(boxOpen, 0.8, bg, { setting : 'onDefault' });
 		}
 		
 		middlePositionFun(boxOpen);
-		if(autoMotion) {
-			if(bg) motionOnOff(boxOpen, 0.8, true, { setting : 'onDefault' });
-			else motionOnOff(boxOpen, 0.8, false, { setting : 'onDefault' });
-		}
 		
+		if(callback){
+			callback(contentBox, contentBox.childNodes, boxSelector);
+		}
 		
 		return contentBox;
 		
 	} else {
-		const div = document.getElementById('utilDiv');
-		div.remove();
-		boxFun(text);
+		boxFun(text,bg, addTagObject, closeBtnDelete, "_"+boxSelector, callback, autoMotion);
 	}
 	
 }
@@ -441,4 +449,51 @@ function contextMenuFun(target, menu, setting){
 		e.stopPropagation();
 		menu.style.display='none';
 	});
+}
+
+
+// 인증 박스
+function authBoxFun(minute, data, cate, className, callback){
+	let authTimeMm = minute;
+	let authTimeS = 0;
+	let authString = data;
+	const authTime = addObject(false, 'p', false, false, (o)=>{
+		o.innerHTML = `인증번호 만료까지 ${String(authTimeMm).length === 1? '0' : ''}${authTimeMm}분 ${String(authTimeS).length === 1? '0' : ''}${authTimeS}초`;
+		o.style.fontSize = '12px';
+	});
+	
+	const auth = addObject(false, 'input', false, false, (o)=>{
+		o.type = 'text';
+	});
+		
+	const submitBtn = addObject(false, 'input', 'grayBtn', false, (o)=>{
+		o.type = 'button';
+		o.style.width = 'max-content';
+		o.style.marginRight = '5px';
+		o.value = '확인';
+	});
+	
+	function timeCheck(){
+		
+		if(authTimeS === 0){
+			authTimeS = 59;
+			authTimeMm -=1;
+		} else {
+			authTimeS -=1;
+		}
+		
+		authTime.innerHTML = `인증번호 만료까지 ${String(authTimeMm).length === 1? '0' : ''}${authTimeMm}분 ${String(authTimeS).length === 1? '0' : ''}${authTimeS}초`;
+		
+	}
+	
+	const timeInterval = window.setInterval(timeCheck,1000);
+	
+	window.setTimeout(()=>{
+		clearInterval(timeInterval);
+		authString = '';
+	}, minute * 60000);
+	
+	boxFun('<span style="color:#3d3d3d;">'+ cate + '(으)로 인증 번호가 <br> 발송되었습니다.</span>',false, [authTime, auth, submitBtn], false, className,(o)=>{
+		callback(o, auth, authTime, submitBtn);
+	},true);
 }

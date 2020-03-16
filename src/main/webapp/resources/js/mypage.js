@@ -301,8 +301,8 @@ function dashAddForm(){
         		}
         	}
     		
-    		// ID Search AJAX
-    		xhrLoad('post','mypage/idsearch',{ 'mid' : mid.value  },(responseText)=>{
+    		// ID CHECK AJAX
+    		xhrLoad('get','idcheck',{ 'mid' : mid.value  },(responseText)=>{
     			
     			const resCheck = (responseText === 'true');
     			// 아이디가 존재 유무 판별

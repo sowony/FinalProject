@@ -5,12 +5,19 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet" href="./resources/css/login.css" type="text/css"/>
-<link rel="stylesheet" href="./resources/css/defaultstyle.css" type="text/css"/>
+<!-- 외부 자바스크립트 라이브러리 -->
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+<!-- 커스텀 유틸  -->
+<link rel="stylesheet" href="./resources/css/defaultstyle.css" type="text/css"/>
 <script type="text/javascript" src="./resources/js/util.js"></script>
 <script type="text/javascript" src="./resources/js/xhr.js"></script>
+
+<!-- 페이지 js, css -->
+<link rel="stylesheet" href="./resources/css/login.css" type="text/css"/>
 <script type="text/javascript" src="./resources/js/loginform.js"></script>
+
 </head>
 <body class="fadeOut">
 	<section>
@@ -30,14 +37,15 @@
 							<input type="submit" class="signInBtn" value="로그인"/>
 							<input type="button" id="signUp" class="signUpBtn" value="회원가입"/>
 						</form>
-						<p><a id="idAndPwFind">아이디 / 비밀번호 를 잊어버리셨나요?</a></p>
+						<p><a href="javascript:idAndPwSearchOn();" id="idAndPwFind">아이디 / 비밀번호 를 잊어버리셨나요?</a></p>
 					</fieldset>
 				</div>
 				<div id="con_foot">
 				<fieldset>
 					<legend>OR</legend>
 					<p><span class="facebookIcon icon"></span><input type="button" class="faceSignInBtn" value="페이스북 로그인"></p>
-					<p><span class="kakaoIcon icon"></span><input type="button" class="kakaoSignInBtn" value="카카오 로그인"></p>
+					<p><span class="kakaoIcon icon"></span><input type="button" id="kakao-login-btn" class="kakaoSignInBtn" value="카카오 로그인"></p>
+					<script type="text/javascript" src="./resources/js/kakaologin.js"></script>
 					<p><span class="googleIcon icon"></span><input type="button" class="googleSignInBtn" value="구글 로그인"></p>
 				</fieldset>
 				</div>

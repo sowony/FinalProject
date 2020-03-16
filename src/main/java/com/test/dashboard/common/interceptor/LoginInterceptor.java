@@ -31,14 +31,22 @@ public class LoginInterceptor implements HandlerInterceptor{
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		// TODO Auto-generated method stub
-		logger.info("[requestPOST] : " + request.getMethod());
+		logger.info("[requestMethod] : " + request.getMethod());
 		logger.info("[requestURI] : "+ request.getRequestURI());
 		
 		if(request.getRequestURI().endsWith("login")) return true;
 		else if(request.getRequestURI().endsWith("idsearch")) return true;
-		else if(request.getRequestURI().endsWith("nicksearch")) return true;
+		else if(request.getRequestURI().endsWith("nickcheck")) return true;
+		else if(request.getRequestURI().endsWith("idcheck")) return true;
+		else if(request.getRequestURI().endsWith("pwmodify")) return true;
 		else if(request.getRequestURI().endsWith("signup")) return true;
 		else if(request.getRequestURI().endsWith("mabout")) return true;
+		else if(request.getRequestURI().endsWith("emailAuthCheck")) return true;
+		else if(request.getRequestURI().endsWith("smscheck")) return true;
+		else if(request.getRequestURI().endsWith("kakaologin")) return true;
+		else if(request.getRequestURI().endsWith("kakaologout")) return true;
+		else if(request.getRequestURI().endsWith("kakaoout")) return true;
+		else if(request.getRequestURI().endsWith("kakaosignup")) return true;
 		else if(request.getRequestURI().endsWith(".js")) return true;
 		else if(request.getRequestURI().endsWith(".css")) return true;
 		else if(request.getRequestURI().endsWith(".jpg")) return true;

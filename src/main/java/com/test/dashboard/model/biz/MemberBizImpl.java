@@ -42,6 +42,18 @@ public class MemberBizImpl implements MemberBiz{
 	}
 	
 	@Override
+	public MemberDto pwSearchCheck(MemberDto memberDto) {
+		return memberDao.pwSearchCheck(memberDto);
+	}
+	
+	
+	@Override
+	public MemberDto idSearchByName(MemberDto memberDto) {
+		// TODO Auto-generated method stub
+		return memberDao.idSearchByName(memberDto);
+	}
+	
+	@Override
 	public MemberDto selectById(String mid) {
 		// TODO Auto-generated method stub
 		return memberDao.selectById(mid);
@@ -50,19 +62,25 @@ public class MemberBizImpl implements MemberBiz{
 	@Override
 	public MemberDto selectByMNo(int mno) {
 		// TODO Auto-generated method stub
-		return null;
+		return memberDao.selectByMNo(mno);
 	}
 	
 	@Override
 	public List<MemberDto> selectList() {
 		// TODO Auto-generated method stub
-		return null;
+		return memberDao.selectList();
 	}
 	
 	@Override
 	public int update(MemberDto memberDto) {
 		// TODO Auto-generated method stub
-		return 0;
+		return memberDao.update(memberDto);
+	}
+	
+	@Override
+	public int passwordUpdate(MemberDto memberDto) {
+		// TODO Auto-generated method stub
+		return memberDao.passwordUpdate(memberDto);
 	}
 
 	@Override
