@@ -51,7 +51,7 @@ public class MainController {
 		
 		logger.info(memberDto.getMimgpath());
 		
-		if(memberDto.getMplatform() == null) {
+		if(!memberDto.getMplatform().equals("kakao")) {
 			if(memberDto.getMimgpath() != null && !memberDto.getMimgpath().equals("")) {
 				String filePath = Util.base64ToImgDecoder(memberDto.getMimgpath(), req.getServletContext().getRealPath("/"), memberDto.getMid(),req.getServletContext().getContextPath());
 				logger.info("[ INFO ] : filePath > " + filePath );
