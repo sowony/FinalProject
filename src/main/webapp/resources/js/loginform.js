@@ -87,6 +87,44 @@ function emailCheckFun(input){
 	});
 }
 
+function imgFun(mimgpathBtn){
+	mimgpathBtn.addEventListener('change',()=>{
+		
+		let reader = new FileReader();
+
+		if(mimgpathBtn.files){
+			reader.addEventListener('load',(e)=>{
+				
+				const fileInfo = e.target.result.split(',')[0];
+				const res = fileInfo.indexOf('image');
+				if(res > -1){
+					const signUpImg = document.querySelector('img.proImg');
+					signUpImg.src = e.target.result;
+					const ImgText = document.querySelector('.ImgText');
+					ImgText.style.display='none';
+				} else {
+					const closeBtn = addObject(null,'input','grayBtn', false, (t)=>{
+						// mimgpathBtn.select();
+						// document.selection.clear();
+						mimgpathBtn.value = '';
+						t.width = 'max-content';
+						t.type = 'button';
+						t.value = '확인';
+						t.addEventListener('click',()=>{
+							const target = document.querySelector('.failUpload');
+							target.remove();
+						});
+					});
+					boxFun('이미지만 업로드 할 수 있습니다.', false, [ closeBtn ], true, 'failUpload', false, true);
+				}
+				
+			});
+			reader.readAsDataURL(mimgpathBtn.files[0]);
+		}
+		
+	});
+}
+
 
 function idAndPwSearchOn(){
 	
@@ -322,7 +360,7 @@ function idAndPwSearchOn(){
 
 window.onload = () => {
 	
-	
+	/*
 	const test = document.querySelector('.faceSignInBtn');
 	
 	test.addEventListener('click', ()=>{
@@ -340,6 +378,8 @@ window.onload = () => {
 			console.log(data);
 		});
 	});
+	
+	*/
 	
 	motionOnOff(document.querySelector('body'), 1, false, {
 		opacity : {
@@ -540,41 +580,7 @@ window.onload = () => {
     		
     		// 프로필 사진 미리보기 -----------------------------------
     		let mimgpathBtn = document.querySelector('input[name="mimgpath"]');
-    		mimgpathBtn.addEventListener('change',()=>{
-    			
-    			let reader = new FileReader();
-
-    			if(mimgpathBtn.files){
-    				reader.addEventListener('load',(e)=>{
-    					
-    					const fileInfo = e.target.result.split(',')[0];
-    					const res = fileInfo.indexOf('image');
-    					if(res > -1){
-    						const signUpImg = document.querySelector('img.proImg');
-    						signUpImg.src = e.target.result;
-    						const ImgText = document.querySelector('.ImgText');
-    						ImgText.style.display='none';
-    					} else {
-    						const closeBtn = addObject(null,'input','grayBtn', false, (t)=>{
-    							// mimgpathBtn.select();
-        						// document.selection.clear();
-    							mimgpathBtn.value = '';
-    							t.width = 'max-content';
-        						t.type = 'button';
-    							t.value = '확인';
-    							t.addEventListener('click',()=>{
-    								const target = document.querySelector('.failUpload');
-    								target.remove();
-    							});
-    						});
-    						boxFun('이미지만 업로드 할 수 있습니다.', false, [ closeBtn ], true, 'failUpload', false, true);
-    					}
-    					
-    				});
-    				reader.readAsDataURL(mimgpathBtn.files[0]);
-    			}
-    			
-    		});
+    		imgFun(mimgpathBtn);
     		
     		// 유효성 검사 및 이벤트 연결 ------------------------------------------
     		const signUpInput = document.querySelectorAll('div.signUpDiv input');

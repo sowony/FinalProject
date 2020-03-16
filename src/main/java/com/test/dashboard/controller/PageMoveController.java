@@ -25,4 +25,10 @@ public class PageMoveController {
 		return "login";
 	}
 	
+	
+	@GetMapping("test")
+	public String getTest() {
+		logger.info("[ INFO ] : MainController > getLogin [path : /login]");
+		return "test";
+	}
 }

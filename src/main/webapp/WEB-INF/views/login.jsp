@@ -17,7 +17,6 @@
 <!-- 페이지 js, css -->
 <link rel="stylesheet" href="./resources/css/login.css" type="text/css"/>
 <script type="text/javascript" src="./resources/js/loginform.js"></script>
-
 </head>
 <body class="fadeOut">
 	<section>
@@ -43,10 +42,11 @@
 				<div id="con_foot">
 				<fieldset>
 					<legend>OR</legend>
-					<p><span class="facebookIcon icon"></span><input type="button" class="faceSignInBtn" value="페이스북 로그인"></p>
+					<p><span class="facebookIcon icon"></span><input type="button" id="facebook-login-btn" class="faceSignInBtn" value="페이스북 로그인"></p>
+					<script type="text/javascript" src="./resources/js/facebooklogin.js"></script>
 					<p><span class="kakaoIcon icon"></span><input type="button" id="kakao-login-btn" class="kakaoSignInBtn" value="카카오 로그인"></p>
 					<script type="text/javascript" src="./resources/js/kakaologin.js"></script>
-					<p><span class="googleIcon icon"></span><input type="button" class="googleSignInBtn" value="구글 로그인"></p>
+					<p><span class="googleIcon icon"></span><input type="button" id="google-login-btn" class="googleSignInBtn" value="구글 로그인"></p>
 				</fieldset>
 				</div>
 				
