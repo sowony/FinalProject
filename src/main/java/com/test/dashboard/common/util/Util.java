@@ -37,7 +37,7 @@ public class Util {
 
 		String[] tmpArray = img.split(",");
 		String[] imgInfo = tmpArray[0].split(";");
-		String[] extArray = imgInfo[0].split("/");
+		String[] extArray = imgInfo[0].split("/") ;
 
 		String base64 = tmpArray[1];
 		String ext = extArray[1];
