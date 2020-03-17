@@ -31,10 +31,17 @@ public class MainController {
 	public boolean postLogin(@RequestBody MemberDto memberDto,  HttpSession session) {
 		logger.info("[ INFO ] : MainController > postLogin [path : /login]");
 		
+		int platformChk = memberDto.getMid().split("_").length;
+		
+		if(platformChk > 1) memberDto.setMpw(memberDto.getMpw() + "!@#ADFVDD");
+		
 		MemberDto user = memberBiz.selectByIdAndPw(memberDto.getMid(), memberDto.getMpw());
 		
 		if(user != null) {
 			logger.info("[ INFO ] : MainController > postLogin [success]");
+			
+			user.setMpw(null);
+			
 			session.setAttribute("user", user);
 			return true;
 		} else {
@@ -49,9 +56,9 @@ public class MainController {
 	public MemberDto postSignUp(@RequestBody MemberDto memberDto, HttpSession session, HttpServletRequest req) {
 		logger.info("[ INFO ] : MainController > postSignUp [path : /signup]");
 		
-		logger.info(memberDto.getMimgpath());
+		if(!memberDto.getMplatform().equals("home")) memberDto.setMpw(memberDto.getMpw() + "!@#ADFVDD");
 		
-		if(!memberDto.getMplatform().equals("kakao")) {
+		if((memberDto.getMplatform().equals("home") || memberDto.getMplatform().equals("facebook"))) {
 			if(memberDto.getMimgpath() != null && !memberDto.getMimgpath().equals("")) {
 				String filePath = Util.base64ToImgDecoder(memberDto.getMimgpath(), req.getServletContext().getRealPath("/"), memberDto.getMid(),req.getServletContext().getContextPath());
 				logger.info("[ INFO ] : filePath > " + filePath );
@@ -68,7 +75,8 @@ public class MainController {
 		
 		int res = memberBiz.insert(memberDto);
 		if(res > 0) {
-			logger.info("[ INFO ] : MainController > postSignUp [success]");
+			logger.info("[ INFO ] : MainController > postSignUp [success]" + memberDto);
+			memberDto.setMpw(null);
 			return memberDto;
 		} else {
 			logger.info("[ INFO ] : MainController > postSignUp [fail]");
@@ -81,6 +89,8 @@ public class MainController {
 	public boolean postMyAbout(@RequestBody MemberDto memberDto) {
 		logger.info("[ INFO ] : MainController > postMyAbout [path : /mabout]");
 		
+		logger.info(""+memberDto);
+		
 		int res = memberBiz.maboutUpdate(memberDto);
 		
 		if(res > 0) {
@@ -92,7 +102,7 @@ public class MainController {
 		}
 		
 	}
-	
+	 
 	
 	@ResponseBody
 	@GetMapping("idsearch")

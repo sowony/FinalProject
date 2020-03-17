@@ -85,15 +85,17 @@ span.kakaoIcon {
     background-image: url(../images/icon/kakaoIcon.svg);
 }
 
-input.googleSignInBtn {
-    color: #3d3d3d;
-    background-color: #fff;
-    border: 1px solid #ccc !important;
+#google-login-btn {
+    background-image: url(../images/icon/btn_google_signin_light_focus_web@2x.png);
+    width: 99%;
+    height: 32px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-position-x: -6px;
+    background-position-y: -10px;
+    background-size: 105%;
 }
 
-span.googleIcon {
-    background-image: url(../images/icon/googleIcon.svg);
-}
 
 .signUpImgDiv {
 	display: block;

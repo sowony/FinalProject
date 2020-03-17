@@ -10,6 +10,80 @@ const backgroundDiv = addObject(null,'div',null,false,(t)=>{
 });
 
 
+function backgroundMotion(){
+	
+	const backgroundImg = document.querySelectorAll('.backgroundImg');
+	
+	let count = 0;
+	
+	backgroundImg[count].style.transitionDuration = '5s';
+	backgroundImg[count].style.opacity = 1;
+	backgroundImg[count].style.top = 0;
+	backgroundImg[count].style.left = 0;
+	backgroundImg[count].style.backgroundSize = '100%';
+	backgroundImg[count].classList.add('openImg');
+	
+	count++;
+	
+	window.setInterval(()=>{
+		
+		if(count === backgroundImg.length-1){
+			count = 0;
+		}
+		
+		let oldTarget = document.querySelector('.openImg');
+		
+		motionOnOff(oldTarget, 5, false, {
+			onOff : 'off',
+			opacity : {
+				num0 : 0
+			},
+			property : {
+				mpp : 'position'
+			}, block : 'off'
+		}, {
+			after : (o)=>{
+				o.classList.remove('openImg');
+				o.style.top = Math.floor((Math.random() * 6) - 3) + '%';
+				o.style.left = Math.floor((Math.random() * 6) - 3) + '%';
+				o.style.backgroundSize = Math.floor((Math.random() * 20) + 100) + "%";
+			}
+		});
+		
+		let target = backgroundImg[count];
+		
+		motionOnOff(target, 5, false, {
+			onOff : 'on',
+			opacity : {
+				num0 : 0,
+				num1 : 1
+			},
+			property : {
+				mpp : 'position',
+			}
+		}, {
+			after : (o)=>{
+				o.style.top = Math.floor((Math.random() * 6) - 3) + '%';
+				o.style.left = Math.floor((Math.random() * 6) - 3) + '%';
+				o.style.backgroundSize = Math.floor((Math.random() * 20) + 120) + "%";
+			},
+			before : (o)=>{
+				o.style.top = 0;
+				o.style.left = 0;
+				o.style.backgroundSize = "100%";
+				o.classList.add('openImg')
+			}
+		});
+		
+		count++;
+		
+	}, 5000);
+	
+
+	
+}
+
+
 // 정규표현식 확인 함수
 function valueCheck(o, str, success, fail){
 	
@@ -33,29 +107,9 @@ function valueCheck(o, str, success, fail){
 	
 }
 
-/*
-function motionClose(obj, time, distance, complete){
-	
-	let loc = (distance)? distance : '10';
-	
-	const top = obj.style.top;
-	const left = obj.style.left;
-	
-	obj.style.opacity = '0';
-	obj.style.top = Number(obj.style.top.substring(0,obj.style.top.indexOf('px'))) - loc +'px';
-	obj.style.transitionDuration = time + 's';
-	
-	if(complete){
-		window.setTimeout(()=>{
-			complete(obj);
-		}, time*1000);
-	}
-	
-}
-*/
 function motionOnOff(obj, time, bg, option, addMotion, complete){
 	
-	if(addMotion) addMotion['after'](obj) || '';
+	if(addMotion) if(addMotion['after']) addMotion['after'](obj);
 	
 	let op = option || {};
 	
@@ -95,25 +149,25 @@ function motionOnOff(obj, time, bg, option, addMotion, complete){
 	const mpp = op['property']? (op['property']['mpp'] || 'position' ) : 'position';
 	
 	if(op['onOff'] === 'off' && !disabledDiv){
-		
-		disabledDiv = addObject(document.querySelector('body'), 'div', 'disabledDiv', true, (o)=>{
+		if(!op['block']){
+			disabledDiv = addObject(document.querySelector('body'), 'div', 'disabledDiv', true, (o)=>{
 			
-			console.log(obj.offsetWidth,obj.offsetHeight);
-			o.style.position = 'fixed';
-			o.style.width = obj.offsetWidth + 'px';
-			o.style.height = obj.offsetHeight + 'px';
-			o.style.top = obj.style.top;
-			o.style.left = obj.style.left;
-			o.style.backgroundColor = 'red';
-			o.style.transform = obj.style.transform;
-			o.style.opacity = 0;
-			o.style.zIndex = 20000;
-			o.addEventListener('click',(e)=>{
-				e.preventDefault();
-				e.stopPropagation();
+				o.style.position = 'fixed';
+				o.style.width = obj.offsetWidth + 'px';
+				o.style.height = obj.offsetHeight + 'px';
+				o.style.top = obj.style.top;
+				o.style.left = obj.style.left;
+				o.style.backgroundColor = 'red';
+				o.style.transform = obj.style.transform;
+				o.style.opacity = 0;
+				o.style.zIndex = 20000;
+				o.addEventListener('click',(e)=>{
+					e.preventDefault();
+					e.stopPropagation();
+				});
+			
 			});
-			
-		});
+		}
 	}
 	
 	if(op['property']){
@@ -141,7 +195,7 @@ function motionOnOff(obj, time, bg, option, addMotion, complete){
 		
 			obj.style.opacity = (op['opacity'])? (op['opacity']['num1'] || '1' ) : '1';
 		
-			if(addMotion) addMotion['before'](obj) || '';
+			if(addMotion) if(addMotion['before']) addMotion['before'](obj);
 		
 			if(op['property']){
 			
@@ -153,7 +207,6 @@ function motionOnOff(obj, time, bg, option, addMotion, complete){
 				obj.style.top = Number(obj.style.top.substring(0,obj.style.top.indexOf('%'))) + ((y instanceof Object ? 0 : y) + (y.num1 || 0)) + '%';
 				obj.style.left = Number(obj.style.left.substring(0,obj.style.left.indexOf('%'))) + ((x instanceof Object ? 0 : x) + (x.num1 || 0)) + '%';
 				
-				console.log(obj.style.top, obj.style.left);
 				
 			} else {
 				
