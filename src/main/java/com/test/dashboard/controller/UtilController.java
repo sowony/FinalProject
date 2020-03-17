@@ -37,6 +37,11 @@ public class UtilController {
 		return new Util().smsCheckFun(memberDto.getMphone(), "웹에서 온 인증번호 입니다. 확인해주세요.");
 	}
 	
+	@GetMapping("userload")
+	public MemberDto getUserLoad(HttpSession session) {
+		
+		return (MemberDto)session.getAttribute("user");
+	}
 
 	@GetMapping("nickcheck")
 	public boolean getNickSearch(MemberDto memberDto) {

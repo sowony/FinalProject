@@ -5,34 +5,38 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet" href="./resources/css/defaultstyle.css" type="text/css">
-<link rel="stylesheet" href="./resources/css/mypage.css" type="text/css">
-<link rel="stylesheet" href="./resources/css/Header.css" type="text/css">
-<script type="text/javascript" src="./resources/js/xhr.js"></script>
+
+<!-- 외부 자바스크립트 라이브러리 -->
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+<!-- 커스텀 유틸  -->
+<link rel="stylesheet" href="./resources/css/defaultstyle.css" type="text/css"/>
 <script type="text/javascript" src="./resources/js/util.js"></script>
+<script type="text/javascript" src="./resources/js/xhr.js"></script>
+
+<!-- 페이지 js, css -->
+<link rel="stylesheet" href="./resources/css/header.css" type="text/css">
+<link rel="stylesheet" href="./resources/css/mypage.css" type="text/css">
 <script type="text/javascript" src="./resources/js/mypage.js"></script>
+
 </head>
 <body>
+<!--  
+	<jsp:include page="header.jsp"></jsp:include>
+-->
 	<header>
-		<div id="headbar">
-			<ul>
-				<li id="mid" data-mid="${user.mid}">${user.mid}</li>
-				<li>MY INFO</li>
-				<li>MY INFO MODIFY</li>
-				<li>로그아웃</li>
-			</ul>
-		</div>
 	</header>
+	<script type="text/javascript" src="./resources/js/header.js"></script>
+	
+	
 	<section>
 		<article id="content">
-			<div id="dashboard">
-				<div id="owner_dash">
-				</div>
-				<div id="belong_dash">
-				
-				</div>
-			</div>
+			
 		</article>
 	</section>
+	
+	<jsp:include page="footer.jsp"></jsp:include>
 </body>
 </html>
