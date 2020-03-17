@@ -33,7 +33,7 @@ BEGIN
 END;
 /
 
---DROP TRIGGER member_AI_TRG;
+DROP TRIGGER member_AI_TRG;
 /
 
 --DROP SEQUENCE member_SEQ;
@@ -83,19 +83,19 @@ COMMENT ON COLUMN member.mdel IS 'Check(Y,N)'
 
 
 ALTER TABLE member
-    ADD CONSTRAINT UC_mnick UNIQUE (mnick)
-/
-
-ALTER TABLE member
-    ADD CONSTRAINT UC_mname_mphone UNIQUE (mname, mphone)
-/
-
-ALTER TABLE member
 	ADD (mplatform varchar(50))
 /
 
 ALTER TABLE member
-    ADD CONSTRAINT UC_mid_mplatform UNIQUE (mid, mplatform)
+    ADD CONSTRAINT UC_mnick UNIQUE (mnick)
+/
+
+ALTER TABLE member
+	ADD CONSTRAINT UC_mname_memail_mplatform UNIQUE (mname, memail, mplatform)
+/
+
+ALTER TABLE member
+    ADD CONSTRAINT UC_mid UNIQUE (mid)
 /
 
 
@@ -129,7 +129,7 @@ BEGIN
 END;
 /
 
---DROP TRIGGER DashBoard_AI_TRG;
+DROP TRIGGER DashBoard_AI_TRG;
 /
 
 --DROP SEQUENCE DashBoard_SEQ;
@@ -191,7 +191,7 @@ BEGIN
 END;
 /
 
---DROP TRIGGER DashGrade_AI_TRG;
+DROP TRIGGER DashGrade_AI_TRG;
 /
 
 --DROP SEQUENCE DashGrade_SEQ;
@@ -245,7 +245,7 @@ BEGIN
 END;
 /
 
---DROP TRIGGER DashMember_AI_TRG;
+DROP TRIGGER DashMember_AI_TRG;
 /
 
 --DROP SEQUENCE DashMember_SEQ;
@@ -324,7 +324,7 @@ BEGIN
 END;
 /
 
---DROP TRIGGER widget_AI_TRG;
+DROP TRIGGER widget_AI_TRG;
 /
 
 --DROP SEQUENCE widget_SEQ;
@@ -418,7 +418,7 @@ BEGIN
 END;
 /
 
---DROP TRIGGER wrule_AI_TRG;
+DROP TRIGGER wrule_AI_TRG;
 /
 
 --DROP SEQUENCE wrule_SEQ;
@@ -490,7 +490,7 @@ BEGIN
 END;
 /
 
---DROP TRIGGER wmemo_AI_TRG;
+DROP TRIGGER wmemo_AI_TRG;
 /
 
 --DROP SEQUENCE wmemo_SEQ;
@@ -551,7 +551,7 @@ BEGIN
 END;
 /
 
---DROP TRIGGER wfile_AI_TRG;
+DROP TRIGGER wfile_AI_TRG;
 /
 
 --DROP SEQUENCE wfile_SEQ;

@@ -43,9 +43,14 @@ public class Util {
 		String ext = extArray[1];
 
 		byte[] base64toBaty = DatatypeConverter.parseBase64Binary(base64);
-
-		System.out.println(base64);
-		System.out.println(ext);
+		
+		userId += "_";
+		
+		for(int i = 0 ; i < 5 ; i++) {
+			
+			userId += randomFun();
+			
+		}
 
 		String filePath = src + "/resources/images/userimage/profile/" + userId + "_profileimage." + ext;
 

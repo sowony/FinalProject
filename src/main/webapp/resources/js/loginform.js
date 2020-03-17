@@ -360,26 +360,7 @@ function idAndPwSearchOn(){
 
 window.onload = () => {
 	
-	/*
-	const test = document.querySelector('.faceSignInBtn');
-	
-	test.addEventListener('click', ()=>{
-		
-		xhrLoad('get','kakaologout', false, (data)=>{
-			console.log(data);
-		});
-		
-	});
-	
-	const test2 = document.querySelector('.googleSignInBtn');
-	
-	test2.addEventListener('click',()=>{
-		xhrLoad('get','kakaoout', false, (data)=>{
-			console.log(data);
-		});
-	});
-	
-	*/
+	backgroundMotion();
 	
 	motionOnOff(document.querySelector('body'), 1, false, {
 		opacity : {
@@ -395,7 +376,7 @@ window.onload = () => {
 			mpp : 'margin',
 			y : {
 				num0 : -80,
-				num1 : 30
+				num1 : 60
 			}
 		}
 	});
@@ -477,16 +458,26 @@ window.onload = () => {
     		t.value='회원가입';
     		t.addEventListener('click', (e)=>{
     			
-    			const userInfo = {};
+    			const userInfo = { mplatform : 'home' };
     			
     			const signUpInput = document.querySelectorAll('div.signUpDiv input');
+    			
     			signUpInput.forEach(input=>{
     				if(input.type !== 'button' || input.type !== 'submit'){
-    					if(input.name === 'maddr_0' || input.name === 'maddr_1'){
+    					if(input.name === 'maddr_0' || input.name === 'maddr_1' || input.name === 'maddr_2'){
     						if(!input.value){
     							inputCheck(input,false,'주소를 검색해주세요.');
     						} else {
     							inputCheck(input,true,null);
+    							
+    							if(input.name === 'maddr_0'){
+	    							userInfo['maddr'] = input.value;
+	    						} else if(input.name === 'maddr_1'){
+	    							userInfo['maddr'] += "(" + input.value + ")";
+	    						} else if(input.name === 'maddr_2'){
+	    							userInfo['maddr'] += input.value;
+	    						}
+    							
     						}
     					} else { 
     						input.focus();
@@ -497,25 +488,13 @@ window.onload = () => {
     	    						const signUpImg = document.querySelector('.proImg');
     	    						userInfo[input.name] = signUpImg.src;
     	    					} else if(input.name === 'memail'){
-    	    						if(signUpCheck){
-    	    							if(input.value === mailCheck) {
-    	    								userInfo[input.name] = mailCheck;
-    	    							} else {
-    	    								mailCheck = '';
-    	    							}
+    	    						if(input.value === mailCheck) {
+    	    							userInfo[input.name] = mailCheck;
+    	    						} else {
+    	    							mailCheck = '';
     	    						}
     	    					} else {
-    	    						if(signUpCheck){
-    	    							if(input.name === 'maddr_0'){
-    	    								userInfo['maddr'] = input.value;
-    	    							} else if(input.name === 'maddr_1'){
-    	    								userInfo['maddr'] += "(" + input.value + ")";
-    	    							} else if(input.name === 'maddr_2'){
-    	    								userInfo['maddr'] += input.value;
-    	    							}else {
-    	    								userInfo[input.name] = input.value;
-    	    							}
-    	    						}
+    	    						userInfo[input.name] = input.value;
     	    					}
     						}
     					}
@@ -525,6 +504,7 @@ window.onload = () => {
     			if(signUpCheck){
     				xhrLoad('post','signup',userInfo,data=>{
     					if(data !== 'null'){
+    						
     						const jsonObj = JSON.parse(data);
     						
     						const profileImg = addObject(null,'div','welcomeDiv', false, t=>{
@@ -537,13 +517,11 @@ window.onload = () => {
     						const mabout = addObject(profileImg,'textarea',null, true, t=>{
 								t.placeholder = '프로필에 남기실 한마디를 적어주세요!';
 								t.style.display = 'block';
-								t.style.width = '200px';
+								t.style.width = '90%';
 								t.style.height = '85px';
 								t.style.padding = '10px';
 								t.style.margin = '10px auto';
     						});
-    						
-    						console.log(jsonObj);
     						
     						const btnFun = addObject(null, 'input', 'grayBtn', false, t=>{
     							t.type='button';
@@ -570,8 +548,8 @@ window.onload = () => {
     				else boxFun('메일을 인증 받아주세요.', false, false, false, 'failSign2', false, true);
     			}
     		});
+    		
     	});
-    	
     	// 회원가입 박스 -----------------------------------------
     	const signBox = boxFun(false, true, [signUpForm, signUpSummitBtn, signUpCloseBtn], true, 'signUpDivBox',(contentBox)=>{
     		
@@ -764,5 +742,6 @@ window.onload = () => {
     	
     });
 
+    
 };
 
