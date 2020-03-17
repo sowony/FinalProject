@@ -26,4 +26,5 @@ public interface DashGradeDao {
 	@Delete("delete from dashgrade where dgno = #{dgno}")
 	public int delete(int dgno);
 	
+	
 }

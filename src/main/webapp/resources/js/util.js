@@ -258,6 +258,8 @@ function middlePositionFun(obj){
 		obj.style.top = '20px';
 	}
 	*/
+	
+	obj.style.position = 'absolute';
 	obj.style.top = '50%';
 	obj.style.left = '50%';
 	obj.style.transform = 'translateX(-50%) translateY(-50%)';

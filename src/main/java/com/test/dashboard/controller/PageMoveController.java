@@ -15,7 +15,7 @@ public class PageMoveController {
 	
 	@GetMapping("mypage")
 	public String getMyPage(Model model, HttpSession session) {
-		logger.info("[ INFO ] : MainController > getMyPage [path : /]");
+		logger.info("[ INFO ] : MainController > getMyPage [path : /mypage/]");
 		return "mypage";
 	}
 	
@@ -25,6 +25,17 @@ public class PageMoveController {
 		return "login";
 	}
 	
+	@GetMapping("header")
+	public String getHeader() {
+		logger.info("[ INFO ] : MainController > getLogin [path : /login]");
+		return "header";
+	}
+	
+	@GetMapping("footer")
+	public String getFooter() {
+		logger.info("[ INFO ] : MainController > getLogin [path : /login]");
+		return "footer";
+	}
 	
 	@GetMapping("test")
 	public String getTest() {

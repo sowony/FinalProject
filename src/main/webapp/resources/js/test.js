@@ -112,7 +112,7 @@ window.onload = ()=>{
 	
 	utilBox.appendChild(outputBox);
 	utilBox.appendChild(backgroundDiv);
-	
+	 
 	-> 닫기 버튼을 생략해도 이정도로 길어진다. 모션이나 기타 등등을 더 만들면 훨씬 길어진다.
 	-> 이것을 아래 처럼 간단하게 표현 가능
 	

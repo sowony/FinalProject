@@ -31,4 +31,9 @@ public class DashBoardDto {
 	    // 대시보드 삭제 유무 
 	    private String ddel;	    
 	
+	    // join용 -- 외부 테이블 변수
+	    private String mnick;
+	    
+	    private String mimgpath;
+	    
 }
