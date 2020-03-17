@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.test.dashboard.model.dao.WboardDao;
+import com.test.dashboard.model.dto.WboardDto;
 
 @Service
 @Transactional

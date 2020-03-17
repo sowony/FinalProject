@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+header {
+    display: block;
+    width: 100%;
+    height: max-content;
+    position: absolute;
+    z-index: 4;
+}
+
+._header {
+    display: block;
+    width: 100%;
+    height: max-content;
+    background-color: #37c6f4;
+    float: left;
+}
+
+li {
+    display: block;
+    padding: 5px 12px;
+    list-style: none;
+    font-size: 12pt;
+    font-weight: 600;
+    letter-spacing: 1pt;
+    float: left;
+    color: #FFF;
+}
+
+li.profile_li {
+    padding: 2px;
+    float: right;
+}
+
+li.nickName_li {
+    float: right;
+}
+
+.header_profile_img{
+	
+	background-size: 100%;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+	
+}
