@@ -17,9 +17,15 @@ public class WboardBizImpl implements WboardBiz{
 	private WboardDao wboardDao; 
 	
 	@Override
-	public List<WboardDto> boardList(String mid) {
+	public List<WboardDto> boardListAll(int dgno) {
 		// TODO Auto-generated method stub
-		return wboardDao.boardList(mid);
+		return wboardDao.boardListAll(dgno);
+	}
+
+	@Override
+	public List<WboardDto> boardList() {
+		// TODO Auto-generated method stub
+		return wboardDao.boardList();
 	}
 
 }
