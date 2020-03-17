@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.test.dashboard.model.dao.WboardDao;
+import com.test.dashboard.model.dto.WboardDto;
 
 @Service
 @Transactional
@@ -18,7 +19,7 @@ public class WboardBizImpl implements WboardBiz{
 	@Override
 	public List<WboardDto> boardList(String mid) {
 		// TODO Auto-generated method stub
-		return null;
+		return wboardDao.boardList(mid);
 	}
 
 }
