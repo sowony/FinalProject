@@ -3,8 +3,10 @@
  */
 
 
+
 function headerFun(){
 	
+	let userInfo;
 	
 	xhrLoad('get', 'userload', null, (res)=>{
 		userInfo = JSON.parse(res);
@@ -32,7 +34,12 @@ function headerFun(){
 			o.innerHTML = `<div class="header_profile_img"style="background-image : url('${userInfo.mimgpath}');"></div>`
 		});
 		
-	});
+	}, false);
 	
+	if(userInfo.mplatform !== 'home'){
+		userInfo.mid = userInfo.mplatform + '에서 연동 중...';
+	}
+	
+	return userInfo;
 };
 

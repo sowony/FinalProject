@@ -1,8 +1,9 @@
 /**
  * http://usejsdoc.org/
  */
-function xhrLoad(method, url, reqeustObjet,callBack){
+function xhrLoad(method, url, reqeustObjet,callBack, async){
     const xhr = new XMLHttpRequest();
+    
     if(method === 'get'){
     	
     	let params = '';
@@ -11,9 +12,13 @@ function xhrLoad(method, url, reqeustObjet,callBack){
     			params += k +"=" + reqeustObjet[k] + "&";
     		});
     	}
-    	xhr.open(method, url + "?"+params);
+    	if(async !== null){
+    		xhr.open(method, url + "?"+params, async);
+    	} else xhr.open(method, url + "?"+params);
     } else {
-    	xhr.open(method, url);
+    	if(async !== null){
+    		xhr.open(method, url, async);
+    	} else xhr.open(method, url);
     }
     
     xhr.onreadystatechange = function(){

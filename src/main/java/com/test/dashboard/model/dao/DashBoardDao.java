@@ -22,7 +22,7 @@ public interface DashBoardDao {
 	public List<DashBoardDto> selectByOwner(String mid);
 	
 	//본인 소속 보드 조회
-	@Select("select * from dashboard where dno in (select dno from dashmember dm where dm.mid = #{mid}) order by dno desc")
+	@Select("select d.*, m.mnick, m.mimgpath from dashboard d inner join member m on(d.mid = m.mid) where dno in (select dno from dashmember dm where dm.mid = #{mid}) order by dno desc")
 	public List<DashBoardDto> selectByBelong(String mid);
 
 	//보드 입장

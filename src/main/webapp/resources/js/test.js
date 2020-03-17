@@ -162,6 +162,8 @@ window.onload = ()=>{
 		
 	});
 	
+
+	
 	
 	const btn = addObject(null, 'button', 'grayBtn', false, (o)=>{
 		o.innerHTML = '박스에 박스 만들기';
@@ -173,10 +175,24 @@ window.onload = ()=>{
 		
 	});
 	
-	boxFun('안녕하세요', false, [ inputText, textarea, div ,btn], true, 'testBox',(o, nodes, classname)=>{
+//	boxFun('안녕하세요', true, [ inputText, textarea, div ,btn], true, 'testBox',(o, nodes, classname)=>{
+//		
+//	}, false);
+//	
+	
+	//시계
+	const clock = addObject(null, 'div', 'clock',false,(o)=>{
+	
+		o.innerHTML = `
+			<iframe scrolling="no" frameborder="no" clocktype="html5" style="overflow:hidden;border:0;margin:0;padding:0;width:380px;height:80px;"src="https://www.clocklink.com/html5embed.php?clock=047&timezone=KoreaRepublicof_Seoul&color=purple&size=380&Title=&Message=&Target=&From=2020,1,1,0,0,0&Color=purple"></iframe>
+		`;
+	});
+	
+	boxFun('clock', true, [clock], true, 'testBox', (o,nodes,classname)=>{
 		
-	}, false);
+	},false);
 	
 	
+	boxFun();
 	
 };
