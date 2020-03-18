@@ -153,6 +153,7 @@ div.customMenu{
 	height : max-content;
 	z-index: 10000;
 	padding : 5px 0px;
+	position: fixed;
 }
 
 .boxOpen > p {
@@ -178,17 +179,18 @@ div.customMenu{
 }
 
 li.menuLi {
-	float: none;
+    float: none;
     padding: 4px 15px;
-    font-size: 10pt;
+    font-size: 9.5pt;
+    font-weight: 500;
     color: #999999;
-    border:0;
+    border: 0;
     text-align: left;
 }
 
 li.menuLi:hover{
 	color : #fff;
-	background-color: #536fae;
+	background-color: #37c6f4;
 }
 
 input {

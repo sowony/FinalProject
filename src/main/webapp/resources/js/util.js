@@ -468,42 +468,64 @@ function addObject(parentNode, tagName, className, defaultLocation, callback){
 
 
 // 객체에 메뉴 등록 함수
-function contextMenuFun(target, menu, setting){
+function contextMenuFun(target, setting){
+	
+	
 	
 	target.addEventListener('contextmenu',(e)=>{
+		
 		e.preventDefault();
 		e.stopPropagation();
 		
-		const oldUl = document.querySelector('.menuUl');
-		if(oldUl){
-			oldUl.remove();
-		}
+		const oldMenu = document.querySelector('.customMenu');
 		
-		menu.style.display='block';
+		if(oldMenu) oldMenu.remove();
+		
+		const menu = addObject(document.querySelector('body'), 'div', 'customMenu', true);
+
 		menu.style.top = e.clientY + 'px';
 		menu.style.left = e.clientX + 'px';
-		
+			
 		const ul = addObject(menu,'ul','menuUl', true);
 		
-		const keyArray = Object.keys(setting);
-		for(let k of keyArray){
-			addObject(ul, 'li', 'menuLi', true, (l)=>{
-				l.innerHTML = k;
-				l.addEventListener('click',setting[k]);
-				l.addEventListener('click',()=>{
-					menu.style.display='none';
+		const valArray = Object.values(setting);
+		
+		valArray.forEach((value, i)=>{
+			const keyArray = Object.keys(value);
+			
+			keyArray.forEach((k,keyIndex)=>{
+				addObject(ul, 'li', 'menuLi', true, (l)=>{
+					l.innerHTML = k;
+					if(keyIndex === keyArray.length-1){
+						if(i !== valArray.length - 1){
+							l.style.borderBottom = '1px solid #ccc';
+						}
+					}
+					l.addEventListener('click',value[k]);
+					l.addEventListener('click',()=>{
+						
+						menu.remove();
+						
+					});
 				});
 			});
-			
-		}
+		});
+		
 		
 	});
 	
 	document.addEventListener('click',(e)=>{
+		
 		e.preventDefault();
 		e.stopPropagation();
-		menu.style.display='none';
+		
+		const menu = document.querySelector('.customMenu');
+		
+		if(menu)
+		menu.remove();
+	
 	});
+	
 }
 
 
