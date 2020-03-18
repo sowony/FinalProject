@@ -7,8 +7,6 @@ window.onload = ()=>{
 	
 	let userInfo = headerFun();
 	
-	console.log(userInfo);
-	
 	backgroundMotion();
 	
 	const content = document.querySelector('#content');
@@ -43,6 +41,20 @@ window.onload = ()=>{
 			
 		});
 		
+		const mabout = document.querySelector('#p_mabout');
+		
+		mabout.addEventListener('click', ()=>{
+			
+			const textarea = addObject(mabout.parentNode, 'textarea', 'mabout', true, (o)=>{
+				o.name = 'mabout';
+				o.value = mabout.innerHTML;
+				o.style.width = '90%';
+				o.style.height = '70px';
+				o.style.padding = '12px';
+				mabout.remove();
+			});
+			
+		});
 		
 	});
 	
@@ -101,19 +113,73 @@ window.onload = ()=>{
 				
 				o.innerHTML = `
 				<div class="d_header">
-					<p class="d_title">${dashItem.dtitle}</p>
-					<p class="d_createdate">${new Intl.DateTimeFormat('ko-KR').format(new Date(dashItem.dcreatedate))}</p>`+
-					((state === 'owner')? `<p class="d_nick">본인 소유</p>` : `<p class="d_nick">${dashItem.mnick}</p>`)
+					<p class="d_title"><span>${dashItem.dtitle}</span><span>${new Intl.DateTimeFormat('ko-KR').format(new Date(dashItem.dcreatedate))}</span></p>
+					<p class="d_nick">
+						<span style="background-image:url('${dashItem.mimgpath}');"></span><span>
+				`+
+					((state === 'owner')? `본인 소유` : `${dashItem.mnick}`)
 					+`
+					</span></p>
 				</div>
 				<div class="d_body">
 					<p class="d_desc">${dashItem.ddesc}</p>
 				</div>
 				`;
+				
+				contextMenuFun(o,{
+					'newDash' : {
+						'대시보드 추가' : ()=>{console.log('작동 테스트');}
+					},
+					'dashMenu' :{
+						'대시보드 자세히 보기' : ()=>{alert('자세히보기 함수');},
+						'대시보드 수정' : ()=>{alert('수정 함수');},
+						'대시보드 삭제' : ()=>{alert('삭제 함수')}
+					},
+					'messageMenu' : {
+						'쪽지함 보기' : ()=>{alert('쪽지함 함수');},
+						'쪽지 작성' : ()=>{alert('쪽지 작성 함수');}
+					},
+					'alramMenu' : {
+						'알람 보기' : ()=>{alert('알람 함수');}
+					},
+					'logout' : {
+						'로그아웃' : ()=>{console.log('로그아웃');}
+					}
+				});
 			});
 			
 		}
 		
 	},false);
+	
+	
+	function logout(){
+		
+		xhrLoad('get','logout', null, (res)=>{
+			if(res === 'true'){
+				location.reload();
+			}
+		});
+		
+	}
+	
+		
+	const body = document.querySelector('body');
+	contextMenuFun(body,{
+		'newDash' : {
+			'대시보드 추가' : ()=>{console.log('작동 테스트');}
+		},
+		'messageMenu' : {
+			'쪽지함 보기' : ()=>{alert('쪽지함 함수');},
+			'쪽지 작성' : ()=>{alert('쪽지 작성 함수');}
+		},
+		'alramMenu' : {
+			'알람 보기' : ()=>{alert('알람 함수');}
+		},
+		'logout' : {
+			'로그아웃' : ()=>{console.log('로그아웃');}
+		}
+	});
+		
 	
 };

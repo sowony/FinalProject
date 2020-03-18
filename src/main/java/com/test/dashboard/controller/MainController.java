@@ -51,6 +51,13 @@ public class MainController {
 		
 	}
 	
+	@GetMapping("logout")
+	public boolean getLogout(HttpSession session) {
+	
+		session.invalidate();
+	
+		return true;
+	}
 	@ResponseBody
 	@PostMapping("signup")
 	public MemberDto postSignUp(@RequestBody MemberDto memberDto, HttpSession session, HttpServletRequest req) {
