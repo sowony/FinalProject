@@ -26,7 +26,7 @@ public class WboardController {
 		public String postWboard(Model model) {
 			logger.info("[ INFO ] : wboardController > wlist");
 			
-			model.addAttribute("boardlist",biz.boardList());
+			model.addAttribute("list",biz.boardList());
 			
 			return "wboard";
 		}

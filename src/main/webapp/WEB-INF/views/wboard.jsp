@@ -29,17 +29,26 @@
 				</c:when>
 				<c:otherwise>
 					<c:forEach items="${list }" var ="boardlist">
+						<tr>
 						<td>${boardlist.wbtitle }</td>
+						<td>${boardlist.wbtitle}</td>
 						
+						<c:if test="${boardlist.wbtodo eq 'N' }">
+						<td>${boardlist.wbtodo}</td>
+						</c:if>
+						
+						<c:if test="${boardlist.wbtodo eq 'Y' }">
 						<td>${boardlist.wbtitle}</td>
-						<td>${boardlist.wbtitle}</td>
-						<td>${boardlist.wbtitle}</td>
+						</c:if>
+						</tr>
+						
 						
 					</c:forEach>
 				</c:otherwise>				
 			</c:choose>
 			
-
+<!-- var ="boardlist"새로운 변수 선언 //test안에 있는 것은 컨트롤러에서 받아온 것, 
+ 스콥프: 페이지 안에서만 효력이 발생한다 ,  -->
 		</tr>
 		
 		
