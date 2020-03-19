@@ -193,9 +193,9 @@ li.menuLi:hover{
 	background-color: #37c6f4;
 }
 
-input {
+input, textarea {
     display: block;
-    width: 185px;
+    width: 190px;
     padding: 7px;
     margin: 10px 0;
     font-size: 9pt;
@@ -223,7 +223,6 @@ textarea
     border: 0;
     background-color: #eee;
     border-radius: 5px;
-    padding-left: 12px;
     -webkit-text-fill-color : #3d3d3d;
 }
 
@@ -231,6 +230,10 @@ input[type="submit"], input[type="button"] {
     width: 100%;
     border: 0px;
     border-radius: 5px;
+}
+
+textarea {
+	white-space:pre;
 }
 
 

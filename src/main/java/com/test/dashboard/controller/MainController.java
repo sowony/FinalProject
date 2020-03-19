@@ -93,7 +93,7 @@ public class MainController {
 	
 	@ResponseBody
 	@PostMapping("mabout")
-	public boolean postMyAbout(@RequestBody MemberDto memberDto) {
+	public boolean postMyAbout(@RequestBody MemberDto memberDto, HttpSession session) {
 		logger.info("[ INFO ] : MainController > postMyAbout [path : /mabout]");
 		
 		logger.info(""+memberDto);
@@ -102,6 +102,9 @@ public class MainController {
 		
 		if(res > 0) {
 			logger.info("[ INFO ] : MainController > postMyAbout [success]");
+			
+			session.setAttribute("user", memberBiz.selectByMNo(memberDto.getMno()));
+			
 			return true;
 		} else {
 			logger.info("[ INFO ] : MainController > postMyAbout [fail]");

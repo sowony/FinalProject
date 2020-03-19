@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.test.dashboard.common.util.Util;
 import com.test.dashboard.model.dao.MemberDao;
 import com.test.dashboard.model.dto.MemberDto;
 
@@ -27,6 +28,7 @@ public class MemberBizImpl implements MemberBiz{
 	@Override
 	public int insert(MemberDto memberDto) {
 		// TODO Auto-generated method stub
+		memberDto.setMabout(Util.brChange(memberDto.getMabout()));
 		return memberDao.insert(memberDto);
 	}
 	
@@ -74,6 +76,7 @@ public class MemberBizImpl implements MemberBiz{
 	@Override
 	public int update(MemberDto memberDto) {
 		// TODO Auto-generated method stub
+		memberDto.setMabout(Util.brChange(memberDto.getMabout()));
 		return memberDao.update(memberDto);
 	}
 	
@@ -98,6 +101,8 @@ public class MemberBizImpl implements MemberBiz{
 	@Override
 	public int maboutUpdate(MemberDto memberDto) {
 		// TODO Auto-generated method stub
+		memberDto.setMabout(Util.brChange(memberDto.getMabout()));
+		System.out.println(memberDto.getMabout());
 		return memberDao.maboutUpdate(memberDto);
 	}
 }
