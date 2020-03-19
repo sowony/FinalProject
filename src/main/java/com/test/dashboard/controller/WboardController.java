@@ -26,9 +26,14 @@ public class WboardController {
 		public String postWboard(Model model) {
 			logger.info("[ INFO ] : wboardController > wlist");
 			
+			//System.out.println(dgno);
+			
 			model.addAttribute("list",biz.boardList());
+			//model.addAttribute("list",biz.boardListAll(dgno));
 			
 			return "wboard";
 		}
+		
+
 		
 }
