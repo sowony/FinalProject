@@ -43,6 +43,7 @@
 #pagination a {display:inline-block;margin-right:10px;}
 #pagination .on {font-weight: bold; cursor: default;color:#777;}
 </style>
+<script type="text/javascript" src="./resources/js/xhr.js"></script>
 </head>
 <body>
 
@@ -55,7 +56,7 @@
         <div class="option">
             <div>
                 <form onsubmit="searchPlaces(); return false;">
-                    키워드 : <input type="text" value="" id="keyword" size="15"> 
+                    키워드 : <input type="text" value="kh정보교육원" id="keyword" size="15"> 
                     <button type="submit">검색하기</button> 
                 </form>
             </div>
@@ -65,9 +66,19 @@
         <div id="pagination"></div>
     </div>
 </div>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cfc755aece03a07263adb8e92484665e&libraries=services"></script>
 
 <script>
+
+window.onload = function(savedList){
+	
+	for(var i = 0; i < savedList.length; i++){
+		var savedPosition = new kakao.maps.LatLng(savedList[i].wmaplat, savedList[i].wmaplng);
+		addMarker(savedPosition, i);
+	}
+	
+}
 // 마커를 담을 배열입니다
 var markers = [];
 
@@ -87,7 +98,7 @@ var ps = new kakao.maps.services.Places();
 var infowindow = new kakao.maps.InfoWindow({zIndex:1});
 
 // 키워드로 장소를 검색합니다
-searchPlaces();
+//searchPlaces();
 
 // 키워드 검색을 요청하는 함수입니다
 function searchPlaces() {
@@ -140,12 +151,13 @@ function displayPlaces(places) {
     removeAllChildNods(listEl);
 
     // 지도에 표시되고 있는 마커를 제거합니다
-    removeMarker();
+    //removeMarker();
     
     for ( var i=0; i<places.length; i++ ) {
 
         // 마커를 생성하고 지도에 표시합니다
-    var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x);        
+    
+var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x);        
          //   marker = addMarker(placePosition, i), 
           var  itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
 
@@ -174,10 +186,10 @@ function getListItem(index, places) {
     var el = document.createElement('li'),
     itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
                 '<div class="info">' +
-                '   <h5>' + places.place_name + '</h5>';
+                '   <h5 class="name">' + places.place_name + '</h5>';
 
     if (places.road_address_name) {
-        itemStr += '    <span>' + places.road_address_name + '</span>' +
+        itemStr += '    <span class="addr">' + places.road_address_name + '</span>' +
                     '   <span class="jibun gray">' +  places.address_name  + '</span>';
     } else {
         itemStr += '    <span>' +  places.address_name  + '</span>'; 
@@ -190,11 +202,32 @@ function getListItem(index, places) {
     el.className = 'item';
 
     var placePosition = new kakao.maps.LatLng(places.y, places.x);
+    //click시 마커 추가
     el.addEventListener('click',function(){
-        addMarker(placePosition, index);
+        
+        let wmapkeyword = document.getElementsByClassName("name")[index].innerText;
+        let wmapaddr = document.getElementsByClassName("addr")[index].innerText;
+        let wmapjibun = document.getElementsByClassName("jibun gray")[index].innerText;
+        let wmaplat = placePosition.getLat().toString();
+        let wmaplong = placePosition.getLng().toString();  
+        
+        saveData(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplong);
+        
+        for(var i = 0; i < index.length; i++){
+        	
+        }
+        addMarker(placePosition, idx);
+        
+       /*  console.log(wmapkeyword);
+        console.log(wmapaddr);
+        console.log(wmapjibun);
+        console.log(wmaplat);
+        console.log(wmaplong); */
         
     });
+    
     return el;
+    
 }
 
 // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
@@ -272,6 +305,58 @@ function removeAllChildNods(el) {
         el.removeChild (el.lastChild);
     }
 }
+ 
+//ajax function
+function saveData(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplong){
+	
+	const d = {
+			wmapkeyword,
+			wmapaddr,
+			wmapjibun,
+			wmaplat,
+			wmaplong
+		};
+	
+	console.log(d);
+	/* 
+	xhrLoad('post', 'map', d, (res)=>{
+		if(res === 'true'){
+			alert('dd');
+		}
+	});
+	 */
+	
+	
+	$.ajax({
+		url: 'map',
+		accept : 'application/json',
+		method: 'post',
+		contentType : 'application/json; charset=utf-8;',
+		async: false,
+		data: JSON.stringify(d),
+		beforeSend : function(xhr){
+			//xhr.setRequestHeader('Content-type', 'application/json');
+		},
+		
+		success: function(res){
+			
+			console.log(res);
+			
+			if(res){
+				alert("저장!");	
+			} else {
+				alert("실패");
+			}
+			
+		},
+		error: function(){
+			alert("다시 선택해주세요!");
+		}
+	});
+ 
+	
+}
+
 </script>
 
 </body>
