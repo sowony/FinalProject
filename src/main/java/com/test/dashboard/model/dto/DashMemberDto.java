@@ -19,6 +19,9 @@ public class DashMemberDto {
 
     // 대시보드 참여 유저 등급 
     private int dgno;
+    
+    // 맴버 고유 색상
+    private String dmcolor;
 	
     // join 용
     private String mnick;

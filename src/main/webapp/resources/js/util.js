@@ -9,12 +9,169 @@ const backgroundDiv = addObject(null,'div',null,false,(t)=>{
 	t.setAttribute('id','bgBlack');
 });
 
-
-function randomColor(){
+function colorPickerBtn(parentNode, beforeNode, submit){
 	
-	const R = Math.round((Math.random() * 255) + 0);
-	const G = Math.round((Math.random() * 255) + 0);
-	const B = Math.round((Math.random() * 255) + 0);
+	const btn = addObject(null, 'div', 'colorPickerBtn', false, (o)=>{
+		o.addEventListener('click', (e)=>{
+			
+			e.preventDefault();
+			e.stopPropagation();
+			
+			const colorObject = new colorPickerFun((color)=>{
+				submit(color);
+			});
+		});
+	});
+	
+	if(beforeNode){
+		parentNode.insertBefore(btn, beforeNode);
+	} else {
+		parentNode.appendChild(btn);
+	}
+	
+}
+
+function colorPickerFun(callback){
+	
+	const oldColorPicker = document.querySelector('.colorBox');
+	
+	if(oldColorPicker){
+		motionOnOff(oldColorPicker, 0.8, false, { setting : 'offDefault '},null, (o)=>{
+			o.remove();
+		});
+	}
+	
+	this.colorValue = 'rgb(255,255,255)';
+	
+	const colorPicker = addObject(null, 'div', 'colorPicker', false, (o)=>{});
+	
+	const colorPointer = addObject(colorPicker, 'div', 'colorPointer', true, (o)=>{});
+	
+	const colerArea = addObject(colorPicker, 'div', 'colorArea', true, (o)=>{
+		o.style.background = `-webkit-linear-gradient(top, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 100%, 0) 50%,
+			hsla(0, 0%, 0%, 0) 50%, hsl(0, 0%, 0%) 100%),
+			-webkit-linear-gradient(left, hsl(0, 0%, 50%) 0%, hsla(0, 0%, 50%, 0) 100%)`;
+		o.style.backgroundColor = 'hsl(0, 100%, 50%)';
+		
+		o.appendChild(colorPointer);
+		
+		function mousemove(e){
+		
+			colorPointer.style.top = e.offsetY + 'px';
+			colorPointer.style.left = e.offsetX + 'px';
+			
+			const S = Math.round(e.offsetX/o.offsetHeight * 100);
+			const L = Math.round(100-(e.offsetY/o.offsetWidth * 100));
+			
+			const colorView = document.querySelector('.colorView');
+			const colorHue = document.querySelector('.colorHue');
+			
+			o.dataset.s = S;
+			o.dataset.l = L;
+			
+			colorView.style.backgroundColor = `hsl(${colorHue.value},${S}%,${L}%)`;
+			
+		}
+		
+		function mouseup(e){
+			
+			const colorView = document.querySelector('.colorView');
+			
+			colorPickerFun['colorValue'] = colorView.style.backgroundColor;
+			
+			e.target.removeEventListener('mousemove', mousemove);
+			
+		}
+		
+		o.addEventListener('mousedown', (e)=>{
+			
+			colorPointer.style.top = e.offsetY + 'px';
+			colorPointer.style.left = e.offsetX + 'px';
+			
+			const S = Math.round(e.offsetX/o.offsetHeight * 100);
+			const L = Math.round(100-(e.offsetY/o.offsetWidth * 100));
+			
+			const colorView = document.querySelector('.colorView');
+			const colorHue = document.querySelector('.colorHue');
+			
+			o.dataset.s = S;
+			o.dataset.l = L;
+			
+			colorView.style.backgroundColor = `hsl(${colorHue.value},${S}%,${L}%)`;
+			
+			o.addEventListener('mousemove', mousemove);
+			
+			o.addEventListener('mouseup', mouseup);
+			
+		});
+		
+	});
+	
+	const colorView = addObject(colorPicker, 'div', 'colorView', true, (o)=>{});
+	
+	const colorHue = addObject(colorPicker, 'input', 'colorHue', true, (o)=>{
+		
+		o.type = 'range';
+		o.max = '359';
+		o.min = '0';
+		o.value = '0';
+		
+		o.addEventListener('input', (e)=>{
+			
+			const colorArea = document.querySelector('.colorArea');
+			const colorView = document.querySelector('.colorView');
+			
+			colerArea.style.backgroundColor = `hsl(${o.value}, 100%, 50%)`;
+			
+			const S = colorArea.dataset.s;
+			const L = colorArea.dataset.l;
+			
+			colorView.style.backgroundColor = `hsl(${o.value}, ${S}%, ${L}%)`;
+		});
+	});
+	
+	const colorSubmit = addObject(null, 'input', ['colorSubmit', 'grayBtn'], false, (o)=>{
+		
+		o.type = 'button';
+		o.value = '선택';
+		o.style.float = 'left';
+		o.style.width = 'max-content';
+		o.addEventListener('click', ()=>{
+			callback(colorPickerFun['colorValue']);
+			const box = o.parentNode;
+			motionOnOff(box, 0.8, false, { setting : 'offDefault' },null, (o)=>{
+				o.remove();
+			});
+		});
+	});
+	
+	const colorClose = addObject(null, 'input', ['colorClose', 'grayBtn'], false, (o)=>{
+		
+		o.type = 'button';
+		o.value = '닫기';
+		o.style.float = 'right';
+		o.style.width = 'max-content';
+		
+		o.addEventListener('click',()=>{
+			
+			const box = o.parentNode;
+			motionOnOff(box, 0.8, false, { setting : 'offDefault' }, null, (o)=>{
+				o.remove();
+			});
+		});
+	});
+	
+	boxFun(null, false, [colorPicker,colorSubmit, colorClose], true, 'colorBox', null, true);
+
+}
+
+function fontColorCheck(rgb){
+	
+	const colorArray = rgb.split('(')[1].split(',');
+	
+	const R = colorArray[0];
+	const G = colorArray[1];
+	const B = colorArray[2].substring(0, colorArray[2].indexOf(')'));
 	
 	let fontColor = '';
 	
@@ -24,7 +181,20 @@ function randomColor(){
 		fontColor = '#3d3d3d';
 	}
 	
-	return [`rgb(${R}, ${G}, ${B})`, fontColor];
+	return fontColor;
+}
+
+function randomColor(){
+	
+	const R = Math.round((Math.random() * 255) + 0);
+	const G = Math.round((Math.random() * 255) + 0);
+	const B = Math.round((Math.random() * 255) + 0);
+	
+	const rgb = `rgb(${R}, ${G}, ${B})`;
+	
+	const fontColor = fontColorCheck(rgb);
+	
+	return [rgb, fontColor];
 }
 
 function brChange(val, chk){
@@ -324,6 +494,12 @@ function utilBoxDelete(slide){
 // 툴팁 생성 함수
 function infoBar(obj, text){
 	
+	// 툽팁 삭제 내장 함수
+	infoBar['infoBoxRemove'] = ()=>{
+		const infoBox = document.querySelector('.infoBox');
+		infoBox.remove();
+	}
+	
 	// 툴팁 마우스 움직임 콜백 함수 1
 	function tooltipMove(e){
 		
@@ -436,6 +612,7 @@ function boxFun(text,bg, addTagObject, closeBtnDelete, boxSelector, callback, au
 		}
 		
 		if(closeBtn){
+			
 			closeBtn.addEventListener('click',()=>{
 				if(boxOpen) {
 					if(autoMotion) {
@@ -445,6 +622,13 @@ function boxFun(text,bg, addTagObject, closeBtnDelete, boxSelector, callback, au
 					} else boxOpen.remove();
 				}
 			});
+			
+			contentBox['closeDisabledDelete'] = (callObject)=>{
+				closeBtn.addEventListener('click', (e)=>{
+					callObject.removeAttribute('disabled');
+				});
+			};
+			
 		}
 		if(addTagObject){
 			for(let tag of addTagObject){
@@ -464,10 +648,12 @@ function boxFun(text,bg, addTagObject, closeBtnDelete, boxSelector, callback, au
 			callback(contentBox, contentBox.childNodes, boxSelector);
 		}
 		
+		
+		
 		return contentBox;
 		
 	} else {
-		boxFun(text,bg, addTagObject, closeBtnDelete, "_"+boxSelector, callback, autoMotion);
+		return boxFun(text,bg, addTagObject, closeBtnDelete, "_"+boxSelector, callback, autoMotion);
 	}
 	
 }

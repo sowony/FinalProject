@@ -44,8 +44,8 @@ public class DashMemberBizImpl implements DashMemberBiz {
 		// TODO Auto-generated method stub
 		
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("dmdno", dno);
-		params.put("dmmid", mid);
+		params.put("dno", dno);
+		params.put("mid", mid);
 		
 		return dashMemberDao.selectById(params);
 	}

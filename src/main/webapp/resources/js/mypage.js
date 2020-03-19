@@ -3,9 +3,7 @@
  */
 
 
-let selectTmpNick = '';
-let selectTmpRule = '';
-let dashCreateInfo = {};
+let selectTmpMember = '';
 
 function logout(){
 		
@@ -17,11 +15,123 @@ function logout(){
 		
 }
 
-function dashRuleAdd(){
+function addMemberBtnAdd(){
 	
-	const dashRuleAddBtn = document.querySelector('input[name=dashRuleAddBtn]');
+	if(!document.querySelector('.addMemberBtn')){
+		
+		const dashRuleDiv = document.querySelector('.dashRuleList').parentNode;
+		const addMemberBtn = addObject(dashRuleDiv, 'input', ['addMemberBtn', 'grayBtn'], true, (o)=>{
+			o.type = 'button';
+			o.value = '추가';
+			o.addEventListener('click',()=>{
+				
+				const dashRuleSelect = document.querySelector('#dashRuleSelect');
+				
+				const { dgalias, dggrade, dgcolor } = dashRuleSelect.dataset;
+				
+				dashRuleSelect.id = '';
+				
+				const dashMemberList = document.querySelector('.dashMemberList');
+				
+				const dashMemberItems = document.querySelectorAll('.dashMemberItem');
+				
+				let chk = true;
+				
+				dashMemberItems.forEach((item)=>{
+					
+					if(item.dataset.mnick === selectTmpMember.mnick){
+						addMemberBtn.disabled = 'true';
+						boxFun('이미 등록되어 있는 맴버입니다.').closeDisabledDelete(addMemberBtn);
+						chk = false;
+						return;
+					}
+					
+				});
+				
+				if(chk){
+					
+					const mnickInput = document.querySelector('input[name=mnick]');
+					mnickInput.value = '';
+					
+					const memberItem = addObject(dashMemberList,'span', 'dashMemberItem', true, (o)=>{
+					
+						o.style.backgroundColor = dashRuleSelect.style.backgroundColor;
+						o.style.color = dashRuleSelect.style.color;
+					
+						o.dataset.dgalias = dgalias;
+						o.dataset.dggrade = dggrade;
+						o.dataset.dmcolor = dgcolor;
+						o.dataset.mid = selectTmpMember.mid;
+						o.dataset.mnick = selectTmpMember.mnick;
+					
+						o.innerHTML = `${selectTmpMember.mnick}<button class="dashMemberDelteBtn">X</button>`;
+					
+						const dashMemberDelteBtn = o.querySelector('.dashMemberDelteBtn');
+					
+						dashMemberDelteBtn.addEventListener('click', (e)=>{
+						
+							infoBar.infoBoxRemove();
+						
+							const rule = e.target.parentNode;
+							rule.remove();
+						});
+					
+						colorPickerBtn(o, dashMemberDelteBtn, (color)=>{
+						
+							o.dataset.dmcolor = color;
+							o.style.backgroundColor = color;
+						
+							o.style.color = fontColorCheck(color);
+						
+						});
+						
+						infoBar(o, `${dgalias} (우선 순위 : ${dggrade})`);
+				
+					});
+					
+					o.remove();
+				}
+			});
+		});
+	}
+}
+
+function dashRuleSelectEvent(e){
 	
-	dashRuleAddBtn.addEventListener('click', ()=>{
+	e.preventDefault();
+	e.stopPropagation();
+	
+	const oldRuleSelect = document.querySelector('#dashRuleSelect');
+	const ruleItem = e.target;
+	
+	if(oldRuleSelect && ruleItem !== oldRuleSelect){
+		oldRuleSelect.removeAttribute('id');
+	}
+	
+	if(ruleItem.id){
+		ruleItem.id = '';
+	} else {
+		ruleItem.id = 'dashRuleSelect';
+	}
+	
+	
+	if(selectTmpMember && ruleItem.id){
+		addMemberBtnAdd();
+	} else {
+		const dashMemberDiv = document.querySelector('.addMemberBtn');
+		if(dashMemberDiv) dashMemberDiv.remove();
+	}
+	
+}
+
+function dashRuleAdd(btn){
+	
+	if(btn['oneStart']){
+		return;
+	}
+	
+	btn.addEventListener('click', ()=>{
+		
 		
 		const dggrade = document.querySelector('input[name=dggrade]');
 		const dgalias = document.querySelector('input[name=dgalias]');
@@ -32,51 +142,122 @@ function dashRuleAdd(){
 		} else if(!dgalias.value){
 			boxFun('등급 별칭을 정해주세요.');
 			return
-		}
+		} 
 		
 		const dashRuleList = document.querySelector('.dashRuleList');
 		
-		const ruleBox = addObject(dashRuleList, 'span', 'dashRuleItem', true , (o)=>{
+		const dashRuleItems = document.querySelectorAll('.dashRuleItem');
+		
+		let chk = true;
+		dashRuleItems.forEach((item)=>{
+			const tmp = item.dataset.dgalias;
 			
-			const colorArray = randomColor();
-			
-			o.dataset.dgalias = dgalias.value;
-			o.dataset.dggrade = dggrade.value;
-			
-			o.style.backgroundColor = colorArray[0];
-			o.style.color = colorArray[1];
-			
-			o.innerHTML = `${dgalias.value}`;
-			infoBar(o, `${dgalias.value} (우선 순위 : ${dggrade.value})`);
+			if(tmp === dgalias.value){
+				btn.disabled = 'true';
+				boxFun('똑같은 이름의 별칭이 있습니다.').closeDisabledDelete(btn);
+				chk = false;
+				return;
+			}
 			
 		});
 		
+		if(chk){
+			const dashRuleItem = addObject(dashRuleList, 'span', 'dashRuleItem', true , (o)=>{
+			
+				const colorArray = randomColor();
+			
+				o.dataset.dgcolor = colorArray[0];
+				o.dataset.dgalias = dgalias.value;
+				o.dataset.dggrade = dggrade.value;
+				
+				o.style.backgroundColor = colorArray[0];
+				o.style.color = colorArray[1];
+			
+				o.innerHTML = `${dgalias.value}<button class="dashRuleDelteBtn">X</button>`;
+			
+				const dashRuleDeleteBtn = o.querySelector('.dashRuleDelteBtn');
+			
+				dashRuleDeleteBtn.addEventListener('click', (e)=>{
+				
+					infoBar.infoBoxRemove();
+				
+					const rule = e.target.parentNode;
+					rule.remove();
+				});
+			
+				colorPickerBtn(o, dashRuleDeleteBtn, (color)=>{
+				
+					o.dataset.dgcolor = color;
+					o.style.backgroundColor = color;
+				
+					o.style.color = fontColorCheck(color);
+				
+				});
+			
+				infoBar(o, `${dgalias.value} (우선 순위 : ${dggrade.value})`);
+			
+				dgalias.value = '';
+				dggrade.value = '';
+				
+			});
+		}
+		
 	});
+	
+	btn['oneStart'] = true;
 	
 }
 
 
-function nickSearch(){
+function nickSearch(btn){
 	
-	const nickSearchBtn = document.querySelector('input[name=nickSearchBtn]');
+	if(btn['oneStart']){
+		return
+	}
 	
-	nickSearchBtn.addEventListener('click',()=>{
+	btn.addEventListener('click',(e)=>{
+		
+		e.preventDefault();
+		e.stopPropagation();
+
+		btn.disabled = 'true';
 		
 		const mnickInput = document.querySelector('input[name=mnick]');
 		
 		xhrLoad('get', 'nickcheck', { mnick : mnickInput.value }, (res)=>{
 			
 			if(res){
-				boxFun('초대 가능한 유저입니다.');
+				
+				const box = boxFun('초대 가능한 유저입니다.');
+				
+				box.closeDisabledDelete(btn);
+				
+				const dashRuleSelect = document.querySelector('#dashRuleSelect');
+				
+				if(dashRuleSelect){
+					addMemberBtnAdd()
+				}
+				
 				const jsonObj = JSON.parse(res);
 				selectTmpMember = jsonObj;
+				
 			} else {
-				boxFun('존재하지 않는 유저입니다.');
+				
+				boxFun('존재하지 않는 유저입니다.').closeDisabledDelete(btn);
+				
+				const dashMemberDiv = document.querySelector('.addMemberBtn');
+				
+				if(dashMemberDiv) dashMemberDiv.remove();
+				
 				selectTmpMember = '';
+				
 			}
+			
 		}, false);
 		
 	});
+	
+	btn['oneStart'] = true;
 }
 
 function addDashBoardFun(){
@@ -112,7 +293,7 @@ function addDashBoardFun(){
 					<input class="grayBtn" type="button" name="dashRuleAddBtn" value="권한 추가"/>
 				</div>
 				<div>
-					<p>대시보드 룰 리스트</p>
+					<p>대시보드 권한 리스트</p>
 					<div class="dashRuleList"></div>
 				</div>
 			</fieldset>
@@ -132,7 +313,7 @@ function addDashBoardFun(){
 					<input type="button" class="grayBtn" name="nickSearchBtn" value="검색"/> 
 				</div>
 				<div style="clear:both;display: inline-block;width: 100%;">
-					<p>대시보드 룰 리스트</p>
+					<p>대시보드 권한 리스트</p>
 					<div class="dashRuleList"></div>
 				</div>
 			</fieldset>
@@ -146,7 +327,7 @@ function addDashBoardFun(){
 		o.innerHTML = `
 			<fieldset>
 				<div>
-					<p>대시보드 권한 추가</p>
+					<p>대시보드 맴버 리스트</p>
 					<div class="dashMemberList"></div>
 				</div>
 			</fieldset>
@@ -156,12 +337,18 @@ function addDashBoardFun(){
 	
 	
 	const addDashPrevBtn = addObject(null, 'input', ['addDashPrevBtn', 'grayBtn'], false, (o)=>{
+		
 		o.type = 'button';
 		o.style.float = 'right';
 		o.style.width = 'max-content';
 		o.style.margin = '0';
 		o.value = '이전';
-		o.addEventListener('click', ()=>{
+		o.addEventListener('click', (e)=>{
+			
+			e.preventDefault();
+			e.stopPropagation();
+			
+			const dashRuleItemArray = document.querySelectorAll('.dashRuleItem');
 			
 			const addDashForm = o.parentNode;
 			
@@ -179,9 +366,169 @@ function addDashBoardFun(){
 				o.remove();
 			});
 			
-			boxFun(null, false, [dashInfoDiv, dashRuleDiv, addDashNextBtn, closeDashCloseBtn], true, 'addDashBox1', (o)=>{}, true);
+			const dashRuleList = dashRuleDiv.querySelector('.dashRuleList');
+			
+			
+			boxFun(null, false, [dashInfoDiv, dashRuleDiv, addDashNextBtn, closeDashCloseBtn], true, 'addDashBox1', (o)=>{
+				
+				for(let item of dashRuleItemArray){
+					item.removeEventListener('click', dashRuleSelectEvent);
+					if(item.id) item.removeAttribute('id');
+					dashRuleList.appendChild(item);
+				}
+				
+				const dashMemberDiv = document.querySelector('.addMemberBtn');
+				if(dashMemberDiv) dashMemberDiv.remove();
+				
+				selectTmpMember = '';
+				
+			}, true);
 			
 		});
+	});
+	
+	const addDashSubmitBtn = addObject(null, 'input', ['addDashSubmitBtn', 'grayBtn'], false, (o)=>{
+		
+		o.type = 'button';
+		o.style.float = 'right';
+		o.style.width = 'max-content';
+		o.style.margin = '0 5px';
+		o.value = '만들기';
+		o.addEventListener('click', ()=>{
+			
+			let dashCreateInfo = {};
+			
+			const dtitle = dashInfoDiv.querySelector('input[name=dtitle]').value;
+			const ddesc = dashInfoDiv.querySelector('textarea[name=ddesc]').value;
+			
+			if(!dtitle){
+				o.disabled = 'true';
+				boxFun('대시보드 명을 입력하지 않았습니다.').closeDisabledDelete(o);
+				return
+			}
+			
+			const rules = [];
+			const members = [];
+			
+			dashMemberDiv.querySelectorAll('.dashRuleItem').forEach(item=>{
+				
+				const dggrade = item.dataset.dggrade;
+				const dgalias = item.dataset.dgalias;
+				const dgcolor = item.dataset.dgcolor;
+				
+				rules.push({ dgalias, dggrade, dgcolor });
+				
+			});
+			
+			
+			if(rules.length === 0){
+				o.disabled = 'true';
+				boxFun('권한이 비어 있습니다.').closeDisabledDelete(o);
+				return
+			}
+			
+			dashMemberListDiv.querySelectorAll('.dashMemberItem').forEach(item=>{
+				
+				const mid = item.dataset.mid;
+				const mnick = item.dataset.mnick;
+				const dggrade = item.dataset.dggrade;
+				const dgalias = item.dataset.dgalias;
+				const dmcolor = item.dataset.dmcolor;
+				
+				members.push({ mid, mnick, dggrade, dgalias, dmcolor });
+				
+			});
+			
+			
+			dashCreateInfo = { dtitle, ddesc, rules, members };
+			
+			o.disabled = 'true';
+			
+			const dashMemberDivClone = dashMemberDiv.cloneNode(true);
+			
+			dashMemberDivClone.querySelector('div').remove();
+			dashMemberDivClone.querySelector('p').remove();
+			
+			const dashRuleItems = dashMemberDivClone.querySelectorAll('.dashRuleItem')
+			
+			const addDashMyInfoCloseBtn = addObject(dashMemberDivClone, 'input', ['addDashMyInfoCloseBtn', 'grayBtn'], true, (o)=>{
+						o.type = 'button';
+						o.style.width = 'max-content';
+						o.style.float = 'left';
+						o.value = '닫기';
+						o.addEventListener('click',()=>{
+							motionOnOff(dashMemberDivClone.parentNode, 0.8, false, { setting : 'offDefault' }, null, (o)=>{
+								addDashSubmitBtn.removeAttribute('disabled');
+								o.remove();
+							});
+						});
+					});
+			
+			dashRuleItems.forEach(item=>{
+				
+				item.querySelector('.colorPickerBtn').remove();
+				item.querySelector('.dashRuleDelteBtn').remove();
+				
+				item.addEventListener('click', ()=>{
+					
+					const addDashMyInfo = addObject(dashMemberDivClone.querySelector('div'), 'div', 'addDashMyInfo', true, (o)=>{
+						
+						o.dataset.dggrade = item.dataset.dggrade;
+						o.dataset.dgalias = item.dataset.dgalias;
+						o.dataset.dmcolor = item.dataset.dgcolor;
+						o.style.backgroundColor = item.dataset.dgcolor;
+						o.style.color = fontColorCheck(o.style.backgroundColor);
+						o.innerHTML = `당신의 권한은 ${item.dataset.dgalias}입니다.`;
+						
+						infoBar(o, `우선 순위 : ${item.dataset.dggrade}`);
+						
+						colorPickerBtn(o,null, (color)=>{
+							
+							o.style.backgroundColor = color;
+							o.style.color = fontColorCheck(color);
+							
+						});
+						
+					});
+					
+					
+					const addDashMyInfoSubmitBtn = addObject(dashMemberDivClone, 'input', ['addDashMyInfoSubmitBtn', 'grayBtn'], true, (o)=>{
+						
+						o.type = 'button';
+						o.style.width = 'max-content';
+						o.style.float = 'right';
+						o.value = '만들기';
+						
+						
+						o.addEventListener('click',()=>{
+							
+							dashCreateInfo.downer = {
+									
+									dggrade : addDashMyInfo.dataset.dggrade,
+									dgalias : addDashMyInfo.dataset.dgalias,
+									dmcolor : addDashMyInfo.dataset.dmcolor
+									
+							};
+							
+							xhrLoad('post', 'mypage/dashboard', dashCreateInfo, (res)=>{
+								if(res === 'true'){
+									utilBoxDelete(true);
+									boxFun('성공적으로 대시보드가 만들어졌습니다.');
+								}
+							});
+							
+						});
+						
+					});
+					
+				});
+				
+			});
+			
+			boxFun('대시보드 소유자의 권한을 선택해주세요.', false, [dashMemberDivClone], true, 'addDashBox3', null, true);
+			
+		});
+		
 	});
 	
 	const addDashNextBtn = addObject(null, 'input', ['addDashNextBtn', 'grayBtn'], false, (o)=>{
@@ -190,7 +537,14 @@ function addDashBoardFun(){
 		o.style.width = 'max-content';
 		o.style.margin = '0';
 		o.value = '다음';
-		o.addEventListener('click', ()=>{
+		
+		
+		o.addEventListener('click', (e)=>{
+			
+			e.preventDefault();
+			e.stopPropagation();
+			
+			const dashRuleItemArray = document.querySelectorAll('.dashRuleItem');
 			
 			const addDashForm = o.parentNode;
 			
@@ -205,13 +559,26 @@ function addDashBoardFun(){
 					}
 				}
 			},false, (o)=>{
+				
 				o.remove();
 			});
 			
-			boxFun(null, false, [dashMemberDiv, dashMemberListDiv, addDashPrevBtn, closeDashCloseBtn], true, 'addDashBox2', (o)=>{
-				nickSearch();
+			boxFun(null, false, [dashMemberDiv, dashMemberListDiv, addDashPrevBtn, addDashSubmitBtn, closeDashCloseBtn], true, 'addDashBox2', (o)=>{
+				
+				const nickSearchBtn = document.querySelector('input[name=nickSearchBtn]');
+				
+				nickSearch(nickSearchBtn);
+				
+				const dashRuleList = dashMemberDiv.querySelector('.dashRuleList');
+				
+				for(let item of dashRuleItemArray){
+					item.addEventListener('click', dashRuleSelectEvent);
+					dashRuleList.appendChild(item);
+				}
 				
 			}, true);
+			
+			
 		});
 	});
 	
@@ -221,7 +588,11 @@ function addDashBoardFun(){
 		o.style.width = 'max-content';
 		o.style.margin = '0';
 		o.value = '닫기';
-		o.addEventListener('click', ()=>{
+		o.addEventListener('click', (e)=>{
+			
+			e.preventDefault();
+			e.stopPropagation();
+			
 			motionOnOff(o.parentNode, 0.8, false, { setting : 'offDefault' }, null, (o)=>{
 				o.remove();
 			});
@@ -229,8 +600,8 @@ function addDashBoardFun(){
 	});
 	
 	boxFun(null, false, [dashInfoDiv, dashRuleDiv, addDashNextBtn, closeDashCloseBtn], true, 'addDashBox1', (o)=>{
-		dashRuleAdd();
-		
+		const dashRuleAddBtn = document.querySelector('input[name=dashRuleAddBtn]');
+		dashRuleAdd(dashRuleAddBtn);
 	}, true);
 	
 };
@@ -400,7 +771,7 @@ window.onload = ()=>{
 					</span></p>
 				</div>
 				<div class="d_body">
-					<p class="d_desc">${dashItem.ddesc}</p>
+					<p class="d_desc">${brChange(dashItem.ddesc, true)}</p>
 				</div>
 				`;
 				
