@@ -20,4 +20,8 @@ public class DashMemberDto {
     // 대시보드 참여 유저 등급 
     private int dgno;
 	
+    // join 용
+    private String mnick;
+
+    private String mimgpath;
 }

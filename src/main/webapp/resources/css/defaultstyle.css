@@ -153,6 +153,7 @@ div.customMenu{
 	height : max-content;
 	z-index: 10000;
 	padding : 5px 0px;
+	position: fixed;
 }
 
 .boxOpen > p {
@@ -178,22 +179,23 @@ div.customMenu{
 }
 
 li.menuLi {
-	float: none;
+    float: none;
     padding: 4px 15px;
-    font-size: 10pt;
+    font-size: 9.5pt;
+    font-weight: 500;
     color: #999999;
-    border:0;
+    border: 0;
     text-align: left;
 }
 
 li.menuLi:hover{
 	color : #fff;
-	background-color: #536fae;
+	background-color: #37c6f4;
 }
 
-input {
+input, textarea {
     display: block;
-    width: 185px;
+    width: 190px;
     padding: 7px;
     margin: 10px 0;
     font-size: 9pt;
@@ -221,7 +223,6 @@ textarea
     border: 0;
     background-color: #eee;
     border-radius: 5px;
-    padding-left: 12px;
     -webkit-text-fill-color : #3d3d3d;
 }
 
@@ -229,6 +230,10 @@ input[type="submit"], input[type="button"] {
     width: 100%;
     border: 0px;
     border-radius: 5px;
+}
+
+textarea {
+	white-space:pre;
 }
 
 

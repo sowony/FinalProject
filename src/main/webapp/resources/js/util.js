@@ -10,6 +10,35 @@ const backgroundDiv = addObject(null,'div',null,false,(t)=>{
 });
 
 
+function randomColor(){
+	
+	const R = Math.round((Math.random() * 255) + 0);
+	const G = Math.round((Math.random() * 255) + 0);
+	const B = Math.round((Math.random() * 255) + 0);
+	
+	let fontColor = '';
+	
+	if((R < 125 && G < 125) || (G < 125 && B < 125) || (R < 125 && B < 125)){
+		fontColor = '#fff';
+	} else {
+		fontColor = '#3d3d3d';
+	}
+	
+	return [`rgb(${R}, ${G}, ${B})`, fontColor];
+}
+
+function brChange(val, chk){
+	if(chk){
+		let res = '';
+		res = val.split('\n').join('<br>');
+		return res;
+	} else {
+		let res = '';
+		res = val.split('<br>').join('\r\n');
+		return res;	
+	}
+}
+
 function backgroundMotion(){
 	
 	const backgroundImg = document.querySelectorAll('.backgroundImg');
@@ -468,42 +497,64 @@ function addObject(parentNode, tagName, className, defaultLocation, callback){
 
 
 // 객체에 메뉴 등록 함수
-function contextMenuFun(target, menu, setting){
+function contextMenuFun(target, setting){
+	
+	
 	
 	target.addEventListener('contextmenu',(e)=>{
+		
 		e.preventDefault();
 		e.stopPropagation();
 		
-		const oldUl = document.querySelector('.menuUl');
-		if(oldUl){
-			oldUl.remove();
-		}
+		const oldMenu = document.querySelector('.customMenu');
 		
-		menu.style.display='block';
+		if(oldMenu) oldMenu.remove();
+		
+		const menu = addObject(document.querySelector('body'), 'div', 'customMenu', true);
+
 		menu.style.top = e.clientY + 'px';
 		menu.style.left = e.clientX + 'px';
-		
+			
 		const ul = addObject(menu,'ul','menuUl', true);
 		
-		const keyArray = Object.keys(setting);
-		for(let k of keyArray){
-			addObject(ul, 'li', 'menuLi', true, (l)=>{
-				l.innerHTML = k;
-				l.addEventListener('click',setting[k]);
-				l.addEventListener('click',()=>{
-					menu.style.display='none';
+		const valArray = Object.values(setting);
+		
+		valArray.forEach((value, i)=>{
+			const keyArray = Object.keys(value);
+			
+			keyArray.forEach((k,keyIndex)=>{
+				addObject(ul, 'li', 'menuLi', true, (l)=>{
+					l.innerHTML = k;
+					if(keyIndex === keyArray.length-1){
+						if(i !== valArray.length - 1){
+							l.style.borderBottom = '1px solid #ccc';
+						}
+					}
+					l.addEventListener('click',value[k]);
+					l.addEventListener('click',()=>{
+						
+						menu.remove();
+						
+					});
 				});
 			});
-			
-		}
+		});
+		
 		
 	});
 	
 	document.addEventListener('click',(e)=>{
+		
 		e.preventDefault();
 		e.stopPropagation();
-		menu.style.display='none';
+		
+		const menu = document.querySelector('.customMenu');
+		
+		if(menu)
+		menu.remove();
+	
 	});
+	
 }
 
 

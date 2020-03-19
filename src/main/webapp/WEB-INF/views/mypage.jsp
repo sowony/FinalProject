@@ -23,17 +23,13 @@
 
 </head>
 <body>
-<!--  
+
 	<jsp:include page="header.jsp"></jsp:include>
--->
-	<header>
-	</header>
 	<script type="text/javascript" src="./resources/js/header.js"></script>
 	
 	
 	<section>
 		<article id="content">
-			
 		</article>
 	</section>
 	
