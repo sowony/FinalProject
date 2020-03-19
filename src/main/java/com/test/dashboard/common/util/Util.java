@@ -254,4 +254,11 @@ public class Util {
 		return res.toString();
 	}
 	
+	public static String brChange(String mabout) {
+		String res = "";
+		
+		res = mabout.replaceAll("(\r\n|\r|\n|\n\r)", "<br/>");
+		
+		return res;
+	}
 }

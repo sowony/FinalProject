@@ -33,7 +33,7 @@ p#p_mabout {
     font-size: 11pt;
     color: #4c4c4c;
     max-height: 200px;
-    overflow: overlay;
+    overflow: hidden visible;
     word-break: break-all;
     text-overflow: ellipsis;
 }
@@ -147,6 +147,71 @@ p.d_desc {
     color: #32747f;
     text-overflow: ellipsis;
     word-break: break-all;
-    overflow: overlay;
+    overflow: hidden visible;
 }
 
+.addDashBox1 fieldset,
+.addDashBox2 fieldset {
+	display : block;
+	border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px 20px;
+    width : 300px;
+    margin : 10px 0;
+}
+
+.addDashBox1 fieldset div,
+.addDashBox2 fieldset div {
+	margin : 8px 0;
+}
+
+.addDashBox1 p,
+.addDashBox2 p {
+    font-size: 12pt;
+    text-align: left;
+    text-indent: 3px;
+    color: #599ed6;
+}
+
+
+.addDashBox1 input[type=text],
+.addDashBox2 input[type=text],
+.addDashBox1 input[type=number],
+.addDashBox2 input[type=number],
+.addDashBox1 textarea,
+.addDashBox2 textarea {
+	display : inline-block;
+	width: 95%;
+	margin : 5px 0;
+}
+
+div.dashRuleList, div.dashMemberList {
+    display: block;
+    text-align: left;
+    width: 92%;
+    height: max-content;
+    min-height: 20px;
+    margin: 5px auto !important;
+    padding: 8px 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 4px #989898;
+    background-color: #eee;
+}
+
+input[name=nickSearchBtn]{
+	display: inline-block;
+    width: 25%;
+    height: 32px;
+    float: left;
+    margin-left: 5px;
+}
+
+.dashRuleItem {
+    display: inline-block;
+    width: max-content;
+    padding: 5px;
+    margin: 5px !important;
+    font-size: 9pt;
+    font-weight: 100;
+    border-radius: 5px;
+}

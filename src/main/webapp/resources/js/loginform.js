@@ -21,11 +21,9 @@ function nickCheckFun(input){
 	valueCheck(input, /^[a-zA-Z가-힣0-9]{2,15}$/,(i)=>{
 		
 		// 닉네임 중복 체크
-		xhrLoad('get','nickcheck',{ 'mnick' : i.value  },(responseText)=>{
+		xhrLoad('get','nickcheck',{ 'mnick' : i.value  },(res)=>{
 			
-			const resCheck = (responseText === 'true');
-
-			if(resCheck){
+			if(res){
 				inputCheck(i,false,'중복된 닉네임이 있습니다.');
 			} else {
 				inputCheck(i,true,null);

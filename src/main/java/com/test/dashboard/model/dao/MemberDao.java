@@ -30,7 +30,7 @@ public interface MemberDao {
 	public MemberDto selectById(String mid);
 
 	// nick 조회
-	@Select("select * from member where mnick = #{mnick}")
+	@Select("select mid, mnick from member where mnick = #{mnick}")
 	public MemberDto selectByNick(String mnick);
 
 	// 이름 조회

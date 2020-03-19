@@ -130,69 +130,137 @@ window.onload = ()=>{
 	const outputBox = boxFun('아웃풋 박스', true, [ innerBoxOpenBtn ]);
 	
 	 */
-	
-	const body = document.querySelector('body');
-	
-	// 인자 순서대로는 부모 객체, 태그 네임, 클래스네임, 디폴트 위치, 콜백(만든 객체 자신)
-	const section = addObject(body, 'section', 'section', true, (o)=>{ });
-	
-	// 첫번째 인자는 타이틀, 두번째 인자는 백그라운드
-	const inputText = addObject(null, 'input', 'mid', false, (o)=>{
-		o.type = 'text';
-	});
-	
-	const textarea = addObject(null, 'textarea', 'textarea', false, (o)=>{
-		o.style.display = 'block';
-		o.value = '테스트 중입니다.';
-		infoBar(o,'텍스트');
-	});
-	
-	const div = addObject(null, 'div', 'content', false, (o)=>{
-		
-		console.dir(o);
-		
-		o.innerHTML = `
-			<fieldset>
-				<legend>정보</legend>
-				${o.tagName}
-			</fieldset>
-		`;
-		
-		infoBar(o,'안녕');
-		
-	});
-	
-
-	
-	
-	const btn = addObject(null, 'button', 'grayBtn', false, (o)=>{
-		o.innerHTML = '박스에 박스 만들기';
-		o.addEventListener('click', ()=>{
-			
-			boxFun('박스에 박스', false, null, false, 'innerBox', null, true);
-			
-		});
-		
-	});
-	
+//	
+//	const body = document.querySelector('body');
+//	
+//	// 인자 순서대로는 부모 객체, 태그 네임, 클래스네임, 디폴트 위치, 콜백(만든 객체 자신)
+//	const section = addObject(body, 'section', 'section', true, (o)=>{ });
+//	
+//	// 첫번째 인자는 타이틀, 두번째 인자는 백그라운드
+//	const inputText = addObject(null, 'input', 'mid', false, (o)=>{
+//		o.type = 'text';
+//	});
+//	
+//	const textarea = addObject(null, 'textarea', 'textarea', false, (o)=>{
+//		o.style.display = 'block';
+//		o.value = '테스트 중입니다.';
+//		infoBar(o,'텍스트');
+//	});
+//	
+//	const div = addObject(null, 'div', 'content', false, (o)=>{
+//		
+//		console.dir(o);
+//		
+//		o.innerHTML = `
+//			<fieldset>
+//				<legend>정보</legend>
+//				${o.tagName}
+//			</fieldset>
+//		`;
+//		
+//		infoBar(o,'안녕');
+//		
+//	});
+//	
+//
+//	
+//	
+//	const btn = addObject(null, 'button', 'grayBtn', false, (o)=>{
+//		o.innerHTML = '박스에 박스 만들기';
+//		o.addEventListener('click', ()=>{
+//			
+//			boxFun('박스에 박스', false, null, false, 'innerBox', null, true);
+//			
+//		});
+//		
+//	});
+//	
 //	boxFun('안녕하세요', true, [ inputText, textarea, div ,btn], true, 'testBox',(o, nodes, classname)=>{
 //		
 //	}, false);
 //	
 	
-	//시계
-	const clock = addObject(null, 'div', 'clock',false,(o)=>{
+//	//시계
+//	const clock = addObject(null, 'div', 'clock',false,(o)=>{
+//	
+//		o.innerHTML = `
+//			<iframe scrolling="no" frameborder="no" clocktype="html5" style="overflow:hidden;border:0;margin:0;padding:0;width:380px;height:80px;"src="https://www.clocklink.com/html5embed.php?clock=047&timezone=KoreaRepublicof_Seoul&color=purple&size=380&Title=&Message=&Target=&From=2020,1,1,0,0,0&Color=purple"></iframe>
+//		`;
+//	});
+//	
+//	boxFun('clock', true, [clock], true, 'testBox', (o,nodes,classname)=>{
+//		
+//	},false);
+//	
+//	
+//	boxFun();
 	
-		o.innerHTML = `
-			<iframe scrolling="no" frameborder="no" clocktype="html5" style="overflow:hidden;border:0;margin:0;padding:0;width:380px;height:80px;"src="https://www.clocklink.com/html5embed.php?clock=047&timezone=KoreaRepublicof_Seoul&color=purple&size=380&Title=&Message=&Target=&From=2020,1,1,0,0,0&Color=purple"></iframe>
-		`;
+	const picker = addObject(null, 'div', 'picker', false, (o)=>{
+		o.style.position = 'absolute';
+		o.style.width = '10px';
+		o.style.height = '10px';
+		o.display = 'block';
+		o.style.border = '1px solid #ccc';
+		o.style.borderRadius = '50%';
 	});
 	
-	boxFun('clock', true, [clock], true, 'testBox', (o,nodes,classname)=>{
+	const picker_area = addObject(null, 'div', 'colorPicker', false, (o)=>{
+		o.style.background = `-webkit-linear-gradient(top, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 100%, 0) 50%,
+			hsla(0, 0%, 0%, 0) 50%, hsl(0, 0%, 0%) 100%),
+			-webkit-linear-gradient(left, hsl(0, 0%, 50%) 0%, hsla(0, 0%, 50%, 0) 100%)`;
+		o.style.backgroundColor = 'hsl(0, 100%, 50%)';
+		o.style.position = 'relative';
+		o.style.display = 'block';
+		o.style.width = '200px';
+		o.style.height = '200px';
+		o.draggable = 'true';
+		o.appendChild(picker);
 		
-	},false);
+		o.addEventListener('dragstart',(e)=>{
+			
+		});
+		o.addEventListener('drag', (e)=>{
+			
+			const tmpImg = addObject(null, 'img');
+			
+			e.dataTransfer.setDragImage(tmpImg,0,0);
+			picker.style.top = e.offsetY + 'px';
+			picker.style.left = e.offsetX + 'px';
+			
+			const S = Math.round(e.offsetX/o.offsetHeight * 100);
+			const L = Math.round(100-(e.offsetY/o.offsetWidth*100));
+			const colorPick = document.querySelector('.colorSet');
+			const lineBar = document.querySelector('.lineBar');
+			
+			colorPick.style.backgroundColor = `hsl(${lineBar.value},${S}%,${L}%)`;
+			
+		});
+		
+		
+	});
+	
+	const color = addObject(null, 'div', 'colorSet', false, (o)=>{
+		o.style.position = 'relative';
+		o.style.display = 'block';
+		o.style.width = '100px';
+		o.style.height = '100px';
+		o.style.border = '1px solid #ccc';
+	});
+	
+	const lineBar = addObject(null, 'input', 'lineBar', false, (o)=>{
+		o.type = 'range';
+		o.max = '359';
+		o.min = '0';
+		o.value = '0';
+		o.addEventListener('input', (e)=>{
+			const picker_area = document.querySelector('.colorPicker');
+			
+			picker_area.style.backgroundColor = `hsl(${o.value}, 100%, 50%)`;
+			
+		});
+	});
 	
 	
-	boxFun();
+	boxFun('컬러 피커',true, [picker_area,color,lineBar]);
 	
 };

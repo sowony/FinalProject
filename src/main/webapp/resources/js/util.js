@@ -10,6 +10,35 @@ const backgroundDiv = addObject(null,'div',null,false,(t)=>{
 });
 
 
+function randomColor(){
+	
+	const R = Math.round((Math.random() * 255) + 0);
+	const G = Math.round((Math.random() * 255) + 0);
+	const B = Math.round((Math.random() * 255) + 0);
+	
+	let fontColor = '';
+	
+	if((R < 125 && G < 125) || (G < 125 && B < 125) || (R < 125 && B < 125)){
+		fontColor = '#fff';
+	} else {
+		fontColor = '#3d3d3d';
+	}
+	
+	return [`rgb(${R}, ${G}, ${B})`, fontColor];
+}
+
+function brChange(val, chk){
+	if(chk){
+		let res = '';
+		res = val.split('\n').join('<br>');
+		return res;
+	} else {
+		let res = '';
+		res = val.split('<br>').join('\r\n');
+		return res;	
+	}
+}
+
 function backgroundMotion(){
 	
 	const backgroundImg = document.querySelectorAll('.backgroundImg');

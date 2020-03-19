@@ -217,6 +217,9 @@ ALTER TABLE DashGrade
         REFERENCES DashBoard (dno) on delete cascade
 /
 
+ALTER TABLE DashGrade
+	ADD (dgcolor varchar(200))
+/
 
 -- 대시 맴버
 

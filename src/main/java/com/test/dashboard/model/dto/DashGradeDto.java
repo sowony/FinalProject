@@ -20,4 +20,6 @@ public class DashGradeDto {
     // 등급 별칭 
     private String dgalias;
 	
+    // 등급 컬러링
+    private String dgcolor;
 }
