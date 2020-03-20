@@ -3,6 +3,7 @@
  */
 
 
+
 window.onload = ()=>{
 	
 	
@@ -195,72 +196,6 @@ window.onload = ()=>{
 //	
 //	boxFun();
 	
-	const picker = addObject(null, 'div', 'picker', false, (o)=>{
-		o.style.position = 'absolute';
-		o.style.width = '10px';
-		o.style.height = '10px';
-		o.display = 'block';
-		o.style.border = '1px solid #ccc';
-		o.style.borderRadius = '50%';
-	});
-	
-	const picker_area = addObject(null, 'div', 'colorPicker', false, (o)=>{
-		o.style.background = `-webkit-linear-gradient(top, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 100%, 0) 50%,
-			hsla(0, 0%, 0%, 0) 50%, hsl(0, 0%, 0%) 100%),
-			-webkit-linear-gradient(left, hsl(0, 0%, 50%) 0%, hsla(0, 0%, 50%, 0) 100%)`;
-		o.style.backgroundColor = 'hsl(0, 100%, 50%)';
-		o.style.position = 'relative';
-		o.style.display = 'block';
-		o.style.width = '200px';
-		o.style.height = '200px';
-		o.draggable = 'true';
-		o.appendChild(picker);
-		
-		o.addEventListener('dragstart',(e)=>{
-			
-		});
-		o.addEventListener('drag', (e)=>{
-			
-			const tmpImg = addObject(null, 'img');
-			
-			e.dataTransfer.setDragImage(tmpImg,0,0);
-			picker.style.top = e.offsetY + 'px';
-			picker.style.left = e.offsetX + 'px';
-			
-			const S = Math.round(e.offsetX/o.offsetHeight * 100);
-			const L = Math.round(100-(e.offsetY/o.offsetWidth*100));
-			const colorPick = document.querySelector('.colorSet');
-			const lineBar = document.querySelector('.lineBar');
-			
-			colorPick.style.backgroundColor = `hsl(${lineBar.value},${S}%,${L}%)`;
-			
-		});
-		
-		
-	});
-	
-	const color = addObject(null, 'div', 'colorSet', false, (o)=>{
-		o.style.position = 'relative';
-		o.style.display = 'block';
-		o.style.width = '100px';
-		o.style.height = '100px';
-		o.style.border = '1px solid #ccc';
-	});
-	
-	const lineBar = addObject(null, 'input', 'lineBar', false, (o)=>{
-		o.type = 'range';
-		o.max = '359';
-		o.min = '0';
-		o.value = '0';
-		o.addEventListener('input', (e)=>{
-			const picker_area = document.querySelector('.colorPicker');
-			
-			picker_area.style.backgroundColor = `hsl(${o.value}, 100%, 50%)`;
-			
-		});
-	});
-	
-	
-	boxFun('컬러 피커',true, [picker_area,color,lineBar]);
+	new colorPickerFun();
 	
 };
