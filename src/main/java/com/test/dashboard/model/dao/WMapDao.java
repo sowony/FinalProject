@@ -13,17 +13,17 @@ import com.test.dashboard.model.dto.WMapDto;
 @Repository
 public interface WMapDao {
 	
-	@Select("SELECT WMAPNO, WNO, WMAPKEYWORD, WMAPADDR, WMAPJIBUN, WMAPLONG, WMAPLAT FROM WMAP")
+	@Select("SELECT WMAPNO, WNO, WMAPKEYWORD, WMAPADDR, WMAPJIBUN, WMAPLONG, WMAPLAT, WMAPMEMO FROM WMAP")
 	public List<WMapDto> selectList();
 	//public List<WMapDto> selectList(int wno);
 	
-	@Select("SELECT WMAPNO,WNO,WMAPKEYWORD,WMAPADDR,WMAPJIBUN,WMAPLONG,WMAPLAT FROM WMAP WHERE WMAPNO=#{wmapno}")
+	@Select("SELECT WMAPNO,WNO,WMAPKEYWORD,WMAPADDR,WMAPJIBUN,WMAPLONG,WMAPLAT, WMAPMEMO FROM WMAP WHERE WMAPNO=#{wmapno}")
 	public WMapDto select(int wmapno);
 	
-	@Insert("INSERT INTO WMAP VALUES(WMAP_SEQ.NEXTVAL,null,#{wmapkeyword},#{wmapaddr},#{wmapjibun},#{wmaplong},#{wmaplat})")
+	@Insert("INSERT INTO WMAP VALUES(WMAP_SEQ.NEXTVAL,null,#{wmapkeyword},#{wmapaddr},#{wmapjibun},#{wmaplong},#{wmaplat},null)")
 	public int insert(WMapDto dto);
 	
-	@Update("UPDATE WMAP SET WMAPKEYWORD=#{wmapkeyword}, WMAPADDR=#{wmapaddr}, WMAPJIBUN=#{wmapjibun}, WMAPLONG=#{wmaplong}, WMAPLAT=#{wmaplat} WHERE WMAPNO=#{wmapno}")
+	@Update("UPDATE WMAP SET WMAPMEMO=#{wmapmemo} WHERE WMAPNO=#{wmapno}")
 	public int update(WMapDto dto);
 	
 	@Delete("DELETE FROM WMAP WHERE WMAPNO=#{wmapno}")
