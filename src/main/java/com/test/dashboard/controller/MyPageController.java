@@ -53,47 +53,62 @@ public class MyPageController {
 	
 	@PostMapping("/dashboard")
 	public boolean postDashBoard(@RequestBody DashAddObjectDto dashAddObjectDto, HttpSession session) throws SQLException {
+//		
+//		logger.info("[ INFO ] : MyPageController > postDashBoard [path : /mypage/dashboard]");
+//		
+//		MemberDto user = (MemberDto) session.getAttribute("user");
+//		
+//		DashBoardDto dashBoardDto = new DashBoardDto();
+//		
+//		dashBoardDto.setDdesc(dashAddObjectDto.getDdesc());
+//		dashBoardDto.setMid(user.getMid());
+//		dashBoardDto.setDtitle(dashAddObjectDto.getDtitle());
+//		
+//		logger.info("[ INFO ] DashInfo :" + dashBoardDto);
+//		
+//		int res = dashBoardBiz.insert(dashBoardDto);
+//		
+//		int dno;
+//		
+//		if(res == 1) {
+//			
+//			logger.info("[ INFO ] DashBoardNum :" + dashBoardDto.getDno());
+//			
+//			dno = dashBoardDto.getDno();
+//		
+//		} else {
+//			
+//			return false;
+//		
+//		}
+//		
+//		for(DashGradeDto out : dashAddObjectDto.getRules()) {
+//			
+//			logger.info("[ INFO ] DashGradeList :" + out);
+//			
+//			out.setDno(dno);
+//			
+//			res = dashGradeBiz.insert(out);
+//		
+//		}
+//		
+//				
+//		for(Map<String, Object> out : dashAddObjectDto.getMembers()) {
+//			logger.info("[ INFO ] DashMemberList :" + out);
+//		}
+//		
+//		res = dashMemberBiz.insert(dashAddObjectDto.getMembers(), dno);
+//		
+//		if(res == 1) {
+//			logger.info("[ INFO ] DashBoard Create");
+//			return true;
+//		} else {
+//			return false;
+//		}
+
+		logger.info("[ INFO ] : MyPageController > postDashBoard | " + dashAddObjectDto);
 		
-		logger.info("[ INFO ] : MyPageController > getDashBoard [path : /mypage/dashboard]");
-		
-		MemberDto user = (MemberDto) session.getAttribute("user");
-		
-		DashBoardDto dashBoardDto = new DashBoardDto();
-		dashBoardDto.setDdesc(dashAddObjectDto.getDdesc());
-		dashBoardDto.setMid(user.getMid());
-		dashBoardDto.setDtitle(dashAddObjectDto.getDtitle());
-		
-		logger.info("[ INFO ] DashInfo :" + dashBoardDto);
-		int res = dashBoardBiz.insert(dashBoardDto);
-		
-		int dno;
-		
-		if(res == 1) {
-			logger.info("[ INFO ] DashBoardNum :" + dashBoardDto.getDno());
-			dno = dashBoardDto.getDno();
-		} else {
-			return false;
-		}
-		
-		for(DashGradeDto out : dashAddObjectDto.getRule()) {
-			logger.info("[ INFO ] DashGradeList :" + out);
-			out.setDno(dno);
-			res = dashGradeBiz.insert(out);
-		}
-		
-				
-		for(Map<String, Object> out : dashAddObjectDto.getMember()) {
-			logger.info("[ INFO ] DashMemberList :" + out);
-		}
-		
-		res = dashMemberBiz.insert(dashAddObjectDto.getMember(), dno);
-		
-		if(res == 1) {
-			logger.info("[ INFO ] DashBoard Create");
-			return true;
-		} else {
-			return false;
-		}
+		return true;
 	}
 	
 	

@@ -8,8 +8,9 @@ import lombok.Data;
 public class DashAddObjectDto {
 
 	String dtitle, ddesc;
-	Map<String, Object>[] member;
-	DashGradeDto[] rule;
+	Map<String, Object> downer;
+	Map<String, Object>[] members;
+	DashGradeDto[] rules;
 	
 	
 	

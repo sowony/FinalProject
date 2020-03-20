@@ -288,6 +288,9 @@ ALTER TABLE DashMember
     ADD CONSTRAINT UC_dno_mid_dgno UNIQUE (dno,mid,dgno)
 /
 
+ALTER TABLE DashMember
+	ADD (dmcolor varchar(200))
+/
 
 
 -- 위젯 테이블
