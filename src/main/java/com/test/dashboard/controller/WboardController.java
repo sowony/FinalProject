@@ -46,6 +46,7 @@ public class WboardController {
 		
 		@RequestMapping(value = "/wSelectOne", method = RequestMethod.POST)
 		@ResponseBody
+		//post방식으로 데이터를 주고 받을 경우 @ModelAttribute("받아오는 값 이름") 디비에서 이용되는 값이름  ,를 사용해서 이름을 맞춰주어야 에러가 안뜬다  
 		public Map<String, Object> selectOne(@ModelAttribute("selectno") int wbtodono) {
 			System.out.println("으아아앙ㄱ " + wbtodono);
 			
