@@ -11,4 +11,7 @@ public interface WboardBiz {
 	
 	//연습용 
 	public List<WboardDto> boardList();
+	
+	//글 상세보기 
+	public WboardDto wSelectOne(int wbtodono);
 }

@@ -68,6 +68,7 @@ textarea.wcontent {
     width: 96.5%;
     height: 200px;
     resize: none;
+    white-space: pre-wrap;
 }
  .writeContent p input {
     display: inline-block !important;

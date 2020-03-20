@@ -18,4 +18,8 @@ public interface WboardDao {
 	@Select("select * from wboard")
 	public List<WboardDto> boardList();
 	
+	//글 상세보기 
+	@Select("select * from wboard where wbtodono = #{wbtodono}")
+	public WboardDto wSelectOne(int wbtodono);
+	
 }

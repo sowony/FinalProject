@@ -54,10 +54,8 @@
 				<c:otherwise>
 					<c:forEach items="${list }" var="wlist">
 						<input type="text" value="${wlist.wbtitle }" 
-						readonly draggable="true" ondragstart="drag(event)">
-						<!-- 
-						 onclick="location.herf='/wSelectOne?wbtodono=${wlist.wbtodono}'">
-					 -->
+						readonly draggable="true" ondragstart="drag(event)"
+						 onclick="selectbtn(${wlist.wbtodono})">
 					</c:forEach>
 				</c:otherwise>
 			</c:choose>

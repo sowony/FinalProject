@@ -18,14 +18,27 @@ public class WboardBizImpl implements WboardBiz{
 	
 	@Override
 	public List<WboardDto> boardListAll(int dgno) {
-		// TODO Auto-generated method stub
 		return wboardDao.boardListAll(dgno);
 	}
 
 	@Override
 	public List<WboardDto> boardList() {
-		// TODO Auto-generated method stub
 		return wboardDao.boardList();
+	}
+
+	@Override
+	public WboardDto wSelectOne(int wbtodono) {
+		WboardDto wboardDto = null;
+		
+		try {
+			wboardDto = wboardDao.wSelectOne(wbtodono);
+		} catch (Exception e) {
+			System.out.println("wboardDao biz 에러 발생");
+			e.printStackTrace();
+		}
+		System.out.println(wbtodono);
+		
+		return wboardDao.wSelectOne(wbtodono);
 	}
 
 }
