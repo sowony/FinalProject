@@ -1,4 +1,5 @@
-	function dragEnter(ev) {
+//드래그앤 드롭 
+function dragEnter(ev) {
 		ev.preventDefault();
 	}
 
@@ -19,66 +20,41 @@
 	}
 //dragObj.id = ''; 가상의 아이디를 삭제 ->매번 중복된 값을 새로 id를 만들어 주어야 하기때문 	
 
+//글 선택시 생성되는 박스 
+function selectbtn(){
+	//                                                                   ↓닫힘 버튼 눌렀을때 배경화면 사라짐
+//	const box = boxFun('박스에 박스', false, null, false, 'innerBox', null, true);
 
-
-
-
-
-
-
-
-/*
-window.onload = ()=>{
 	
-	const body = document.querySelector('body');
+	const div1 = addObject(null, 'div', 'writeContent');
 	
-	//편하게 오브젝트 만들기 
-	//addObject(parentNode, tagName, className, defaultLocation, callback)
-	const section = addObject(body,'section','section',true,(o)=>{
+	const wpic = addObject(div1, 'p', 'wpic', true, (o)=>{
+		o.innerHTML = `<span>담당자</span><input class="wtxt" type="text" placehoder="닝겐"/>`;
+	});
+	const wtitle = addObject(div1, 'p', 'wtitle', true, (o)=>{
+		o.innerHTML = `<span>제목</span><input class="wtxt" type="text" placehoder="닝겐"/>`;
+	});
+	const wdate = addObject(div1, 'p', 'wdate', true, (o)=>{
+		o.innerHTML = `<span>날짜</span><input class="wtxt" type="text" placehoder="닝겐"/>`;
+	});
+	const wcontent = addObject(div1, 'textarea', 'wcontent', true, (o)=>{
 		
+		o.value = "다양한 내용이 여기에 들어 가야하고 지도, 파일 업드...? ";
 	});
 	
-	const bTitle = addObject(null,'input','bTitle',false,(o)=>{
-		o.type='text';
-		o.value ='전체 할일';
-		infoBar(o,'프로젝트의 전원의 할일');
-	});
-	/*
-	const bList = addObject(null,'table','bList',false,(o)=>{
-		
-		o.innerHTML =  `<tr><td>여기안에 정보를 넣으려면 어떻게 해야할까 </td></tr> `;
-		
-/*		xhr => jsonObj
-		
-		{
-			list : [
-				{
-				 id : 1
-				 title : 야호
-				},{
-					 id : 1
-					 title : 야호
-					},{
-						 id : 1
-						 title : 야호
-						}
-				
-			]
-			
-		}
-		
-		let content;
-		
-		for(let item of jsonObj.list){
-			content += `<tr><td>${item.id}</td><td>${item.title}</td></tr>`
-		}
-		o.innerHTML = content 
-		
-	});
+	const box = boxFun('일정', true, [ div1 ],false,'innerBox',null,true);
 	
-	//const allBox = ('모든 할일',);
-	
-	
-};
+	box();
+}
 
-*/
+//글 새로 쓰기 버튼 
+function insertbtn() {
+	
+	const box = boxFun('일정 추가',true,[]);
+	
+}
+
+
+
+
+

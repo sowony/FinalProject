@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-
 .wboardcon {
 	display: block;
 	width: max-content;
@@ -9,7 +8,7 @@
 	box-shadow: none;
 }
 
-div {
+.wtasklist {
 	width: max-content;
 	min-width: 170px;
 	height: 245px;
@@ -20,7 +19,6 @@ div {
 	float: left;
 	overflow: hidden visible;
 }
-
 
 input {
 	display: block;
@@ -34,6 +32,51 @@ input {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	word-break: break-all;
+	
+	
+
 }
 
+<!--드래그 방지 
+
+   -ms-user-select: none; 
+   -moz-user-select: -moz-none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+   user-select: none;
+
+-->
+
+.innerBox{
+	width: max-content;
+}
+
+input.wtxt {
+    width: 220px !important;
+    resize: none;
+}
+input.wtitle {
+    width: 220px !important;
+    resize: none;
+}
+input.wdate {
+    width: 220px !important;
+    resize: none;
+}
+
+textarea.wcontent {
+    width: 96.5%;
+    height: 200px;
+    resize: none;
+}
+ .writeContent p input {
+    display: inline-block !important;
+    margin-left: 5px;
+}
+
+.writeContent p span {
+    display: inline-block;
+    min-width: 55px;
+    text-align: left;
+}
 

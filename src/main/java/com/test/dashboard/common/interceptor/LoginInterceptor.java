@@ -54,6 +54,7 @@ public class LoginInterceptor implements HandlerInterceptor{
 		else if(request.getRequestURI().endsWith("footer")) return true;
 		else if(request.getRequestURI().endsWith("header")) return true;
 		else if(request.getRequestURI().endsWith("wboard")) return true;
+		//else if(request.getRequestURI().endsWith("wSelectOne")) return true;
 //>>>>>>> Jinhan/master
 		else if(request.getRequestURI().endsWith(".js")) return true;
 		else if(request.getRequestURI().endsWith(".css")) return true;

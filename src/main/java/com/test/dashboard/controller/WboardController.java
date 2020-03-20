@@ -34,6 +34,15 @@ public class WboardController {
 			return "wboard";
 		}
 		
+		/*
+		@RequestMapping("/wSelectOne")
+		public String selectOne(Model model, int wbtodono) {
+			//글 상세보기 
+			return "";
+			
+		}
+		*/
+		
 
 		
 }
