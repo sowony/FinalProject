@@ -13,6 +13,7 @@ public class WboardDto {
 	private int wno ; //위젯번호
 	private int dno; // 고유넘버(모든사람이 공통으로 가짐)위젯이 속한 대시보드 테이블 번호
 	private int dgno ; //대시보드 맴버 권한 그룹 넘버
+	private String mid;
 	private String wbtodo ; //Y : 한일 N : 해야 할 일 , 전체할일은 
 	private String wbtitle ;
 	private String wbcontent ;
