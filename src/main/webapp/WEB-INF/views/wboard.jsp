@@ -43,7 +43,7 @@
 
 		</div>
 
-		<div class="wtasklist" ondrop="drop(event)" ondragover="dragEnter(event)">
+		<div class="wtasklist"  ondragover="dragEnter(event)">
 			<p>나의 일정</p>
 
 			<c:choose>
@@ -54,7 +54,7 @@
 				<c:otherwise>
 					<c:forEach items="${list }" var="wlist">
 						<input type="text" value="${wlist.wbtitle }" 
-						readonly draggable="true" ondragstart="drag(event)"
+						readonly draggable="true"  ondragstart="drag(event)"
 						 onclick="selectbtn(${wlist.wbtodono})">
 					</c:forEach>
 				</c:otherwise>
@@ -63,12 +63,14 @@
 		</div>
 
 
-		<div class="wtasklist" ondrop="drop(event)" ondragover="dragEnter(event)">
+		<div class="wtasklist" ondrop="copydrop(event)"  ondragover="dragEnter(event)">
+			<input type="hidden" name="wbtodo" value="N"/>
 			<p>진행중 일정</p>
 		</div>
 
 
-		<div class="wtasklist" ondrop="drop(event)" ondragover="dragEnter(event)">
+		<div class="wtasklist" ondrop="nomaldrop(event)" ondragover="dragEnter(event)">
+			<input type="hidden" name="wbtodo" value="Y"/>
 			<p>완료 일정</p>
 
 		</div>

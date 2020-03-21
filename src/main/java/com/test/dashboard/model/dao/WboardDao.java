@@ -19,7 +19,8 @@ public interface WboardDao {
 	public List<WboardDto> boardList();
 	
 	//글 상세보기 
-	@Select("select * from wboard where wbtodono = #{wbtodono}")
+	@Select("select wbtodono, wno, dno, dgno, mid, wbtodo, wbtitle,"
+			+ "wbcontent, wfno_list, TO_CHAR(wbstartdate, 'YYYY-MM-DD') as wbstartdate , wbenddate, wbcolor from wboard where wbtodono = #{wbtodono}")
 	public WboardDto wSelectOne(int wbtodono);
 	
 }

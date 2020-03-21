@@ -51,3 +51,6 @@ INSERT INTO wboard VALUES
 SELECT * FROM WBOARD;
 
 SELECT * FROM WBOARD WHERE mid = 'a'
+
+select to_char(wbstartdate,'yyyy-mm-dd') FROM WBOARD;
+

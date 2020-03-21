@@ -54,6 +54,7 @@ public class WboardController {
 			//wwdto.getWbtodono()
 			
 			WboardDto dto = biz.wSelectOne(wbtodono);
+			System.out.println("디티오 ㅂ부ㅜㄴ"+dto.getMid()+dto.getWbtitle()+dto.getWbstartdate());
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("wbtodono",dto.getWbtodono());
@@ -68,7 +69,7 @@ public class WboardController {
 			map.put("wbstartdate", dto.getWbstartdate());
 			map.put("wbenddate", dto.getWbenddate());
 			map.put("wbcolor", dto.getWbcolor());
-		
+		    
 
 			return map;
 		
