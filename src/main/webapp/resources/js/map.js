@@ -131,19 +131,9 @@ function getListItem(index, places) {
         let wmaplong = placePosition.getLng().toString();  
         
         saveData(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplong);
-        
-        addMarker(placePosition, index);
-        
-        for(var i = 0; i < index.length; i++){
-        	
-        }
-//        addMarker(placePosition, idx);
-        
-       /*  console.log(wmapkeyword);
-        console.log(wmapaddr);
-        console.log(wmapjibun);
-        console.log(wmaplat);
-        console.log(wmaplong); */
+		
+		var markerPosition  = new kakao.maps.LatLng(wmaplat, wmaplong); 
+		addMarker(markerPosition);
         
     });
     
@@ -151,34 +141,66 @@ function getListItem(index, places) {
     
 }
 
-// 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
-function addMarker(position, idx, title) {
-    var imageSrc = 'http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
-        imageSize = new kakao.maps.Size(36, 37),  // 마커 이미지의 크기
-        imgOptions =  {
-            spriteSize : new kakao.maps.Size(36, 691), // 스프라이트 이미지의 크기
-            spriteOrigin : new kakao.maps.Point(0, (idx*46)+10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
-            offset: new kakao.maps.Point(13, 37) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
-        },
-        markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
-            marker = new kakao.maps.Marker({
-            position: position, // 마커의 위치
-            image: markerImage 
-        });
-
-    marker.setMap(map); // 지도 위에 마커를 표출합니다
-    markers.push(marker);  // 배열에 생성된 마커를 추가합니다
-
-    return marker;
+function addMarker(position){
+	
+     
+     var marker = new kakao.maps.Marker({
+			position: position
+		});
+		marker.setMap(map);
+		markers.push(marker);
+		
+		return marker;
 }
+
+////마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
+//function addMarker(position, idx, title) {
+//    var imageSrc = 'http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
+//        imageSize = new kakao.maps.Size(36, 37),  // 마커 이미지의 크기
+//        imgOptions =  {
+//            spriteSize : new kakao.maps.Size(36, 691), // 스프라이트 이미지의 크기
+//            spriteOrigin : new kakao.maps.Point(0, (idx*46)+10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
+//            offset: new kakao.maps.Point(13, 37) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+//        },
+//        markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
+//            marker = new kakao.maps.Marker({
+//            position: position, // 마커의 위치
+//            image: markerImage 
+//        });
+//
+//    marker.setMap(map); // 지도 위에 마커를 표출합니다
+//    markers.push(marker);  // 배열에 생성된 마커를 추가합니다
+//
+//    return marker;
+//}
+//function addMarkerAll(position){
+//	var imageSrc = 'http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
+//    imageSize = new kakao.maps.Size(36, 37),  // 마커 이미지의 크기
+//    imgOptions =  {
+//        spriteSize : new kakao.maps.Size(36, 691), // 스프라이트 이미지의 크기
+//        //spriteOrigin : new kakao.maps.Point(0, (idx*46)+10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
+//        offset: new kakao.maps.Point(13, 37) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+//    },
+//    markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
+//        marker = new kakao.maps.Marker({
+//        position: position, // 마커의 위치
+//        image: markerImage 
+//    });
+//
+//marker.setMap(map); // 지도 위에 마커를 표출합니다
+//markers.push(marker);  // 배열에 생성된 마커를 추가합니다
+//
+//return marker;
+//}
+
 
 // 지도 위에 표시되고 있는 마커를 모두 제거합니다
-function removeMarker() {
-    for ( var i = 0; i < markers.length; i++ ) {
-        markers[i].setMap(null);
-    }   
-    markers = [];
-}
+//function removeMarker() {
+//    for ( var i = 0; i < markers.length; i++ ) {
+//        markers[i].setMap(null);
+//    }   
+//    markers = [];
+//}
 
 // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
 function displayPagination(pagination) {
@@ -226,6 +248,7 @@ function removeAllChildNods(el) {
         el.removeChild (el.lastChild);
     }
 }
+
  
 //ajax function
 function saveData(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplong){
@@ -238,16 +261,6 @@ function saveData(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplong){
 			wmaplong
 		};
 	
-	//console.log(d);
-	/* 
-	xhrLoad('post', 'map', d, (res)=>{
-		if(res === 'true'){
-			alert('dd');
-		}
-	});
-	 */
-	
-	
 	$.ajax({
 		url: 'map',
 		accept : 'application/json',
@@ -255,14 +268,8 @@ function saveData(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplong){
 		contentType : 'application/json; charset=utf-8;',
 		async: false,
 		data: JSON.stringify(d),
-//		beforeSend : function(xhr){
-//			//xhr.setRequestHeader('Content-type', 'application/json');
-//		},
-		
 		success: function(res){
-			
-			//console.log(res);
-			
+						
 			if(res){
 				alert("저장!");	
 			} else {
@@ -275,24 +282,65 @@ function saveData(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplong){
 	});	
 }
 
+window.onload = openMarker;
+
 function openMarker(){
-	const coor = {
-			wmaplat,
-			wmaplong
-	};
-	
+
 	$.ajax({
 		url: 'marker',
 		accept: 'application/json',
 		method: 'post',
 		contentType: 'application/json; charset=utf-8;',
 		async: false,
-		data: JSON.stringify(coor),
-		success: function(){
-			
+		data: JSON.stringify(),
+		success: function(data){
+			//var res = JSON.parse(data);
+			//console.log(data);
+			data.forEach(function(item){
+				var markerPosition  = new kakao.maps.LatLng(item.wmaplat, item.wmaplong); 
+
+				var marker = addMarker(markerPosition);
+				var div = marker.pd.parentNode;
+				var qs = div.querySelector('img');
+				var chk = addObject(div, 'div', 'map_test', true, (o)=>{
+					o.style.position = 'absolute';
+					o.style.width = qs.style.width;
+					o.style.height = qs.style.height;
+				});
+				console.log(marker.pd.parentNode);
+				contextMenuFun(chk,{
+					'delete' : {
+						'삭제' : function(){
+							console.log('삭제???');
+						}
+					},
+					'update' : {
+						'메모 추가' : function(){
+							console.log('memo');
+						}
+					}
+					
+				});
+				return marker;		
+			});
 		},
 		error: function(){
 			alert("마커 생성 실패");
 		}
 	});
+	
+//	const body = document.querySelector('body');
+//	contextMenuFun(body,{
+//		'delete' : {
+//			'삭제' : function(){
+//				console.log('삭제???');
+//			}
+//		},
+//		'update' : {
+//			'메모 추가' : function(){
+//				console.log('memo');
+//			}
+//		}
+//		
+//	});
 }
