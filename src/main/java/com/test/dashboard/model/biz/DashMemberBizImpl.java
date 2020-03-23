@@ -26,11 +26,11 @@ public class DashMemberBizImpl implements DashMemberBiz {
 	}
 	
 	@Override
-	public int insert(Map<String, Object>[] params, int dno) throws SQLException {
+	public int insert(List<DashMemberDto> params, int dno) throws SQLException {
 		// TODO Auto-generated method stub
 		int res = 0;
-		for(Map<String, Object> param : params) {
-			param.put("dno", dno);
+		for(DashMemberDto param : params) {
+			param.setDno(dno);
 			res = dashMemberDao.insert(param);
 		}
 		if(res == 0) {

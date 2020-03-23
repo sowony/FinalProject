@@ -6,11 +6,6 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 
-<!-- 외부 자바스크립트 라이브러리 -->
-<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-<script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
-<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-
 <!-- 커스텀 유틸  -->
 <link rel="stylesheet" href="./resources/css/defaultstyle.css" type="text/css"/>
 <script type="text/javascript" src="./resources/js/util.js"></script>
@@ -32,6 +27,19 @@
 		<article id="content">
 		</article>
 	</section>
+	
+	<div>
+	<div class="backgroundDiv"></div>
+	<div class="backgroundImg img1"></div>
+	<div class="backgroundImg img2"></div>
+	<div class="backgroundImg img3"></div>
+	<div class="backgroundImg img4"></div>
+	<div class="backgroundImg img5"></div>
+	<div class="backgroundImg img6"></div>
+	<div class="backgroundImg img7"></div>
+	<div class="backgroundImg img8"></div>
+	<div class="backgroundImg img9"></div>
+</div>
 	
 	<jsp:include page="footer.jsp"></jsp:include>
 </body>
