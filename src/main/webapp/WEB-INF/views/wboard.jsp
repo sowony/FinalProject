@@ -16,6 +16,10 @@
 	type="text/css" />
 <script type="text/javascript" src="./resources/js/util.js"></script>
 <script type="text/javascript" src="./resources/js/xhr.js"></script>
+<script type="text/javascript">
+
+
+</script>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 </head>
 <body>
@@ -43,7 +47,7 @@
 
 		</div>
 
-		<div class="wtasklist"  ondragover="dragEnter(event)">
+		<div class="wtasklist mytasklist"  ondragover="dragEnter(event)">
 			<p>나의 일정</p>
 
 			<c:choose>

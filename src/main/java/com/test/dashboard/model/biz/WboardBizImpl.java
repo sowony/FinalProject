@@ -41,4 +41,11 @@ public class WboardBizImpl implements WboardBiz{
 		return wboardDao.wSelectOne(wbtodono);
 	}
 
+	//게시물 작성 
+	@Override
+	public int wbinsert(WboardDto dto) {
+		
+		return wboardDao.wbinsert(dto);
+	}
+
 }

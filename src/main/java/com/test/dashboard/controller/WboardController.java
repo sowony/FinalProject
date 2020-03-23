@@ -75,6 +75,27 @@ public class WboardController {
 		
 		}
 		
+		@GetMapping("/summerwrite")
+		public String boardWrite() {
+		  return "summerboardwrite";
+		}
+		
+		@PostMapping("/summerwrite")
+		public String wbinsert(WboardDto dto) {
+			
+			int	res = biz.wbinsert(dto);
+			if(res > 0) {
+				System.out.println("저장완료");
+				return "redirect:wboard";
+				
+			}else {
+				System.out.println("저장안됨");
+				return "summerboardwrite";
+			}
+			
+		
+		}
+		
 		
 
 		

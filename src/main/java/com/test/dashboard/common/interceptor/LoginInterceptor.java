@@ -52,6 +52,8 @@ public class LoginInterceptor implements HandlerInterceptor{
 		else if(request.getRequestURI().endsWith("footer")) return true;
 		else if(request.getRequestURI().endsWith("header")) return true;
 		else if(request.getRequestURI().endsWith("wboard")) return true;
+		else if(request.getRequestURI().endsWith("summerwrite")) return true;
+		
 		else if(request.getRequestURI().endsWith("map")) return true;
 		else if(request.getRequestURI().endsWith("footer")) return true;
 		else if(request.getRequestURI().endsWith("header")) return true;
