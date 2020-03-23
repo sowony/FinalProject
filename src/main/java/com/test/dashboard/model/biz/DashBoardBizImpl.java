@@ -52,7 +52,7 @@ public class DashBoardBizImpl implements DashBoardBiz{
 	@Override
 	public DashBoardDto selectOne(int dno) {
 		// TODO Auto-generated method stub
-		return selectOne(dno);
+		return dashBoardDao.selectOne(dno);
 	}
 	
 	

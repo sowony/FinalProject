@@ -27,4 +27,9 @@ public class DashMemberDto {
     private String mnick;
 
     private String mimgpath;
+
+    private int dggrade;
+    
+    private String dgalias;
 }
+

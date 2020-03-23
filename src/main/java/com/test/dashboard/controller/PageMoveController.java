@@ -1,17 +1,57 @@
 package com.test.dashboard.controller;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.test.dashboard.model.biz.DashBoardBiz;
 
 @Controller
 public class PageMoveController {
 
 	private Logger logger = LoggerFactory.getLogger(PageMoveController.class);
+	
+	@Autowired
+	private DashBoardBiz dashBoardBiz;
+	
+	@GetMapping("board")
+	public String getDashboard(){
+		
+		logger.info("[ INFO ] : MainController > getDashboard [path : /board]");
+		
+		return "board";
+
+	}
+	
+	@SuppressWarnings("unchecked")
+	@GetMapping("board/{dno}")
+	public String getDashboardDno(@PathVariable int dno, HttpSession session){
+		
+		logger.info("[ INFO ] : MainController > getDashboard [path : /board/" + dno + "]");
+		
+		Set<Integer> selectBoardList = new HashSet<Integer>();
+		
+		if(session.getAttribute("selectBoardList") != null) {
+			selectBoardList.addAll((Set<Integer>)session.getAttribute("selectBoardList"));
+		}
+		
+		selectBoardList.add(dno);
+		
+		session.setAttribute("selectBoard", dno);
+		session.setAttribute("selectBoardList", selectBoardList);
+		
+		return "redirect:/board";
+
+	}
 	
 	@GetMapping("mypage")
 	public String getMyPage(Model model, HttpSession session) {

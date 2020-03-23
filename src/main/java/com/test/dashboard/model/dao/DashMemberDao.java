@@ -29,7 +29,7 @@ public interface DashMemberDao {
 	
 	@SelectKey(statement = "select dgno from dashgrade dg where dg.dno = #{dno} and dggrade = #{dggrade} and dgalias = #{dgalias}", before = true, keyProperty = "dgno", resultType = Integer.class)
 	@Insert("insert into dashmember values(dashmember_seq.nextval, #{dno}, #{mid}, #{dgno}, #{dmcolor})")
-	public int insert(Map<String, Object> params);
+	public int insert(DashMemberDto param);
 	
 	@Update("update dashmember set dgno = #{dgno}, dmcolor = #{dmcolor} where dmno = #{dmno}")
 	public int update(DashMemberDto dto);

@@ -17,7 +17,7 @@ public interface DashMemberBiz {
 	// 맴버테이벌 대쉬보드 NO와 맴버 ID로 조회
 	public DashMemberDto selectById(int dno, String mid);
 	
-	public int insert(Map<String, Object>[] params, int dno) throws SQLException;
+	public int insert(List<DashMemberDto> params , int dno) throws SQLException;
 	
 	public int update(DashMemberDto dto);
 	

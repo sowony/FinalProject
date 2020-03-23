@@ -34,8 +34,15 @@ public class LoginInterceptor implements HandlerInterceptor{
 		logger.info("[requestMethod] : " + request.getMethod());
 		logger.info("[requestURI] : "+ request.getRequestURI());
 		
-		if(request.getRequestURI().endsWith("login")) return true;
-		else if(request.getRequestURI().endsWith("idsearch")) return true;
+		HttpSession session = request.getSession();
+		MemberDto user = (MemberDto) session.getAttribute("user");
+		
+		if(request.getRequestURI().endsWith("login")) {
+			
+			if(user == null) return true;
+			else response.sendRedirect("/dashboard");
+			
+		} else if(request.getRequestURI().endsWith("idsearch")) return true;
 		else if(request.getRequestURI().endsWith("nickcheck")) return true;
 		else if(request.getRequestURI().endsWith("idcheck")) return true;
 		else if(request.getRequestURI().endsWith("pwmodify")) return true;
@@ -65,10 +72,8 @@ public class LoginInterceptor implements HandlerInterceptor{
 		else if(request.getRequestURI().endsWith(".gif")) return true;
 		else if(request.getRequestURI().endsWith(".svg")) return true;
 		else {
-			HttpSession session = request.getSession();
-			MemberDto user = (MemberDto) session.getAttribute("user");
 			
-			if(user == null) response.sendRedirect("login");
+			if(user == null) response.sendRedirect("/dashboard/login");
 			else return true;
 			
 		}

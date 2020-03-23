@@ -57,6 +57,19 @@
 			</div>
 		</article>
 	</section>
+	
+	<div>
+		<div class="backgroundDiv"></div>
+		<div class="backgroundImg img1"></div>
+		<div class="backgroundImg img2"></div>
+		<div class="backgroundImg img3"></div>
+		<div class="backgroundImg img4"></div>
+		<div class="backgroundImg img5"></div>
+		<div class="backgroundImg img6"></div>
+		<div class="backgroundImg img7"></div>
+		<div class="backgroundImg img8"></div>
+		<div class="backgroundImg img9"></div>
+	</div>
 	<jsp:include page="footer.jsp"></jsp:include>
 </body>
 </html>
