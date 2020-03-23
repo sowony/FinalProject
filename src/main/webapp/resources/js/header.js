@@ -8,7 +8,7 @@ function headerFun(){
 	
 	let userInfo;
 	
-	xhrLoad('get', 'userload', null, (res)=>{
+	xhrLoad('get', '/dashboard/userload', null, (res)=>{
 		userInfo = JSON.parse(res);
 		
 		const header = document.querySelector('header');
@@ -22,7 +22,7 @@ function headerFun(){
 		});
 		
 		const title_li = addObject(header_ul, 'li', 'title_li', true, (o)=>{
-			o.innerHTML = 'TASKTREE';
+			o.innerHTML = '<a href="/dashboard">TASKTREE</a>';
 		});
 
 

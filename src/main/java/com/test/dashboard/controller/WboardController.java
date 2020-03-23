@@ -46,6 +46,7 @@ public class WboardController {
 		
 		@RequestMapping(value = "/wSelectOne", method = RequestMethod.POST)
 		@ResponseBody
+		//post방식으로 데이터를 주고 받을 경우 @ModelAttribute("받아오는 값 이름") 디비에서 이용되는 값이름  ,를 사용해서 이름을 맞춰주어야 에러가 안뜬다  
 		public Map<String, Object> selectOne(@ModelAttribute("selectno") int wbtodono) {
 			System.out.println("으아아앙ㄱ " + wbtodono);
 			
@@ -53,6 +54,7 @@ public class WboardController {
 			//wwdto.getWbtodono()
 			
 			WboardDto dto = biz.wSelectOne(wbtodono);
+			System.out.println("디티오 ㅂ부ㅜㄴ"+dto.getMid()+dto.getWbtitle()+dto.getWbstartdate());
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("wbtodono",dto.getWbtodono());
@@ -67,9 +69,30 @@ public class WboardController {
 			map.put("wbstartdate", dto.getWbstartdate());
 			map.put("wbenddate", dto.getWbenddate());
 			map.put("wbcolor", dto.getWbcolor());
-		
+		    
 
 			return map;
+		
+		}
+		
+		@GetMapping("/summerwrite")
+		public String boardWrite() {
+		  return "summerboardwrite";
+		}
+		
+		@PostMapping("/summerwrite")
+		public String wbinsert(WboardDto dto) {
+			
+			int	res = biz.wbinsert(dto);
+			if(res > 0) {
+				System.out.println("저장완료");
+				return "redirect:wboard";
+				
+			}else {
+				System.out.println("저장안됨");
+				return "summerboardwrite";
+			}
+			
 		
 		}
 		

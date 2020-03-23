@@ -14,4 +14,8 @@ public interface WboardBiz {
 	
 	//글 상세보기 
 	public WboardDto wSelectOne(int wbtodono);
+	
+	//게시물 작성 
+	public int wbinsert(WboardDto dto);
+	
 }
