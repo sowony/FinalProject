@@ -92,7 +92,7 @@ function selectbtn(selectno){
 			$(".wtxt").eq(0).val(id);
 			$(".wtxt").eq(1).val(title);
 			$(".wtxt").eq(2).val(date);
-			$(".wcontent").val(content);
+			$(".wcontent").html(content);
 		},
 		error: function(res){
 			alert("다시 선택해주세요!");
@@ -113,8 +113,8 @@ function selectbtn(selectno){
 	const wdate = addObject(div1, 'p', 'wdate', true, (o)=>{
 		o.innerHTML = `<span>날짜</span><input class="wtxt" type="text" placeholder="날짜"/>`;
 	});
-	const wcontent = addObject(div1, 'textarea', 'wcontent', true, (o)=>{
-		o.placeholder = "내용 ";
+	const wcontent = addObject(div1, 'div', 'wcontent', true, (o)=>{
+		o.innerHTML = "내용 ";
 	});
 		//2번째,배경 투명 = false, 검정 = true/ true 4번째 취소버튼 없애기 
 	const box = boxFun('일정', true, [ div1 ],false,'innerBox',null,true);
@@ -126,12 +126,29 @@ function selectbtn(selectno){
 		<input type="button" value="수정" id="wbupdate" >
 		`;
 		
-		document.querySelector('#delete').addEventListener('click', (e)=>{
-			
+		document.querySelector('#wbdelete').addEventListener('click', (e)=>{
+			$.ajax({
+				url: 'wDelete',
+				//accept : 'application/json',
+				method: 'post',
+				//contentType : 'application/json; charset=utf-8;',
+				//async: false,
+				data: {"wbtodono":wbtodono},
+				success: function(res){
+					console.log(res);
+					alert("삭제되었습니다.");
+					location.href="/wboard";
+				
+				},
+				error: function(res){
+					alert("실패");
+					
+				}
+			});
 		
 		});
-		document.querySelector('#add').addEventListener('click', (e)=>{
-			
+		document.querySelector('#wbupdate').addEventListener('click', (e)=>{
+			selectbtn.remove();
 			
 		});
 	});

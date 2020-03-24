@@ -64,11 +64,18 @@ input.wdate {
     resize: none;
 }
 
-textarea.wcontent {
+div.wcontent {
     width: 96.5%;
     height: 200px;
     resize: none;
     white-space: pre-wrap;
+    text-align:left;
+    box-shadow: 0 0 0 1000px #eee inset, 0 0 4px #989898;
+    border: 0;
+    background-color: #eee;
+    border-radius: 5px;
+    -webkit-text-fill-color: #3d3d3d;
+    padding-left: 15px;
 }
  .writeContent p input {
     display: inline-block !important;
