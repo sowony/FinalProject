@@ -3,6 +3,7 @@
  */
 
 
+
 window.onload = ()=>{
 	
 	
@@ -130,69 +131,71 @@ window.onload = ()=>{
 	const outputBox = boxFun('아웃풋 박스', true, [ innerBoxOpenBtn ]);
 	
 	 */
-	
-	const body = document.querySelector('body');
-	
-	// 인자 순서대로는 부모 객체, 태그 네임, 클래스네임, 디폴트 위치, 콜백(만든 객체 자신)
-	const section = addObject(body, 'section', 'section', true, (o)=>{ });
-	
-	// 첫번째 인자는 타이틀, 두번째 인자는 백그라운드
-	const inputText = addObject(null, 'input', 'mid', false, (o)=>{
-		o.type = 'text';
-	});
-	
-	const textarea = addObject(null, 'textarea', 'textarea', false, (o)=>{
-		o.style.display = 'block';
-		o.value = '테스트 중입니다.';
-		infoBar(o,'텍스트');
-	});
-	
-	const div = addObject(null, 'div', 'content', false, (o)=>{
-		
-		console.dir(o);
-		
-		o.innerHTML = `
-			<fieldset>
-				<legend>정보</legend>
-				${o.tagName}
-			</fieldset>
-		`;
-		
-		infoBar(o,'안녕');
-		
-	});
-	
-
-	
-	
-	const btn = addObject(null, 'button', 'grayBtn', false, (o)=>{
-		o.innerHTML = '박스에 박스 만들기';
-		o.addEventListener('click', ()=>{
-			
-			boxFun('박스에 박스', false, null, false, 'innerBox', null, true);
-			
-		});
-		
-	});
-	
+//	
+//	const body = document.querySelector('body');
+//	
+//	// 인자 순서대로는 부모 객체, 태그 네임, 클래스네임, 디폴트 위치, 콜백(만든 객체 자신)
+//	const section = addObject(body, 'section', 'section', true, (o)=>{ });
+//	
+//	// 첫번째 인자는 타이틀, 두번째 인자는 백그라운드
+//	const inputText = addObject(null, 'input', 'mid', false, (o)=>{
+//		o.type = 'text';
+//	});
+//	
+//	const textarea = addObject(null, 'textarea', 'textarea', false, (o)=>{
+//		o.style.display = 'block';
+//		o.value = '테스트 중입니다.';
+//		infoBar(o,'텍스트');
+//	});
+//	
+//	const div = addObject(null, 'div', 'content', false, (o)=>{
+//		
+//		console.dir(o);
+//		
+//		o.innerHTML = `
+//			<fieldset>
+//				<legend>정보</legend>
+//				${o.tagName}
+//			</fieldset>
+//		`;
+//		
+//		infoBar(o,'안녕');
+//		
+//	});
+//	
+//
+//	
+//	
+//	const btn = addObject(null, 'button', 'grayBtn', false, (o)=>{
+//		o.innerHTML = '박스에 박스 만들기';
+//		o.addEventListener('click', ()=>{
+//			
+//			boxFun('박스에 박스', false, null, false, 'innerBox', null, true);
+//			
+//		});
+//		
+//	});
+//	
 //	boxFun('안녕하세요', true, [ inputText, textarea, div ,btn], true, 'testBox',(o, nodes, classname)=>{
 //		
 //	}, false);
 //	
 	
-	//시계
-	const clock = addObject(null, 'div', 'clock',false,(o)=>{
+//	//시계
+//	const clock = addObject(null, 'div', 'clock',false,(o)=>{
+//	
+//		o.innerHTML = `
+//			<iframe scrolling="no" frameborder="no" clocktype="html5" style="overflow:hidden;border:0;margin:0;padding:0;width:380px;height:80px;"src="https://www.clocklink.com/html5embed.php?clock=047&timezone=KoreaRepublicof_Seoul&color=purple&size=380&Title=&Message=&Target=&From=2020,1,1,0,0,0&Color=purple"></iframe>
+//		`;
+//	});
+//	
+//	boxFun('clock', true, [clock], true, 'testBox', (o,nodes,classname)=>{
+//		
+//	},false);
+//	
+//	
+//	boxFun();
 	
-		o.innerHTML = `
-			<iframe scrolling="no" frameborder="no" clocktype="html5" style="overflow:hidden;border:0;margin:0;padding:0;width:380px;height:80px;"src="https://www.clocklink.com/html5embed.php?clock=047&timezone=KoreaRepublicof_Seoul&color=purple&size=380&Title=&Message=&Target=&From=2020,1,1,0,0,0&Color=purple"></iframe>
-		`;
-	});
-	
-	boxFun('clock', true, [clock], true, 'testBox', (o,nodes,classname)=>{
-		
-	},false);
-	
-	
-	boxFun();
+	new colorPickerFun();
 	
 };

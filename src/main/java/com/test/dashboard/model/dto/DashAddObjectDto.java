@@ -1,6 +1,6 @@
 package com.test.dashboard.model.dto;
 
-import java.util.Map;
+import java.util.List;
 
 import lombok.Data;
 
@@ -8,8 +8,9 @@ import lombok.Data;
 public class DashAddObjectDto {
 
 	String dtitle, ddesc;
-	Map<String, Object>[] member;
-	DashGradeDto[] rule;
+	DashMemberDto downer;
+	List<DashMemberDto> members;
+	DashGradeDto[] rules;
 	
 	
 	

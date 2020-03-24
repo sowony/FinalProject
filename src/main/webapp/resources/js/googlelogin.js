@@ -27,7 +27,9 @@ function loginSignIn() {
 	  xhrLoad('post', 'login', memberInfo, (res)=>{
 		 
 		  if(res === 'true'){
+			  
 			  location.reload();
+		  
 		  } else {
 			  
 			const profileImg = addObject(null,'div','welcomeDiv', false, t=>{
@@ -102,7 +104,6 @@ function loginSignIn() {
          												signUpCheck = false;
          												mailCheck = false;
          												utilBoxDelete(true);
-         												
          											});
          											
          										}, false);

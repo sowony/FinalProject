@@ -34,8 +34,15 @@ public class LoginInterceptor implements HandlerInterceptor{
 		logger.info("[requestMethod] : " + request.getMethod());
 		logger.info("[requestURI] : "+ request.getRequestURI());
 		
-		if(request.getRequestURI().endsWith("login")) return true;
-		else if(request.getRequestURI().endsWith("idsearch")) return true;
+		HttpSession session = request.getSession();
+		MemberDto user = (MemberDto) session.getAttribute("user");
+		
+		if(request.getRequestURI().endsWith("login")) {
+			
+			if(user == null) return true;
+			else response.sendRedirect("/dashboard");
+			
+		} else if(request.getRequestURI().endsWith("idsearch")) return true;
 		else if(request.getRequestURI().endsWith("nickcheck")) return true;
 		else if(request.getRequestURI().endsWith("idcheck")) return true;
 		else if(request.getRequestURI().endsWith("pwmodify")) return true;
@@ -48,13 +55,17 @@ public class LoginInterceptor implements HandlerInterceptor{
 		else if(request.getRequestURI().endsWith("kakaoout")) return true;
 		else if(request.getRequestURI().endsWith("kakaosignup")) return true;
 		else if(request.getRequestURI().endsWith("test")) return true;
-//<<<<<<< HEAD
 		else if(request.getRequestURI().endsWith("map")) return true;
-//=======
 		else if(request.getRequestURI().endsWith("footer")) return true;
 		else if(request.getRequestURI().endsWith("header")) return true;
 		else if(request.getRequestURI().endsWith("wboard")) return true;
-//>>>>>>> Jinhan/master
+		else if(request.getRequestURI().endsWith("summerwrite")) return true;
+		
+		else if(request.getRequestURI().endsWith("map")) return true;
+		else if(request.getRequestURI().endsWith("footer")) return true;
+		else if(request.getRequestURI().endsWith("header")) return true;
+		else if(request.getRequestURI().endsWith("wboard")) return true;
+		else if(request.getRequestURI().endsWith("wSelectOne")) return true;
 		else if(request.getRequestURI().endsWith(".js")) return true;
 		else if(request.getRequestURI().endsWith(".css")) return true;
 		else if(request.getRequestURI().endsWith(".jpg")) return true;
@@ -66,10 +77,8 @@ public class LoginInterceptor implements HandlerInterceptor{
 		else if(request.getRequestURI().endsWith("pagechange")) return true;
 		else if(request.getRequestURI().endsWith("crwl")) return true;
 		else {
-			HttpSession session = request.getSession();
-			MemberDto user = (MemberDto) session.getAttribute("user");
 			
-			if(user == null) response.sendRedirect("login");
+			if(user == null) response.sendRedirect("/dashboard/login");
 			else return true;
 			
 		}

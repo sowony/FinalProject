@@ -1,5 +1,7 @@
 package com.test.dashboard.model.biz;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +15,16 @@ public class WMapBizImpl implements WMapBiz {
 
 	@Autowired
 	private WMapDao dao;
+	
+//	@Override
+//	public List<WMapDto> selectList(int wno){
+//		return dao.selectList(wno);
+//	}
+	
+	@Override
+	public List<WMapDto> selectList(){
+		return dao.selectList();
+	}
 	
 	@Override
 	public WMapDto select(int wmapno) {

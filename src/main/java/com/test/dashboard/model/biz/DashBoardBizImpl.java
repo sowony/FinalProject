@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.test.dashboard.common.util.Util;
 import com.test.dashboard.model.dao.DashBoardDao;
 import com.test.dashboard.model.dto.DashBoardDto;
 
@@ -30,6 +31,9 @@ public class DashBoardBizImpl implements DashBoardBiz{
 	@Override
 	public int insert(DashBoardDto dto) {
 		// TODO Auto-generated method stub
+		
+		dto.setDdesc(Util.brChange(dto.getDdesc()));
+		
 		return dashBoardDao.insert(dto);
 	}
 	
@@ -48,7 +52,7 @@ public class DashBoardBizImpl implements DashBoardBiz{
 	@Override
 	public DashBoardDto selectOne(int dno) {
 		// TODO Auto-generated method stub
-		return selectOne(dno);
+		return dashBoardDao.selectOne(dno);
 	}
 	
 	

@@ -17,10 +17,10 @@ public interface DashGradeDao {
 	@Select("select * from dashgrade where dno = #{dno}")
 	public List<DashGradeDto> selectList(int dno);
 	
-	@Insert("insert into dashgrade values(dashgrade_seq.nextval, #{dno}, #{dggrade}, #{dgalias})")
+	@Insert("insert into dashgrade values(dashgrade_seq.nextval, #{dno}, #{dggrade}, #{dgalias}, #{dgcolor})")
 	public int insert(DashGradeDto dto);
 	
-	@Update("update dashgrade set dggrade = #{dggrade}, dgalias = #{dgalias} where dgno = #{dgno}")
+	@Update("update dashgrade set dggrade = #{dggrade}, dgalias = #{dgalias}, dgcolor = #{dgcolor} where dgno = #{dgno}")
 	public int update(DashGradeDto dto);
 	
 	@Delete("delete from dashgrade where dgno = #{dgno}")

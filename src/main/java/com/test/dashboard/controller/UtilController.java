@@ -44,7 +44,7 @@ public class UtilController {
 	}
 
 	@GetMapping("nickcheck")
-	public boolean getNickSearch(MemberDto memberDto) {
+	public MemberDto getNickSearch(MemberDto memberDto) {
 		
 		logger.info("[ INFO ] : MyPageController > getNickSearch [path : /nickcheck]");
 		logger.info("[ INFO ] : SearchNick > " + memberDto.getMnick());
@@ -54,9 +54,9 @@ public class UtilController {
 		logger.info("[ INFO ] : USER > " + user );
 		
 		if(user != null) {
-			return true;
+			return user;
 		} else {
-			return false;
+			return null;
 		}
 	}
 	

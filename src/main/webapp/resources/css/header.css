@@ -27,6 +27,14 @@ li {
     color: #FFF;
 }
 
+li.title_li a {
+    font-size: 12pt;
+    font-weight: 600;
+    letter-spacing: 1pt;
+    float: left;
+    color: #FFF;
+}
+
 li.profile_li {
     padding: 2px;
     float: right;
@@ -43,4 +51,9 @@ li.nickName_li {
     height: 28px;
     border-radius: 50%;
 	
+}
+
+._dashItem a {
+    position: relative;
+    bottom: 2px;
 }
