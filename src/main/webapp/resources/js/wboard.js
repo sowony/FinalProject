@@ -148,7 +148,12 @@ function selectbtn(selectno){
 		
 		});
 		document.querySelector('#wbupdate').addEventListener('click', (e)=>{
-			selectbtn.remove();
+
+			//<p> 없애고 
+			//임시보관할 장소를 가지고 와서 담아 두고 
+			//<input> 테그를 새로 만들어서 넣어주기
+			//서머노트 json으로 받아온거 뿌려주기 <textarea>넣어도됨 
+			
 			
 		});
 	});
