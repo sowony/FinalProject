@@ -9,6 +9,56 @@ const backgroundDiv = addObject(null,'div',null,false,(t)=>{
 	t.setAttribute('id','bgBlack');
 });
 
+
+function logout(){
+	
+	xhrLoad('get','logout', null, (res)=>{
+		if(res === 'true'){
+			location.reload();
+		}
+	});
+		
+}
+
+
+function widgetFun(setting){
+	
+	const widget = addObject(null, 'div', 'widget', false, (o)=>{
+		
+		o.style.width = setting['wwidth']+'px';
+		o.style.height = setting['wheight']+'px';
+		o.style.zIndex = setting['wzindex'];
+		o.style.position = setting['position'];
+		
+		if(!setting['wtitlecolor']){
+			setting['wtitlecolor'] = 'rgb(65, 198, 241)';
+		}
+		
+		if(!setting['wcontentcolor']){
+			setting['wcontentcolor'] = 'rgb(255, 255, 255)';
+		}
+		
+		const wtitlefontcolor = fontColorCheck(setting['wtitlecolor']);
+		const wcontentfontcolor = fontColorCheck(setting['wcontentcolor']);
+		
+		o.style.backgroundColor = setting['wcontentcolor'];
+		
+		o.innerHTML = `
+			<div class="widgetHeader" style="color:${wtitlefontcolor};background-color:${setting['wtitlecolor']};">
+				<p style="color: inherit;"><span>${setting['wcategory']}</span><span>${setting['wtitle']}</span></p>
+			</div>
+			<div class="widgetContent" style="color:${wcontentfontcolor};">
+			</div>
+			<div class="widgetFooter">
+			</div>
+		`;
+		
+		middlePositionFun(o);
+	});
+	
+	return widget;
+}
+
 function colorPickerBtn(parentNode, beforeNode, submit){
 	
 	const btn = addObject(null, 'div', 'colorPickerBtn', false, (o)=>{
@@ -17,9 +67,9 @@ function colorPickerBtn(parentNode, beforeNode, submit){
 			e.preventDefault();
 			e.stopPropagation();
 			
-			const colorObject = new colorPickerFun((color)=>{
-				submit(color);
-			});
+			const colorObject = new colorPickerFun((color,btn)=>{
+				submit(color,btn);
+			},btn);
 		});
 	});
 	
@@ -29,9 +79,10 @@ function colorPickerBtn(parentNode, beforeNode, submit){
 		parentNode.appendChild(btn);
 	}
 	
+	return btn;
 }
 
-function colorPickerFun(callback){
+function colorPickerFun(callback,btn){
 	
 	const oldColorPicker = document.querySelector('.colorBox');
 	
@@ -137,7 +188,7 @@ function colorPickerFun(callback){
 		o.style.float = 'left';
 		o.style.width = 'max-content';
 		o.addEventListener('click', ()=>{
-			callback(colorPickerFun['colorValue']);
+			callback(colorPickerFun['colorValue'],btn);
 			const box = o.parentNode;
 			motionOnOff(box, 0.8, false, { setting : 'offDefault' },null, (o)=>{
 				o.remove();
@@ -684,8 +735,6 @@ function addObject(parentNode, tagName, className, defaultLocation, callback){
 
 // 객체에 메뉴 등록 함수
 function contextMenuFun(target, setting){
-	
-	
 	
 	target.addEventListener('contextmenu',(e)=>{
 		

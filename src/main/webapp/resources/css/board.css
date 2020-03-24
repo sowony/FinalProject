@@ -27,6 +27,12 @@ li._dashItem:hover {
     box-shadow: 0px 1px 1px #22576f, inset 0 0 0px 2px #5a94af;
 }
 
+li.selectDash {
+    background-color: rgb(171, 213, 232);
+    color: rgb(61, 61, 61);
+    box-shadow: rgb(34, 87, 111) 0px 1px 1px, rgb(90, 148, 175) 0px 0px 0px 2px inset;
+}
+
 span.dashboardCloseBtn {
     display: inline-block;
     margin: 0 5px;
@@ -41,15 +47,123 @@ span.dashboardCloseBtn {
 
 .dashboard {
     display: block;
-    position: absolute;
+    position: relative;
     width: 100%;
     height: 100%;
 }
 
-.widgetArea {
+#widgetArea {
     display: block;
     position: relative;
     width: 100%;
     height: 100%;
     background-color: #E1F5FE;
+}
+
+
+.widgetAddBox fieldset {
+    display: block;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px 20px;
+    width: 300px;
+    margin: 10px 5px;
+    float: left;
+}
+
+.widgetAddBox fieldset div {
+	margin : 8px 0;
+}
+
+.widgetAddBox p {
+	display: inline-block;
+	min-width: 80px;
+    max-width: max-content;
+    font-size: 12pt;
+    text-align: left;
+    text-indent: 3px;
+    color: #599ed6;
+}
+
+
+.widgetAddBox input[type=text],
+.widgetAddBox input[type=number],
+.widgetAddBox textarea {
+	display : inline-block;
+	width: 65%;
+	margin : 5px 0 5px 5px;
+}
+
+
+.widgetAddBox select {
+    display: inline-block;
+    margin: 5px 0px 5px 5px;
+        width: 70%;
+    font-size: 9pt;
+    font-weight: 600;
+    letter-spacing: 1pt;
+    box-shadow: 0 0 0 1000px #eee inset, 0 0 4px #989898;
+    border: 0;
+    background-color: #eee;
+    border-radius: 5px;
+    padding: 7px;
+}
+
+
+.widgetPreview {
+    height: 85%;
+    width: 100%;
+    display: block;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.line1, .line2 {
+    margin: 0 !important;
+    position: absolute;
+    z-index: 501;
+}
+
+.line2 {
+	border-right: 1px dashed #ccc;
+    width: 50%;
+    height: 100%;
+}
+
+.line1 {
+	border-bottom: 1px dashed #ccc;
+    width: 100%;
+    height: 50%;
+}
+
+.widget {
+    border-radius: 5px;
+    box-shadow: 0 0 1px 1px #21537260;
+    overflow: hidden;
+    margin: 0px !important;
+}
+
+.widgetHeader {
+    margin: 0 !important;
+    width: 100%;
+    padding: 0 10px;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.widgetHeader p span:nth-child(1) {
+    color: #fff;
+    margin: 0 5px 0 0;
+}
+
+.widgetHeader p span:nth-child(2) {
+    font-size: 10pt;
+    font-weight: 100;
+    position: relative;
+    bottom: 1px;
+    color: inherit;
 }
