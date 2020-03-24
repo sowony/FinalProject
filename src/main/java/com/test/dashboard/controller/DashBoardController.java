@@ -19,6 +19,8 @@ import com.test.dashboard.model.biz.DashBoardBiz;
 import com.test.dashboard.model.biz.DashGradeBiz;
 import com.test.dashboard.model.biz.DashMemberBiz;
 import com.test.dashboard.model.dto.DashBoardDto;
+import com.test.dashboard.model.dto.DashGradeDto;
+import com.test.dashboard.model.dto.DashMemberDto;
 
 
 @RequestMapping("/board")
@@ -42,7 +44,7 @@ public class DashBoardController {
 		
 		session.setAttribute("selectBoard", dno);
 		
-		logger.info("[ INFO ] : MyPageController > getSelectDashBoard [path : /board/select/"+ dno +"]");
+		logger.info("[ INFO ] : DashBoardController > getSelectDashBoardNo [path : /board/select/"+ dno +"]");
 		
 		return dashBoardBiz.selectOne(dno);
 	
@@ -53,17 +55,35 @@ public class DashBoardController {
 		
 		int dno = (int) session.getAttribute("selectBoard");
 		
-		logger.info("[ INFO ] : MyPageController > getSelectDashBoard [path : /board/select/"+ dno +"]");
+		logger.info("[ INFO ] : DashBoardController > getSelectDashBoard [path : /board/select/"+ dno +"]");
 		
 		return dashBoardBiz.selectOne(dno);
 	
+	}
+	
+	@GetMapping("/rules")
+	public List<DashGradeDto> getRules(HttpSession session){
+		
+		logger.info("[ INFO ] : DashBoardController > getRules [path : /board/rules]");
+		int dno = (int) session.getAttribute("selectBoard");
+		return dashGradeBiz.selectList(dno);
+		
+	}
+	
+	@GetMapping("/members")
+	public List<DashMemberDto> getMembers(HttpSession session){
+		
+		logger.info("[ INFO ] : DashBoardController > getMembers [path : /board/members]");
+		int dno = (int) session.getAttribute("selectBoard");
+		return dashMemberBiz.selectList(dno);
+		
 	}
 	
 	@SuppressWarnings("unchecked")
 	@GetMapping("/selectList")
 	public List<DashBoardDto> getSelectListDashBoard(HttpSession session){
 		
-		logger.info("[ INFO ] : MyPageController > getSelectDashBoard [path : /board/selectList]");
+		logger.info("[ INFO ] : DashBoardController > getSelectListDashBoard [path : /board/selectList]");
 		
 		List<DashBoardDto> selectList = new ArrayList<DashBoardDto>();
 		
@@ -84,6 +104,8 @@ public class DashBoardController {
 	@SuppressWarnings("unchecked")
 	@GetMapping("/dashboardClose")
 	public int getDashboardClose(DashBoardDto dashBoardDto, HttpSession session) {
+		
+		logger.info("[ INFO ] : DashBoardController > getDashboardClose [path : /board/dashboardClose]");
 		
 		Set<Integer> selectBoardList = ((Set<Integer>)session.getAttribute("selectBoardList"));
 		boolean res = selectBoardList.remove(dashBoardDto.getDno());

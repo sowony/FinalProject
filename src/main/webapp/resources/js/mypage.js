@@ -165,7 +165,7 @@ function addMemberBtnAdd(){
 						o.dataset.mid = selectTmpMember.mid;
 						o.dataset.mnick = selectTmpMember.mnick;
 					
-						o.innerHTML = `${selectTmpMember.mnick}<button class="dashMemberDelteBtn">X</button>`;
+						o.innerHTML = `<img class="dashMemberImg" src="${selectTmpMember.mimgpath}"/><span>${selectTmpMember.mnick}</span><button class="dashMemberDelteBtn">X</button>`;
 					
 						const dashMemberDelteBtn = o.querySelector('.dashMemberDelteBtn');
 					
@@ -362,7 +362,14 @@ function nickSearch(btn){
 }
 
 function addDashBoardFun(){
+
+	const addDashBox1 = document.querySelector('.addDashBox1');
+	const addDashBox2 = document.querySelector('.addDashBox2');
+	const addDashBox3 = document.querySelector('.addDashBox3');
 	
+	if(addDashBox1) addDashBox1.remove();
+	if(addDashBox2) addDashBox2.remove();
+	if(addDashBox3) addDashBox3.remove();
 	
 	// 1p
 	const dashInfoDiv = addObject(null, 'div', 'dashInfoDiv', false, (o)=>{
@@ -845,7 +852,9 @@ window.onload = ()=>{
 	const body = document.querySelector('body');
 	contextMenuFun(body,{
 		'newDash' : {
-			'대시보드 추가' : ()=>{addDashBoardFun();}
+			'대시보드 추가' : (e)=>{
+				addDashBoardFun();
+			}
 		},
 		'messageMenu' : {
 			'쪽지함 보기' : ()=>{alert('쪽지함 함수');},

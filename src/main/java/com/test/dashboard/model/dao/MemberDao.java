@@ -5,8 +5,6 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
@@ -30,7 +28,7 @@ public interface MemberDao {
 	public MemberDto selectById(String mid);
 
 	// nick 조회
-	@Select("select mid, mnick from member where mnick = #{mnick}")
+	@Select("select mid, mnick, mimgpath from member where mnick = #{mnick}")
 	public MemberDto selectByNick(String mnick);
 
 	// 이름 조회
