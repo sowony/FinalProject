@@ -167,3 +167,9 @@ span.dashboardCloseBtn {
     bottom: 1px;
     color: inherit;
 }
+
+.widgetAddFooter {
+	margin : 0 5px;
+    display: block;
+    clear: both;
+}
