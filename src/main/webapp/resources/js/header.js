@@ -22,7 +22,10 @@ function headerFun(){
 		});
 		
 		const title_li = addObject(header_ul, 'li', 'title_li', true, (o)=>{
-			o.innerHTML = '<a href="/dashboard">TASKTREE</a>';
+			o.innerHTML = '<a href="#" onclick="return false;">TASKTREE</a>';
+			o.addEventListener('click', ()=>{
+				location.href = '/dashboard';
+			});
 		});
 
 

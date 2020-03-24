@@ -52,3 +52,8 @@ li.nickName_li {
     border-radius: 50%;
 	
 }
+
+._dashItem a {
+    position: relative;
+    bottom: 2px;
+}
