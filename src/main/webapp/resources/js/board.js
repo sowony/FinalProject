@@ -9,10 +9,11 @@ let dashboardInfo = {};
 function widgetAdd(){
 	
 	
+	
 	//1p
 	const widgetAddBox1 = boxFun(null, false, null, true, 'widgetAddBox', (o)=>{
 		
-		
+		// 본문
 		const widgetSetting = addObject(o, 'div', 'widgetSetting', true, (o)=>{
 			o.style.textAlign = 'left';
 			o.innerHTML = `
@@ -83,6 +84,22 @@ function widgetAdd(){
 			colorContent.style.position = 'relative';
 			colorContent.style.top = '7px';
 			
+			
+			const widgetAddFooter = addObject(o, 'div', 'widgetAddFooter', true, (o)=>{
+				
+				// close 버튼
+				const widgetAddCloseBtn = addObject(o, 'input', ['widgetAddCloseBtn', 'grayBtn'], true, (o)=>{
+					o.type = 'button';
+					o.style.width = 'max-content';
+					o.value = '닫기';
+					o.addEventListener('click', (e)=>{
+						motionOnOff(widgetAddBox1, 0.8, false, { setting : 'offDefault' }, null, (o)=>{
+							o.remove();
+						});
+						
+					});
+				});
+			});
 			
 		});
 		
