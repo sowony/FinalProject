@@ -89,6 +89,7 @@ public class MainController {
 			logger.info("[ INFO ] : MainController > postSignUp [fail]");
 			return null;
 		}
+		
 	}
 	
 	@ResponseBody
@@ -103,7 +104,7 @@ public class MainController {
 		if(res > 0) {
 			logger.info("[ INFO ] : MainController > postMyAbout [success]");
 			
-			session.setAttribute("user", memberBiz.selectByMNo(memberDto.getMno()));
+			if(session.getAttribute("user") != null) session.setAttribute("user", memberBiz.selectByMNo(memberDto.getMno()));
 			
 			return true;
 		} else {

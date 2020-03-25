@@ -11,6 +11,7 @@ function loginSignIn() {
 	  
   const auth = gapi.auth2.init({
 		client_id: '869095672733-06a9k0ou1vkd2lakls4ibmba3vu5psot.apps.googleusercontent.com',
+		client_secret : 'firmx8X0IVXczpi2yUTJ7MT8',
 		scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/plus.me'
   });
   

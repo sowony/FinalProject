@@ -61,21 +61,25 @@ span.dashboardCloseBtn {
 }
 
 
-.widgetAddBox fieldset {
+.widgetAddBox1 fieldset, .widgetAddBox2 fieldset {
     display: block;
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 10px 20px;
     width: 300px;
+    height: 339.333px;
     margin: 10px 5px;
     float: left;
 }
 
-.widgetAddBox fieldset div {
+
+.widgetAddBox1 fieldset div,
+.widgetAddBox2 fieldset div {
 	margin : 8px 0;
 }
 
-.widgetAddBox p {
+.widgetAddBox1 p,
+.widgetAddBox2 p {
 	display: inline-block;
 	min-width: 80px;
     max-width: max-content;
@@ -86,16 +90,20 @@ span.dashboardCloseBtn {
 }
 
 
-.widgetAddBox input[type=text],
-.widgetAddBox input[type=number],
-.widgetAddBox textarea {
+.widgetAddBox1 input[type=text],
+.widgetAddBox2 input[type=text],
+.widgetAddBox1 input[type=number],
+.widgetAddBox2 input[type=number],
+.widgetAddBox1 textarea,
+.widgetAddBox2 textarea {
 	display : inline-block;
 	width: 65%;
 	margin : 5px 0 5px 5px;
 }
 
 
-.widgetAddBox select {
+.widgetAddBox1 select,
+.widgetAddBox2 select {
     display: inline-block;
     margin: 5px 0px 5px 5px;
         width: 70%;
@@ -172,4 +180,67 @@ span.dashboardCloseBtn {
 	margin : 0 5px;
     display: block;
     clear: both;
+}
+
+span.selectRule {
+	color:#fff;
+    background-color:#417d98 !important;
+}
+
+.widgetRuleSetting span{
+    display: block;
+    padding: 4px 0;
+    margin: 5px 0;
+    width: 100%;
+    background-color: #81D4FA;
+    text-align: center;
+    border-radius: 5px;
+    letter-spacing: 1pt;
+}
+
+.widgetRuleSetting span:hover{
+    color:#fff;
+    background-color:#417d98;
+}
+
+.widgetAddBox2 input[type=number] {
+    margin: 5px 0;
+    width: 44.5%;
+    display: inline-block;
+}
+
+.ruleItem span {
+    width: 48%;
+    display: inline-block;
+    position: relative;
+    top: 1px;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: inherit;
+}
+
+p.ruleItem:nth-last-child(1) {
+    border-bottom: 1px solid #ccc;
+}
+
+p.ruleItem {
+    height: max-content;
+    padding: 2px;
+    position: relative;
+    text-align: center;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+}
+
+p.ruleItem:hover {
+	background-color: #B2EBF2;
+    color: #00838F;
+}
+
+p.select {
+	background-color: #B2EBF2;
+    color: #00838F;
 }

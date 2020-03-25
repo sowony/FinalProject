@@ -675,6 +675,7 @@ function boxFun(text,bg, addTagObject, closeBtnDelete, boxSelector, callback, au
 			});
 			
 			contentBox['closeDisabledDelete'] = (callObject)=>{
+				callObject.setAttribute('disabled', 'true');
 				closeBtn.addEventListener('click', (e)=>{
 					callObject.removeAttribute('disabled');
 				});
