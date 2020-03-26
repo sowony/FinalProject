@@ -29,5 +29,7 @@ public class WRuleDto {
     // 그룹 최대 권한 등급 group 일 경우 0~9999
     private int wrmax;
 
+    // join 용
+    private String mnick;
 	
 }

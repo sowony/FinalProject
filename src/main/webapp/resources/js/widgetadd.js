@@ -13,17 +13,18 @@ function ruleAddBtn(that){
 	
 	const widgetRuleList = document.querySelector('.widgetRuleSetting .widgetRuleList');
 	
-	
 	const rules = [];
 	
 	let tmpArray = [];
+	
+	console.log(rules);
 	
 	if(wrcategory === 'group') {
 		
 		const wrmin = targetBox.querySelector('input[name=wrmin]').value;
 		const wrmax = targetBox.querySelector('input[name=wrmax]').value;
 		
-		rules.push({ wrcategory, wrrwd, wrmin, wrmax, mnick : '-' });
+		rules.push({ wrcategory, wrrwd, wrmin, wrmax });
 		
 	} else {
 		
@@ -63,7 +64,7 @@ function ruleAddBtn(that){
 			
 			if(memberNick.length > 0){
 				memberNick.forEach(mnick=>{
-					rules.push({ wrcategory, wrrwd, mnick, wrmin : '-', wrmax : '-' });
+					rules.push({ wrcategory, wrrwd, mnick });
 				});
 			}
 			
@@ -82,13 +83,11 @@ function ruleAddBtn(that){
 				const {wrcategory, mnick, wrmin, wrmax, wrrwd} = ul.dataset;
 				if(wrcategory === 'group'){
 					if(rule.wrmax <= wrmax && rule.wrmax >= wrmin ){
+						tmpArray.push('권한 적용 범위에 중복되는 부분이 있습니다.<br/>');
 						chk = false;
 					} else if(rule.wrmin <= wrmax && rule.wrmin >= wrmin ){
-						chk = false;
-					}
-					
-					if(!chk){
 						tmpArray.push('권한 적용 범위에 중복되는 부분이 있습니다.<br/>');
+						chk = false;
 					}
 					
 				} else {
@@ -110,27 +109,34 @@ function ruleAddBtn(that){
 			const ul = addObject(widgetRuleList,'ul', null, true,(o)=>{
 				
 				o.dataset.wrcategory = rule.wrcategory;
-				o.dataset.mnick = rule.mnick;
-				o.dataset.mid = (function(mnick){
-					let mid = '-';
-					dashboardInfo.dashmember.forEach(member=>{
-						if(member.mnick === mnick){
-							mid = member.mid;
-							return;
-						}
-					});
-					return mid;
-				})(rule.mnick);
-				o.dataset.wrmin = rule.wrmin;
-				o.dataset.wrmax = rule.wrmax;
+				
+				
+				
+				if(rule.wrcategory === 'group'){
+					o.dataset.wrmin = rule.wrmin;
+					o.dataset.wrmax = rule.wrmax;
+				} else if(rule.wrcategory === 'individual') {
+					o.dataset.mnick = rule.mnick;
+					o.dataset.mid = (function(mnick){
+						let mid = '-';
+						dashboardInfo.dashmember.forEach(member=>{
+							if(member.mnick === mnick){
+								mid = member.mid;
+								return;
+							}
+						});
+						return mid;
+					})(rule.mnick);
+				}
+				
 				o.dataset.wrrwd = rule.wrrwd;
 				
 				
 				o.innerHTML = `
 					<li>${rule.wrcategory === 'individual'? '개인' : '그룹'}</li>
-					<li>${rule.mnick}</li>
-					<li>${rule.wrmin}</li>
-					<li>${rule.wrmax}</li>
+					<li>${rule.mnick? rule.mnick : '-'}</li>
+					<li>${rule.wrmin? rule.wrmin: '-'}</li>
+					<li>${rule.wrmax? rule.wrmax : '-'}</li>
 					<li>${rule.wrrwd === '6'? '모든 권한' : '읽기'}</li>
 				`;
 				
@@ -817,6 +823,7 @@ function widgetAdd(){
 			});
 			
 			widget['info'] = {
+					
 					wtitle,
 					wcategory,
 					wwidth,
@@ -840,30 +847,53 @@ function widgetAdd(){
 				
 				widgetArea.appendChild(widgetClone);
 				
-				widgetClone.style.top = e.pageY - Math.floor(widgetClone.offsetHeight/2) + 'px';
-				widgetClone.style.left = e.pageX - Math.floor(widgetClone.offsetWidth/2) + 'px';
+				widgetClone.style.top = e.pageY - Math.floor(widgetClone.offsetHeight/2) + widgetArea.scrollTop + 'px';
+				widgetClone.style.left = e.pageX - Math.floor(widgetClone.offsetWidth/2) + widgetArea.scrollLeft + 'px';
 				
 				
-				function mousemove(e){
-					const widgetClone = e.target;
-					widgetClone.style.top = e.pageY - Math.floor(widgetClone.offsetHeight/2) + 'px';
-					widgetClone.style.left = e.pageX - Math.floor(widgetClone.offsetWidth/2) + 'px';
+				function cloneMousemove(e){
+					
+					
+					widgetClone.style.top = e.pageY - Math.floor(widgetClone.offsetHeight/2) + widgetArea.scrollTop + 'px';
+					widgetClone.style.left = e.pageX - Math.floor(widgetClone.offsetWidth/2) + widgetArea.scrollLeft + 'px';
+				
 				}
 				
-				function mouseDownAndOut(e){
-					const widgetClone = e.target;
-					widget.style.top = e.pageY - Math.floor(widgetClone.offsetHeight/2) + 'px';
-					widget.style.left = e.pageX - Math.floor(widgetClone.offsetWidth/2) + 'px';
-					widgetArea.appendChild(widget);
-					widget.mouseEventFun();
+				function cloneMouseDownAndOut(e){
+					
+					
+					widget.style.top = e.pageY - Math.floor(widgetClone.offsetHeight/2) + widgetArea.scrollTop + 'px';
+					widget.style.left = e.pageX - Math.floor(widgetClone.offsetWidth/2) + widgetArea.scrollLeft + 'px';
+					
+					widgetArea.removeEventListener('mousemove', cloneMousemove);
+					widgetArea.removeEventListener('mousedown', cloneMouseDownAndOut);
+					
 					widgetClone.remove();
+					
+					widgetArea.appendChild(widget);
+					
+					widget.mouseEventFun();
+					widget.scaleEventFun();
+					
+					widget['info'].wposition = widget.style.position;
+					widget['info'].wtop = widget.style.top.split('px')[0];
+					widget['info'].wleft = widget.style.left.split('px')[0];
+					
+					console.log(widget['info']);
+					
+					xhrLoad('post','widget/insert', widget['info'], (res)=>{
+						
+						console.log(res);
+						
+					});
+					
 				}
 				
-				widgetClone.addEventListener('mousemove', mousemove);
-				widgetClone.addEventListener('mousedown', mouseDownAndOut);
-				widgetClone.addEventListener('mouseout', mouseDownAndOut);
+				widgetArea.addEventListener('mousemove', cloneMousemove);
+				widgetArea.addEventListener('mousedown', cloneMouseDownAndOut);
 				
 				o.remove();
+				
 			});
 			
 		});

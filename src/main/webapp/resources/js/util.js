@@ -47,44 +47,228 @@ function arrSort(arr){
 	return returnArr;
 }
 
-function mouseEventFun(){
+function mouseEventFun(target, clickArea, mouseArea ){
 	
-	const widgetArea = this.parentNode;
-	const widgetHeader = this.querySelector('.widgetHeader');
-	const widget = widgetHeader.parentNode;
 	
 	let originX, originY;
 	let mouseX, mouseY;
 	
+	const body = document.querySelector('body');
+	
 	function mousemove(e){
 		
-		widget.style.top = originY - (mouseY - e.pageY) + 'px';
-		widget.style.left = originX - (mouseX - e.pageX) + 'px';
+		target.style.top = originY - (mouseY - e.pageY) + 'px';
+		target.style.left = originX - (mouseX - e.pageX) + 'px';
 	}
 	
 	function mousedown(e){
 		
-		originX = widget.offsetLeft;
-		originY = widget.offsetTop;
+		let width = clickArea.offsetWidth;
+		let height = clickArea.offsetHeight;
+		
+		originX = target.offsetLeft;
+		originY = target.offsetTop;
+		
 		mouseX = e.pageX;
 		mouseY = e.pageY;
 		
-		widgetArea.addEventListener('mousemove', mousemove);
-		widgetHeader.addEventListener('mouseup', mouseOutAndUp);
+		
+		if (mouseY-33 < originY +5 && mouseY-33 > originY-5){
+			return;
+		} else if (mouseY-33< originY + height +5 && mouseY-33 > originY + height -5){
+			return;
+		} else if(mouseX < originX + width +15 && mouseX > originX + width -15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
+			return;
+		} else if(mouseX < originX+15 && mouseX > originX-15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
+			return;
+		}
+		
+		mouseArea.addEventListener('mousemove', mousemove);
+		body.addEventListener('mouseup', mouseOutAndUp);
 		
 	}
 	
 	function mouseOutAndUp(e){
 		
-		widgetArea.removeEventListener('mousemove', mousemove);
-		widgetHeader.removeEventListener('mouseup', mouseOutAndUp);
+		mouseArea.removeEventListener('mousemove', mousemove);
+		body.removeEventListener('mouseup', mouseOutAndUp);
 		
 	}
 	
-	widgetHeader.addEventListener('mousedown', mousedown);
+	clickArea.addEventListener('mousedown', mousedown);
 	
 }
 
+function scaleEventFun(target, mouseArea){
+	
+	let areaClone;
+	
+	let width, height;
+	
+	let originX, originY;
+	let mouseX, mouseY;
+	
+	let state;
+	
+	const body = document.querySelector('body');
+	
+	function mousemoveDown(e){
+		
+		
+		width = target.offsetWidth;
+		height = target.offsetHeight;
+		
+		state = areaClone.style.cursor;
+		
+		if(state === 'ne-resize' || state === 'nw-resize' || state === 'n-resize'){
+			
+			const oldTop = target.offsetTop;
+			target.style.top = originY - (mouseY - e.pageY - mouseArea.scrollTop) + 'px';
+			
+			const newTop = target.offsetTop;
+			
+			target.style.height = height + (oldTop - newTop) + 'px';
+		} else if (state === 'sw-resize' || state === 'se-resize' || state === 's-resize'){
+			
+			target.style.height = (e.pageY - 33 - originY) + 'px';
+			
+		}
+		
+
+		if(state === 'nw-resize' || state === 'sw-resize' || state === 'w-resize'){
+			
+			const oldLeft = target.offsetLeft;
+			target.style.left = originX - (mouseX - e.pageX - mouseArea.scrollLeft) + 'px';
+			
+			const newLeft = target.offsetLeft;
+			
+			target.style.width = width + (oldLeft - newLeft) + 'px';
+		} else if (state === 'ne-resize' || state === 'se-resize' || state === 'e-resize'){
+			
+			target.style.width = (e.pageX - originX) + 'px';
+			
+		}
+		
+	}
+	
+	function mousemoveOver(e){
+		
+		width = target.offsetWidth;
+		height = target.offsetHeight;
+	
+		
+		originX = target.offsetLeft;
+		originY = target.offsetTop;
+		
+		mouseX = e.pageX + mouseArea.scrollLeft;
+		mouseY = e.pageY + mouseArea.scrollTop;
+		
+		
+		if(mouseX < originX+15 && mouseX > originX-15 && mouseY-33< originY + height +15 && mouseY-33 > originY + height -15){
+			// 왼쪽 아래
+			target.style.cursor = 'sw-resize';
+		} else if(mouseX < originX+15 && mouseX > originX-15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
+			// 왼쪽 위
+			target.style.cursor = 'nw-resize';
+		} else if(mouseX < originX + width +15 && mouseX > originX + width -15 && mouseY-33< originY + height +15 && mouseY-33 > originY + height -5){
+			// 오른쪽 아래
+			target.style.cursor = 'se-resize';
+		} else if(mouseX < originX + width +15 && mouseX > originX + width -15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
+			// 오른쪽 위
+			target.style.cursor = 'ne-resize';
+		} else if(mouseX < originX+5 && mouseX > originX-5){
+			// 왼쪽
+			target.style.cursor = 'w-resize';
+		} else if (mouseX < originX + width +5 && mouseX > originX + width -5){
+			// 오른쪽
+			target.style.cursor = 'e-resize';
+		} else if (mouseY-33 < originY +5 && mouseY-33 > originY-5){
+			// 위
+			target.style.cursor = 'n-resize';
+		} else if (mouseY-33< originY + height +5 && mouseY-33 > originY + height -5){
+			// 아래
+			target.style.cursor = 's-resize';
+		} else {
+			target.style.cursor = 'default';
+			return;
+		}
+		
+	}
+	
+	function mouseOutAndUp(e){
+		
+		target.style.cursor = 'default';
+		
+		areaClone.remove();
+		
+	}
+	
+	function mousedown(e){
+		
+		e.preventDefault();
+		e.stopPropagation();
+		
+		width = target.offsetWidth;
+		height = target.offsetHeight;
+		
+		originX = target.offsetLeft;
+		originY = target.offsetTop;
+		
+		mouseX = e.pageX + mouseArea.scrollLeft;
+		mouseY = e.pageY + mouseArea.scrollTop;
+		
+		if(areaClone){
+			areaClone.remove();
+		} else {
+			areaClone = mouseArea.cloneNode();
+			areaClone.classList.add('mousemoveArea');
+		}
+		
+		if(mouseX < originX+15 && mouseX > originX-15 && mouseY-33< originY + height +15 && mouseY-33 > originY + height -15){
+			// 왼쪽 아래
+			areaClone.style.cursor = 'sw-resize';
+		} else if(mouseX < originX+15 && mouseX > originX-15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
+			// 왼쪽 위
+			areaClone.style.cursor = 'nw-resize';
+		} else if(mouseX < originX + width +15 && mouseX > originX + width -15 && mouseY-33< originY + height +15 && mouseY-33 > originY + height -15){
+			// 오른쪽 아래
+			areaClone.style.cursor = 'se-resize';
+		} else if(mouseX < originX + width +15 && mouseX > originX + width -15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
+			// 오른쪽 위
+			areaClone.style.cursor = 'ne-resize';
+		} else if(mouseX < originX+5 && mouseX > originX-5){
+			// 왼쪽
+			areaClone.style.cursor = 'w-resize';
+		} else if (mouseX < originX + width +5 && mouseX > originX + width -5){
+			// 오른쪽
+			areaClone.style.cursor = 'e-resize';
+		} else if (mouseY-33 < originY +5 && mouseY-33 > originY-5){
+			// 위
+			areaClone.style.cursor = 'n-resize';
+		} else if (mouseY-33< originY + height +5 && mouseY-33 > originY + height -5){
+			// 아래
+			areaClone.style.cursor = 's-resize';
+		} else {
+			areaClone.style.cursor = 'default';
+			return;
+		}
+		
+		areaClone.style.opacity = 0;
+		areaClone.style.zIndez = 20000;
+		
+		mouseArea.parentNode.appendChild(areaClone);
+		
+		
+		areaClone.addEventListener('mouseup', mouseOutAndUp);
+		areaClone.addEventListener('mouseout', mouseOutAndUp);
+		areaClone.addEventListener('mousemove', mousemoveDown);
+		
+	}
+	
+	
+	target.addEventListener('mousemove', mousemoveOver);
+	target.addEventListener('mousedown', mousedown);
+}
 
 function widgetFun(setting){
 	
@@ -93,7 +277,10 @@ function widgetFun(setting){
 		o.style.width = setting['wwidth']+'px';
 		o.style.height = setting['wheight']+'px';
 		o.style.zIndex = setting['wzindex'];
-		o.style.position = setting['position'];
+		o.style.position = setting['wposition'];
+		
+		if(setting['wtop']) o.style.top = setting['wtop'] + 'px';
+		if(setting['wleft']) o.style.left = setting['wleft'] + 'px';
 		
 		if(!setting['wtitlecolor']){
 			setting['wtitlecolor'] = 'rgb(65, 198, 241)';
@@ -120,10 +307,18 @@ function widgetFun(setting){
 		
 	});
 	
-	widget['mouseEventFun'] = mouseEventFun;
+	widget['mouseEventFun'] = ()=>{
+		mouseEventFun(widget, widget.querySelector('.widgetHeader'), widget.parentNode);
+	};
+	
+	widget['scaleEventFun'] = ()=>{
+		scaleEventFun(widget, widget.parentNode);
+	};
 	
 	return widget;
 }
+
+
 
 function colorPickerBtn(parentNode, beforeNode, submit){
 	

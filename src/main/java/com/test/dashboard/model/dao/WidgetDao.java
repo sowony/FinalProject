@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +25,8 @@ public interface WidgetDao {
 	@Select("select * from widget where wno = #{wno}")
 	public WidgetDto selectOne(int wno);
 	
-	@Insert("insert into widget values(widget_seq.nextval, #{dno}, #{wcategory}, #{wtitle}, #{mid}, #{wleft}, #{wtop}, #{wwidth}, #{wheight}, #{wzindex}, #{wcontentcolor}, #{wtitlecolor}, #{wposition}, sysdate, 'N')")
+	@SelectKey(statement = "select widget_seq.nextval from dual", keyProperty = "wno", resultType = Integer.class, before = true)
+	@Insert("insert into widget values(#{wno}, #{dno}, #{wcategory}, #{wtitle}, #{mid}, #{wleft}, #{wtop}, #{wwidth}, #{wheight}, #{wzindex}, #{wcontentcolor}, #{wtitlecolor}, #{wposition}, sysdate, 'N')")
 	public int insert(WidgetDto widgetDto);
 	
 	@Update("update widget set wtitle=#{wtitle}, wleft=#{wleft}, wtop=#{wtop}, wwidth=#{wwdith}, wzindex=#{wzindex}, wcontentcolor=#{wcontentcolor}, wtitlecolor=#{wtitlecolor}, wposition=#{wposition} where wno=#{wno}")

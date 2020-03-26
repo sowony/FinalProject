@@ -1,6 +1,7 @@
 package com.test.dashboard.model.dto;
 
 import java.util.Date;
+import java.util.List;
 
 import org.apache.ibatis.type.Alias;
 
@@ -55,4 +56,7 @@ public class WidgetDto {
     // 위젯 삭제 유무 
     private String wdel;
 	
+    
+    // join 용
+    private List<WRuleDto> rules;
 }

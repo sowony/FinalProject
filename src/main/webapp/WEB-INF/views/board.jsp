@@ -14,8 +14,11 @@
 <!-- 페이지 js, css -->
 <link rel="stylesheet" href="/dashboard/resources/css/header.css" type="text/css">
 <link rel="stylesheet" href="/dashboard/resources/css/board.css" type="text/css">
-<script type="text/javascript" src="/dashboard/resources/js/board.js"></script>
+
 <script type="text/javascript" src="/dashboard/resources/js/widgetadd.js"></script>
+<script type="text/javascript" src="/dashboard/resources/js/widgetload.js"></script>
+
+<script type="text/javascript" src="/dashboard/resources/js/board.js"></script>
 </head>
 <body>
 

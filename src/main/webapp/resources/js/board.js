@@ -51,7 +51,10 @@ function selectDashBoardLoad(){
 		
 		const widgetArea = dashboard.querySelector('.widgetArea');
 		
+		widgetload();
+		
 		console.log(dashboardInfo);
+		
 		
 	},false);
 	
