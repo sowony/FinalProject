@@ -140,10 +140,10 @@ div#bgBlack {
 	background-color: #00000090;
 }
 
+
 div.boxOpen, div.customMenu {
 	display: block;
 	position: absolute;
-	z-index: 10003;
 	background-color: #ffffff;
 	width: max-content;
 	height: max-content;
@@ -154,10 +154,14 @@ div.boxOpen, div.customMenu {
 	text-align: center;
 }
 
+div.boxOpen{
+	z-index: 10003;
+}
+
 div.customMenu {
+	z-index: 10004;
 	width: 200px;
 	height: max-content;
-	z-index: 10000;
 	padding: 5px 0px;
 	position: fixed;
 }
