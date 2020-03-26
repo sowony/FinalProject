@@ -45,11 +45,14 @@ input {
    -webkit-user-select: none;
    user-select: none;
 
+wbinnerbox
+width: max-content;
 -->
 
-.innerBox{
-	width: max-content;
+.writeContent{
+	width: max-content; 	
 }
+
 
 input.wtxt {
     width: 220px !important;
@@ -86,14 +89,29 @@ div.wcontent {
     display: inline-block;
     min-width: 55px;
     text-align: left;
+   
+}
+.writeContent{
+	width: 376px;
+	
 }
 
 #wbdelete{
 	width: 30px;	
 }
 
-#wbupdate{
-	
+#wupic{
+	width: 282px !important; 
 }
-
-
+#wutitle{
+	width: 282px !important;
+}
+.winsertbtn{
+	margin-top: 10px;
+}
+.winsertbtn{
+	margin-top: 10px;
+}
+.wdate span{
+	min-width: 50px;
+}

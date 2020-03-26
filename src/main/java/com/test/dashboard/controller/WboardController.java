@@ -115,7 +115,36 @@ public class WboardController {
 		}
 		
 		
-		@RequestMapping(value = "/summerUpdate", method = RequestMethod.POST)
+		//게시글 수정 폼으로 보내기 
+		@RequestMapping(value="/summerupdate", method=RequestMethod.POST)
+		@ResponseBody
+		public Map<String, Object> summerUpdate(@ModelAttribute("selectno") int wbtodono){
+			
+			System.out.println("여기는 업데이트"+wbtodono);
+			WboardDto dto = biz.wSelectOne(wbtodono);
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("wbtodono",dto.getWbtodono());
+			map.put("wno",dto.getWno());
+			map.put("dno",dto.getDno());
+			map.put("dgno",dto.getDgno());
+			map.put("mid",dto.getMid());
+			map.put("wbtodo",dto.getWbtodo());
+			map.put("wbtitle",dto.getWbtitle());
+			map.put("wbcontent",dto.getWbcontent());
+			map.put("wfno_list", dto.getWfno_list());
+			map.put("wbstartdate", dto.getWbstartdate());
+			map.put("wbenddate", dto.getWbenddate());
+			map.put("wbcolor", dto.getWbcolor());
+			
+			
+			return map;
+		}
+		
+		
+		
+		//게시글 수정 완료 해서 저장하기 
+		@RequestMapping(value = "/summerUpdateres", method = RequestMethod.POST)
 		@ResponseBody
 		public boolean summerUpdate(WboardDto dto) {
 			//@RequestBody를 붙여주면 컨트롤러로 전송된 JSON 정보가 자동으로 Map으로 변환되어 해당 변수에 저장됩니다. (변수명은 아무렇게나 지어도 상관없습니다.)
