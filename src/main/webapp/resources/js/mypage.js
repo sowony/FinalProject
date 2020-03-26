@@ -54,7 +54,7 @@ function dashboardLoad(loc){
 						},
 						property : {
 							mpp : 'margin',
-							y : { num0 : -6, num0 : 6 },
+							y : { num0 : -6, num1 : 10 },
 							x : 6
 						}
 					});

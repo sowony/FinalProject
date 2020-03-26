@@ -12,6 +12,7 @@
 <script type="text/javascript" src="./resources/js/test.js"></script>
 </head>
 <body>
+<input type="radio"/>
 
 </body>
 </html>

@@ -20,6 +20,71 @@ function logout(){
 		
 }
 
+// 배열 정렬
+function arrSort(arr){
+	
+	let chkNum = 0;
+	const len = arr.length;
+	
+	let returnArr = [];
+	
+	for(let i = 0 ; i < len ; i++ ){
+		returnArr.push('');
+	}
+	
+	arr.forEach(val=>{
+		arr.forEach((checkVal,i)=>{
+			if(val > checkVal){
+				chkNum++;
+			}
+			if(i === len-1){
+				returnArr[chkNum] = val;
+				chkNum = 0;
+			}
+		});
+	});
+	
+	return returnArr;
+}
+
+function mouseEventFun(){
+	
+	const widgetArea = this.parentNode;
+	const widgetHeader = this.querySelector('.widgetHeader');
+	const widget = widgetHeader.parentNode;
+	
+	let originX, originY;
+	let mouseX, mouseY;
+	
+	function mousemove(e){
+		
+		widget.style.top = originY - (mouseY - e.pageY) + 'px';
+		widget.style.left = originX - (mouseX - e.pageX) + 'px';
+	}
+	
+	function mousedown(e){
+		
+		originX = widget.offsetLeft;
+		originY = widget.offsetTop;
+		mouseX = e.pageX;
+		mouseY = e.pageY;
+		
+		widgetArea.addEventListener('mousemove', mousemove);
+		widgetHeader.addEventListener('mouseup', mouseOutAndUp);
+		
+	}
+	
+	function mouseOutAndUp(e){
+		
+		widgetArea.removeEventListener('mousemove', mousemove);
+		widgetHeader.removeEventListener('mouseup', mouseOutAndUp);
+		
+	}
+	
+	widgetHeader.addEventListener('mousedown', mousedown);
+	
+}
+
 
 function widgetFun(setting){
 	
@@ -53,8 +118,9 @@ function widgetFun(setting){
 			</div>
 		`;
 		
-		middlePositionFun(o);
 	});
+	
+	widget['mouseEventFun'] = mouseEventFun;
 	
 	return widget;
 }
@@ -512,7 +578,20 @@ function middlePositionFun(obj){
 	obj.style.position = 'absolute';
 	obj.style.top = '50%';
 	obj.style.left = '50%';
-	obj.style.transform = 'translateX(-50%) translateY(-50%)';
+	if(obj.style.transform){
+		
+		const transformArray = obj.style.transform.split(' ');
+		const tmpArray = [];
+		transformArray.forEach(style=>{
+			if(!style.indexOf('translateX') > 0 || !style.indexOf('translateY') > 0 ){
+				tmpArray.push(style);
+			}
+		});
+		
+		obj.style.transform = style.toString().replace(/,/g,' ') + 'translateX(-50%) translateY(-50%)';
+		
+	} else obj.style.transform = 'translateX(-50%) translateY(-50%)';
+
 }
 
 // 유틸 오브젝트 모두 삭제 함수
@@ -675,19 +754,47 @@ function boxFun(text,bg, addTagObject, closeBtnDelete, boxSelector, callback, au
 			});
 			
 			contentBox['closeDisabledDelete'] = (callObject)=>{
+				
+				if(callObject.tagName === 'A'){
+					if(callObject.getAttribute('style')) callObject.setAttribute('style', callObject.getAttribute('style') + 'pointer-events: none;');
+					else callObject.setAttribute('style', 'pointer-events: none;');
+				} else {
+					callObject.setAttribute('disabled', 'true');
+				}
+				
 				closeBtn.addEventListener('click', (e)=>{
-					callObject.removeAttribute('disabled');
+					if(callObject.tagName === 'A'){
+						
+						let styleArray = callObject.getAttribute('style').split(';');
+						styleArray.splice(styleArray.length-2, 1);
+						const styleStr = styleArray.toString().replace(/,/g, ';');
+						callObject.setAttribute('style',styleStr );
+						
+					} else callObject.removeAttribute('disabled');
 				});
 			};
 			
 		}
+		
+		contentBox['removeDisabledDelete'] = (callObject)=>{
+			console.log(callObject);
+			if(callObject.tagName === 'A'){
+				
+				let styleArray = callObject.getAttribute('style').split(';');
+				styleArray.splice(styleArray.length-2, 1);
+				const styleStr = styleArray.toString().replace(/,/g, ';');
+				callObject.setAttribute('style',styleStr);
+				console.log(callObject.getAttribute('style'));
+				
+			} else callObject.removeAttribute('disabled');
+		};
+		
 		if(addTagObject){
 			for(let tag of addTagObject){
 				if(closeBtn) boxOpen.insertBefore(tag, closeBtn);
 				else boxOpen.appendChild(tag);
 			}
 		}
-		
 		
 		if(autoMotion) {
 			motionOnOff(boxOpen, 0.8, bg, { setting : 'onDefault' });
@@ -696,10 +803,10 @@ function boxFun(text,bg, addTagObject, closeBtnDelete, boxSelector, callback, au
 		middlePositionFun(boxOpen);
 		
 		if(callback){
+			
+			
 			callback(contentBox, contentBox.childNodes, boxSelector);
 		}
-		
-		
 		
 		return contentBox;
 		

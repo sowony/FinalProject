@@ -14,7 +14,7 @@ import com.test.dashboard.model.dto.DashGradeDto;
 public interface DashGradeDao {
 
 	// 특정 대쉬보드의 등급 목록
-	@Select("select * from dashgrade where dno = #{dno}")
+	@Select("select * from dashgrade where dno = #{dno} order by dggrade")
 	public List<DashGradeDto> selectList(int dno);
 	
 	@Insert("insert into dashgrade values(dashgrade_seq.nextval, #{dno}, #{dggrade}, #{dgalias}, #{dgcolor})")
