@@ -75,6 +75,23 @@ public class WboardController {
 		
 		}
 		
+		
+		@RequestMapping(value="/wDelete", method= RequestMethod.POST)
+		@ResponseBody
+		public boolean wDelete(@ModelAttribute("selectno") int wbtodono) {
+			
+			int res = biz.wDelete(wbtodono);
+			
+			if(res > 0) {
+				return true;
+			}else {
+				return false;
+			}
+			
+		}
+		
+		
+		
 		@GetMapping("/summerwrite")
 		public String boardWrite() {
 		  return "summerboardwrite";
@@ -82,6 +99,7 @@ public class WboardController {
 		
 		@PostMapping("/summerwrite")
 		public String wbinsert(WboardDto dto) {
+			System.out.println(dto.getWbstartdate()+"그리고"+dto.getWbenddate());
 			
 			int	res = biz.wbinsert(dto);
 			if(res > 0) {
@@ -94,6 +112,22 @@ public class WboardController {
 			}
 			
 		
+		}
+		
+		
+		@RequestMapping(value = "/summerUpdate", method = RequestMethod.POST)
+		@ResponseBody
+		public boolean summerUpdate(WboardDto dto) {
+			//@RequestBody를 붙여주면 컨트롤러로 전송된 JSON 정보가 자동으로 Map으로 변환되어 해당 변수에 저장됩니다. (변수명은 아무렇게나 지어도 상관없습니다.)
+			
+			
+			int res = biz.summerUpdate(dto);
+			if(res>0) {
+				return true;
+			}else {
+				return false;	
+			}
+			
 		}
 		
 		

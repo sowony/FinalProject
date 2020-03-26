@@ -105,16 +105,17 @@ function selectbtn(selectno){
 	const div1 = addObject(null, 'div', 'writeContent');
 	
 	const wpic = addObject(div1, 'p', 'wpic', true, (o)=>{
-		o.innerHTML = `<span>담당자</span><input class="wtxt" type="text" placeholder="담당자"/>`;
+		o.innerHTML = `<span>담당자</span><input class="wtxt" type="text" placeholder="담당자" readonly />`;
 	});
 	const wtitle = addObject(div1, 'p', 'wtitle', true, (o)=>{
-		o.innerHTML = `<span>제목</span><input class="wtxt" type="text" placeholder="제목"/>`;
+		o.innerHTML = `<span>제목</span><input class="wtxt" type="text" placeholder="제목" readonly/>`;
 	});
 	const wdate = addObject(div1, 'p', 'wdate', true, (o)=>{
-		o.innerHTML = `<span>날짜</span><input class="wtxt" type="text" placeholder="날짜"/>`;
+		o.innerHTML = `<span>날짜</span><input class="wtxt" type="text" placeholder="날짜" readonly />`;
 	});
 	const wcontent = addObject(div1, 'div', 'wcontent', true, (o)=>{
 		o.innerHTML = "내용 ";
+		
 	});
 		//2번째,배경 투명 = false, 검정 = true/ true 4번째 취소버튼 없애기 
 	const box = boxFun('일정', true, [ div1 ],false,'innerBox',null,true);
@@ -127,17 +128,24 @@ function selectbtn(selectno){
 		`;
 		
 		document.querySelector('#wbdelete').addEventListener('click', (e)=>{
+
 			$.ajax({
 				url: 'wDelete',
 				//accept : 'application/json',
-				method: 'post',
+				method: 'post',  
 				//contentType : 'application/json; charset=utf-8;',
 				//async: false,
-				data: {"wbtodono":wbtodono},
+				data: {"selectno":selectno},
 				success: function(res){
+					
 					console.log(res);
-					alert("삭제되었습니다.");
-					location.href="/wboard";
+					if(true){
+						alert("삭제되었습니다.");	
+						location.href="wboard";
+					}else if(false){
+						alert("삭제 실패 ");
+					}
+					
 				
 				},
 				error: function(res){
@@ -149,10 +157,151 @@ function selectbtn(selectno){
 		});
 		document.querySelector('#wbupdate').addEventListener('click', (e)=>{
 
+			
+			$.ajax({
+				url: 'wSelectOne',
+				//accept : 'application/json',
+				method: 'post',
+				//contentType : 'application/json; charset=utf-8;',
+				//async: false,
+				data: {"selectno":selectno},
+				success: function(res){
+					console.log(res);
+					//alert(res);
+					var id = res.mid;
+					var title = res.wbtitle;
+					var startdate = res.wbstartdate ;
+					var enddate =  res.wbenddate;
+					var content = res.wbcontent; 
+					console.log(id+" " +title+" " +" " +content);
+					$(".wtxt").eq(0).val(id);
+					$(".wtxt").eq(1).val(title);
+					$(".wtxt").eq(2).val(startdate);
+					$(".wtxt").eq(3).val(enddate);
+					$(".wcontent").html(content);
+				},
+				error: function(res){
+					alert("다시 선택해주세요!");
+					
+				}
+			});
+			
+			
+			const div1 = addObject(null, 'div', 'writeContent');
+			
+			const wpic = addObject(div1, 'p', 'wpic', true, (o)=>{
+				o.innerHTML = `<span>담당자</span><input class="wtxt" type="text" placeholder="담당자" name="mid"/>`;
+			});
+			const wtitle = addObject(div1, 'p', 'wtitle', true, (o)=>{
+				o.innerHTML = `<span>제목</span><input class="wtxt" type="text" placeholder="제목" name="wbtitle"/>`;
+			});
+			const wdate = addObject(div1, 'p', 'wdate', true, (o)=>{
+				o.innerHTML = `<span>날짜</span>
+				<input id="wbstartdate" class="wtxt" type="text" placeholder="날짜" name="wbstartdate"/>
+				<input id="wbenddate" class="wtxt" type="text" placeholder="날짜" name="wbenddate"/>
+				`;
+			});
+			const wcontent = addObject(div1, 'div', 'wcontent', true, (o)=>{
+				o.innerHTML = "내용 ";
+			});
+			
+			const winsertbtn = addObject(div1,'p','winsertbtn',true,(o)=>{
+				o.innerHTML = `
+				<input type="button" value="취소" id="wbcancle">
+				<input type="button" value="수정" id="wbupdate" >
+				`;
+			
+				
+				
+				
+				
+				
 			//<p> 없애고 
 			//임시보관할 장소를 가지고 와서 담아 두고 
 			//<input> 테그를 새로 만들어서 넣어주기
 			//서머노트 json으로 받아온거 뿌려주기 <textarea>넣어도됨 
+			
+/*			$('.wtxt').eq(0).attr("readonly", false);
+			$('.wtxt').eq(1).attr("readonly", false);
+			$('.wtxt').eq(2).attr("readonly", false);
+				 
+			
+			 
+
+			
+			//$('#wbupdate').val('수정완료');
+			  if($('#wbupdate').val() == '수정'){
+				  $('#wbupdate').val('수정완료');
+					  alert("쨘");	
+
+			  }else{
+				  $('#wbupdate').val('수정');
+				  alert("두번째 수정 ");
+				  $('.wtxt').eq(0).attr("readonly", true);
+			    $('.wtxt').eq(1).attr("readonly", true);
+				 $('.wtxt').eq(2).attr("readonly", true);
+				 
+
+			  }*/
+			
+			
+			
+			
+			/*
+			 * 				  $.ajax({
+						url: 'summerUpdate',
+						//accept : 'application/json',
+						method: 'post',
+						//contentType : 'application/json; charset=utf-8;',
+						//async: false,
+						data: {
+							"selectno":selectno,
+							"wbtitle":wbtitle,
+							"mid":mid,
+							"wbcontent":wbcontent,
+							"wbstartdate":wbstartdate,
+							"wbenddate":wbenddate
+						},
+						success: function(res){
+							console.log(res);
+							alert("수정 성공하였습니다");
+
+						},
+						error: function(res){
+							alert("수정에 실패하였습니다.");
+							
+						}
+					});
+						  
+			 ////////////////////
+
+		$.ajax({
+		url: 'wSelectOne',
+		//accept : 'application/json',
+		method: 'post',
+		//contentType : 'application/json; charset=utf-8;',
+		//async: false,
+		data: {"selectno":selectno},
+		success: function(res){
+			console.log(res);
+			//alert(res);
+			var id = res.mid;
+			var title = res.wbtitle;
+			var date = res.wbstartdate +"~"+ res.wbenddate;
+			var content = res.wbcontent; 
+			console.log(id+" " +title+" " +date+" " +content);
+			$(".wtxt").eq(0).val(id);
+			$(".wtxt").eq(1).val(title);
+			$(".wtxt").eq(2).val(date);
+			$(".wcontent").html(content);
+		},
+		error: function(res){
+			alert("다시 선택해주세요!");
+			
+		}
+	});
+	
+	*/
 			
 			
 		});
@@ -168,7 +317,7 @@ function selectbtn(selectno){
 //글 새로 쓰기 버튼 
 function insertbtn() {
 	
-	const box = boxFun('일정 추가',true,[]);
+	//const box = boxFun('일정 추가',true,[]);
 	
 }
 

@@ -45,7 +45,22 @@ public class WboardBizImpl implements WboardBiz{
 	@Override
 	public int wbinsert(WboardDto dto) {
 		
+
 		return wboardDao.wbinsert(dto);
+	}
+
+	
+	//게시물 삭제 
+	@Override
+	public int wDelete(int wbtodono) {
+		return wboardDao.wDelete(wbtodono);
+	}
+
+	//게시물 수정 
+	@Override
+	public int summerUpdate(WboardDto dto) {
+
+		return wboardDao.summerUpdate(dto);
 	}
 
 }

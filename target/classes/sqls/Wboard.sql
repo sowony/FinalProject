@@ -50,7 +50,9 @@ INSERT INTO wboard VALUES
 
 SELECT * FROM WBOARD;
 
-SELECT * FROM WBOARD WHERE mid = 'c';
+SELECT * FROM WBOARD WHERE mid = 'a';
+
+delete from wboard where wbtodono = 2;
 
 select to_char(wbstartdate,'yyyy-mm-dd') FROM WBOARD;
 

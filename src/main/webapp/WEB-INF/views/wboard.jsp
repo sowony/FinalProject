@@ -5,21 +5,32 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script type="text/javascript"
-	src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
 <script type="text/javascript" src="./resources/js/wboard.js"></script>
 <link rel="stylesheet" href="./resources/css/wboard.css" type="text/css" />
 
 <!-- 커스텀 유틸  -->
-<link rel="stylesheet" href="./resources/css/defaultstyle.css"
-	type="text/css" />
+<link rel="stylesheet" href="./resources/css/defaultstyle.css"type="text/css" />
 <script type="text/javascript" src="./resources/js/util.js"></script>
 <script type="text/javascript" src="./resources/js/xhr.js"></script>
-<script type="text/javascript">
+
+<!-- 썸머노트js관련 -->
+<!-- include libraries(jQuery, bootstrap) -->
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet">
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script> 
+
+<!-- include summernote css/js-->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.js"></script>
+
+<!-- 달력피커 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/themes/dark.css">
 
 
-</script>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 </head>
 <body>

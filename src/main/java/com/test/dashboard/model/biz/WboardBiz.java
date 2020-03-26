@@ -18,4 +18,10 @@ public interface WboardBiz {
 	//게시물 작성 
 	public int wbinsert(WboardDto dto);
 	
+	//게시물 삭제 
+	public int wDelete(int wbtodono);
+	
+	//게시물 수정
+	public int summerUpdate(WboardDto dto);
+	
 }
