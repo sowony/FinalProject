@@ -32,4 +32,10 @@ public class WRuleDto {
     // join 용
     private String mnick;
 	
+    private String dmcolor;
+    
+    private String dgcolor;
+    
+    private String mimgpath;
+    
 }

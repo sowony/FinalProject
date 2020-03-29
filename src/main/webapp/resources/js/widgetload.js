@@ -4,8 +4,53 @@
 
 let widgets = []
 
-function widgetload(){
+function widgetSettingFun(widgetSetting){
 	
+	const widget = widgetFun(widgetSetting);
+	widget['info'] = widgetSetting;
+	
+	const dashmember = dashboardInfo.dashmember;
+	const dashgrade = dashboardInfo.dashgrade;
+	
+	widget['info'].rules.forEach(rule=>{
+		
+		if(rule.wrcategory === 'individual'){
+			
+			dashmember.forEach(member=>{
+				if(member.mid === rule.mid){
+					
+					const {mnick, mimgpath, dmcolor, dggrade, dgalias} = member;
+					
+					rule.mnick = mnick;
+					rule.mimgpath = mimgpath;
+					rule.dmcolor = dmcolor;
+					rule.dggrade = dggrade;
+					rule.dgalias = dgalias;
+				
+				}
+			});
+			
+		} else {
+			dashgrade.forEach(grade=>{
+				
+				if(grade.dggrade === rule.wrmax) {
+					rule.maxdgalias = grade.dgalias;
+					rule.maxdgcolor = grade.dgcolor;
+				}
+				
+				if(grade.dggrade === rule.wrmin){
+					rule.mindgalias = grade.dgalias;
+					rule.mindgcolor = grade.dgcolor;
+				}
+				
+			});
+		}
+		
+	});
+	return widget;
+}
+
+function widgetload(){
 	
 	// 대시보드 초기화
 	const widgetArea = document.querySelector('#widgetArea');
@@ -25,9 +70,7 @@ function widgetload(){
 		
 		for(let widgetSetting of widgetSettings){
 			
-			
-			const widget = widgetFun(widgetSetting);
-			widget['info'] = widgetSetting;
+			const widget = widgetSettingFun(widgetSetting);
 			
 			motionOnOff(widget, 1, false, { onOff : 'on', opactiy : { num0 : 0, num1: 1 } }, {
 				after : (o)=>{
@@ -39,10 +82,11 @@ function widgetload(){
 			
 			widget.mouseEventFun();
 			widget.scaleEventFun();
+			widget.contextMenuAddFun();
+			widget.cateFun();
 			
 			widgets.push(widget);
 		}
 	});
-	
 	
 }

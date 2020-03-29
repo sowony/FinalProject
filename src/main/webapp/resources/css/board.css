@@ -175,6 +175,7 @@ span.selectRule {
 .ruleItem span {
 	display: inline-block;
     position: relative;
+    width: 65px;
     top: 1px;
     word-break: break-all;
     overflow: hidden;
@@ -183,12 +184,16 @@ span.selectRule {
     color: inherit;
 }
 
-.memberItem span {
-    width: 120px;
+.memberItem span:nth-child(1),.ruleItem span:nth-child(1)  {
+    width: 150px;
 }
-
-.ruleItem span {
-    width: 48%;
+.memberItem span img {
+	border-radius: 50%;
+	width: 20px;
+    height: 20px;
+    position: relative;
+    top: 5px;
+    margin-right: 5px;
 }
 
 p.ruleItem:nth-last-child(1),
@@ -245,6 +250,14 @@ p.select {
     display: inline-block;
     border: 1px solid #ccc;
     float: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    white-space: nowrap;
+}
+
+.widgetRuleList ul li:nth-child(2){
+	width: 150px;
 }
 
 .widgetRuleList {

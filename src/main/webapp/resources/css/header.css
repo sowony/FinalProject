@@ -78,6 +78,7 @@ li._dashItem {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    position: relative;
 }
 
 li._dashItem:hover {
@@ -90,7 +91,6 @@ li.selectDash {
     background-color: rgb(171, 213, 232);
     color: rgb(61, 61, 61);
     box-shadow: rgb(34, 87, 111) 0px 1px 1px, rgb(90, 148, 175) 0px 0px 0px 2px inset;
-    position: relative;
 }
 
 span.dashboardCloseBtn {

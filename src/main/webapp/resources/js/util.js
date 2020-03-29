@@ -83,12 +83,32 @@ function mouseEventFun(target, clickArea, mouseArea ){
 			return;
 		}
 		
+		
+		const colorArray = clickArea.style.backgroundColor.split('(')[1].split(',');
+		
+		let R = Number(colorArray[0]);
+		let G = Number(colorArray[1]);
+		let B = Number(colorArray[2].substring(0, colorArray[2].indexOf(')')));
+		
+		R = R-30 < 0? 0 : R-30;
+		G = G-30 < 0? 0 : G-30;
+		B = B-30 < 0? 0 : B-30;
+		
+		clickArea.style.boxShadow = 'inset 0 0 1px 3px ' + `rgb(${R}, ${G}, ${B})`; 		
+		
 		mouseArea.addEventListener('mousemove', mousemove);
 		body.addEventListener('mouseup', mouseOutAndUp);
 		
 	}
 	
 	function mouseOutAndUp(e){
+		
+		target.info.wtop = target.style.top.split('px')[0];
+		target.info.wleft = target.style.left.split('px')[0];
+		
+		xhrLoad('post', 'widget/topleftupdate',target.info);
+		
+		clickArea.style.boxShadow = '';
 		
 		mouseArea.removeEventListener('mousemove', mousemove);
 		body.removeEventListener('mouseup', mouseOutAndUp);
@@ -153,6 +173,7 @@ function scaleEventFun(target, mouseArea){
 	
 	function mousemoveOver(e){
 		
+		
 		width = target.offsetWidth;
 		height = target.offsetHeight;
 	
@@ -198,6 +219,11 @@ function scaleEventFun(target, mouseArea){
 	function mouseOutAndUp(e){
 		
 		target.style.cursor = 'default';
+		
+		target.info.wwidth = target.style.width.split('px')[0];
+		target.info.wheight = target.style.height.split('px')[0];
+		
+		xhrLoad('post', 'widget/widthHeightUpdate', target.info);
 		
 		areaClone.remove();
 		
@@ -270,6 +296,8 @@ function scaleEventFun(target, mouseArea){
 	target.addEventListener('mousedown', mousedown);
 }
 
+
+
 function widgetFun(setting){
 	
 	const widget = addObject(null, 'div', 'widget', false, (o)=>{
@@ -315,10 +343,125 @@ function widgetFun(setting){
 		scaleEventFun(widget, widget.parentNode);
 	};
 	
+	widget['contextMenuAddFun'] = ()=>{
+		contextMenuFun(widget, {
+			'new' : {
+				'새 위젯 만들기' : ()=>{
+					widgetAdd();
+				}
+			},
+			'widget' : {
+				'위젯 수정' : ()=>{},
+				'위젯 삭제' : ()=>{},
+				'위젯 위로 올리기' : ()=>{
+					
+					widgetZMove(widget, 'up', 'min');
+					
+				},
+				'위젯 가장 위로 올리기' : ()=>{
+					
+					
+					widgetZMove(widget, 'up', 'max');
+				},
+				
+				'위젯 아래로 내리기' : ()=>{
+					
+					widgetZMove(widget, 'down', 'min');
+					
+				},
+				'위젯 가장 아래로 내리기' : ()=>{
+					
+					widgetZMove(widget, 'down', 'max');
+				}
+			},
+			'dashboardInfo' : {
+				'대시보드 자세히 보기' : ()=>{}
+			},
+			'letter' : {
+				'쪽지함 보기' : ()=>{},
+				'쪽지 작성' : ()=>{}
+			},
+			'alram' : {
+				'말람함 보기' : ()=>{}
+			},
+			'myInfo' : {
+				'내 정보 보기' : ()=>{},
+				'로그아웃' : ()=>{logout();}
+			}
+			
+		});
+	};
+	
+	
+	widget['cateFun'] = ()=>{
+		
+		const wcategory = widget.info.wcategory.toLowerCase();
+		
+		if(wcategory === 'memo'){
+			wmemoBox(widget);
+		}
+		
+		
+	};
+	
 	return widget;
 }
-
-
+function widgetZMove(widget, upDown, maxMin){
+	
+	const area = widget.parentNode;
+	const nodes = area.childNodes;
+	const maxZIndex = nodes.length;
+	const zindex = Number(widget.style.zIndex);
+	
+	if(upDown === 'up'){
+		if(zindex < maxZIndex){
+			nodes.forEach(node=>{
+				if(Number(node.style.zIndex) === zindex + 1){
+					
+					node.style.zIndex = zindex;
+					if(maxMin ==='min'){
+						widget.style.zIndex = zindex + 1;
+						return;
+					}
+					
+				} else if(Number(node.style.zIndex) > zindex) {
+					if(maxMin ==='max'){
+						node.style.zIndex = Number(node.style.zIndex)-1;
+					}
+				}
+				
+			});
+			
+			if(maxMin === 'max'){
+				widget.style.zIndex = maxZIndex;
+			}
+		}
+		
+	} else {
+		if(zindex > 0){
+			nodes.forEach(node=>{
+				if(Number(node.style.zIndex) === zindex - 1){
+					
+					node.style.zIndex = zindex;
+					if(maxMin ==='min'){
+						widget.style.zIndex = zindex - 1;
+						return;
+					}
+					
+				} else if(Number(node.style.zIndex) < zindex) {
+					if(maxMin ==='max'){
+						node.style.zIndex = Number(node.style.zIndex)+1;
+					}
+				}
+				
+			});
+			
+			if(maxMin === 'max'){
+				widget.style.zIndex = 1;
+			}
+		}
+	}
+}
 
 function colorPickerBtn(parentNode, beforeNode, submit){
 	

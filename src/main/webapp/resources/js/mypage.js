@@ -63,7 +63,8 @@ function dashboardLoad(loc){
 				
 					o.innerHTML = `
 					<div class="d_header">
-						<p class="d_title"><span>${dashItem.dtitle}</span><span>${new Intl.DateTimeFormat('ko-KR').format(new Date(dashItem.dcreatedate))}</span></p>
+						<p class="d_title"><span>${dashItem.dtitle}</span></p>
+						<p class="d_date"><span>${new Intl.DateTimeFormat('ko-KR').format(new Date(dashItem.dcreatedate))}</span></p>
 						<p class="d_nick">
 							<span style="background-image:url('${dashItem.mimgpath}');"></span><span>
 						`+

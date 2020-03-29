@@ -6,6 +6,8 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 
+<!--외부 라이브러리 -->
+
 <!-- 커스텀 유틸  -->
 <link rel="stylesheet" href="/dashboard/resources/css/defaultstyle.css" type="text/css"/>
 <script type="text/javascript" src="/dashboard/resources/js/util.js"></script>
@@ -15,21 +17,25 @@
 <link rel="stylesheet" href="/dashboard/resources/css/header.css" type="text/css">
 <link rel="stylesheet" href="/dashboard/resources/css/board.css" type="text/css">
 
+
+<script type="text/javascript" src="/dashboard/resources/js/wmemo.js"></script>
+
 <script type="text/javascript" src="/dashboard/resources/js/widgetadd.js"></script>
 <script type="text/javascript" src="/dashboard/resources/js/widgetload.js"></script>
 
+
 <script type="text/javascript" src="/dashboard/resources/js/board.js"></script>
+
 </head>
 <body>
 
 	<jsp:include page="header.jsp"></jsp:include>
 	<script type="text/javascript" src="/dashboard/resources/js/header.js"></script>
 	
-	
 	<section>
 		<article id="content">
 		</article>
 	</section>
-	
+			
 </body>
 </html>

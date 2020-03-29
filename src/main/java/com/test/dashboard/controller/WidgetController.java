@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,10 +38,19 @@ public class WidgetController {
 		
 	}
 	
-	@PostMapping("/insert")
-	public boolean postInsertWidget(@RequestBody WidgetDto widgetDto, HttpSession session) {
+	@GetMapping("/{wno}")
+	public WidgetDto getWidget(@PathVariable int wno) {
 		
-		logger.info("[ INFO ] : DashBoardController > postInsertWidget [path : /widget/insert]");
+		logger.info("[ INFO ] : WidgetController > getWidget [path : /widget/"+ wno +"]");
+		
+		return widgetBiz.selectOne(wno);
+	}
+	
+	
+	@PostMapping("/insert")
+	public int postInsertWidget(@RequestBody WidgetDto widgetDto, HttpSession session) {
+		
+		logger.info("[ INFO ] : WidgetController > postInsertWidget [path : /widget/insert]");
 		
 		int dno = (int) session.getAttribute("selectBoard");
 		MemberDto owner = ((MemberDto)session.getAttribute("user"));
@@ -57,16 +67,29 @@ public class WidgetController {
 		
 		widgetDto.getRules().add(ownerRule);
 		
-		logger.info("[ INFO ] : DashBoardController > postInsertWidget [widgetDto : " + widgetDto +"]");
+		logger.info("[ INFO ] : WidgetController > postInsertWidget [widgetDto : " + widgetDto +"]");
 		
 		int res = widgetBiz.insert(widgetDto);
 		
 		if(res > 0) {
-			return true;
+			return widgetDto.getWno();
 		} else {
-			return false;
+			return 0;
 		}
 		
+	}
+	
+	@PostMapping("/topleftupdate")
+	public int postTopLeftUpdate(@RequestBody WidgetDto widgetDto) {
+		logger.info("[ INFO ] : WidgetController > postTopLeftUpdate [widgetDto : " + widgetDto +"]");
+		return widgetBiz.topLeftUpdate(widgetDto);
+		
+	}
+	
+	@PostMapping("/widthHeightUpdate")
+	public int postWidthHeightUpdate(@RequestBody WidgetDto widgetDto) {
+		logger.info("[ INFO ] : WidgetController > postWidthHeightUpdate [widgetDto : " + widgetDto +"]");
+		return widgetBiz.widthHeightUpdate(widgetDto);
 	}
 	
 	

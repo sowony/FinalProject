@@ -6,7 +6,26 @@
 
 window.onload = ()=>{
 	
+	const div = document.querySelectorAll('div');
 	
+	div[0].addEventListener('keypress', function(e){
+		
+		if(e.keyCode === 13){
+			document.execCommand('formatBlock', false, 'p');
+		}
+		
+	});
+	
+	div[1].addEventListener('keypress', function(e){
+		
+		
+	});
+	const boldBtn = document.querySelector('.boldBtn');
+	
+	boldBtn.addEventListener('click', (e)=>{
+		document.execCommand('enableInlineTableEditing');
+		
+	});
 	/*
 	 
 	1. addObject

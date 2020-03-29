@@ -64,12 +64,23 @@ public class WidgetBizImpl implements WidgetBiz{
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("dno", dno);
 		params.put("mid", mid);
-		return widgetDao.selectList(params);
+		
+		List<WidgetDto> selectList = widgetDao.selectList(params);
+		
+		for(WidgetDto out : selectList) {
+			out.setRules(wRuleBiz.selectList(out.getWno()));
+		}
+		
+		return selectList;
 	}
 	@Override
 	public WidgetDto selectOne(int wno) {
 		// TODO Auto-generated method stub
-		return widgetDao.selectOne(wno);
+		WidgetDto widgetDto = widgetDao.selectOne(wno);
+		
+		widgetDto.setRules(wRuleBiz.selectList(wno));
+		
+		return widgetDto;
 	}
 	@Override
 	public int update(WidgetDto widgetDto) {
@@ -77,5 +88,14 @@ public class WidgetBizImpl implements WidgetBiz{
 		return widgetDao.update(widgetDto);
 	}
 	
+	@Override
+	public int topLeftUpdate(WidgetDto widgetDto) {
+		// TODO Auto-generated method stub
+		return widgetDao.topLeftUpdate(widgetDto);
+	}
 	
+	@Override
+	public int widthHeightUpdate(WidgetDto widgetDto) {
+		return widgetDao.widthHeightUpdate(widgetDto);
+	}
 }

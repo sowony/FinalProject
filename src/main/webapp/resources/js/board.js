@@ -93,16 +93,17 @@ function openDashBoardList(){
 							
 							xhrLoad('get', 'board/dashboardClose', { dno }, (res)=>{
 								
-								const dno = Number(res)
+								const resNo = Number(res)
 								
-								if(dno > 0){
+								if(resNo > 0){
 									const dashboard = document.querySelector('.dashboard');
 									
-									if(dashboard.dataset.dno !== dno){
-										selectDashBoardLoad(dno);
+									if(dashboard.dataset.dno === dno){
+										selectDashBoardLoad();
 									}
 									
 									dashItem.remove();
+									
 									
 								} else {
 									location.href = '/dashboard';
@@ -155,10 +156,6 @@ window.onload = ()=>{
 			'새 위젯 만들기' : ()=>{
 				widgetAdd();
 			}
-		},
-		'widget' : {
-			'위젯 수정' : ()=>{},
-			'위젯 삭제' : ()=>{}
 		},
 		'dashboardInfo' : {
 			'대시보드 자세히 보기' : ()=>{}
