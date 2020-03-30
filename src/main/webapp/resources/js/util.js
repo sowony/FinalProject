@@ -78,18 +78,21 @@ function arrSort(arr){
 	return returnArr;
 }
 
-function mouseEventFun(target, clickArea, mouseArea ){
+function mouseEventFun(target, clickArea, mouseArea){
 	
-	
+	let areaClone;
 	let originX, originY;
 	let mouseX, mouseY;
 	const widgetHeader = clickArea.parentNode.parentNode.querySelector('.widgetHeader');
-	const body = document.querySelector('body');
 	
 	function mousemove(e){
 		
+		e.preventDefault();
+		e.stopPropagation();
+		
 		target.style.top = originY - (mouseY - e.pageY) + 'px';
 		target.style.left = originX - (mouseX - e.pageX) + 'px';
+	
 	}
 	
 	function mousedown(e){
@@ -97,46 +100,48 @@ function mouseEventFun(target, clickArea, mouseArea ){
 		e.preventDefault();
 		e.stopPropagation();
 		
-//		let width = clickArea.offsetWidth;
-//		let height = clickArea.offsetHeight;
-		
 		originX = target.offsetLeft;
 		originY = target.offsetTop;
 		
 		mouseX = e.pageX;
 		mouseY = e.pageY;
 		
-		
-//		if (mouseY-33 < originY +5 && mouseY-33 > originY-5){
-//			return;
-//		} else if (mouseY-33< originY + height +5 && mouseY-33 > originY + height -5){
-//			return;
-//		} else if(mouseX < originX + width +15 && mouseX > originX + width -15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
-//			return;
-//		} else if(mouseX < originX+15 && mouseX > originX-15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
-//			return;
-//		}
+		if(areaClone){
+			areaClone.remove();
+		} else {
+			areaClone = mouseArea.cloneNode();
+			areaClone.classList.add('mousemoveArea');
+		}
 		
 		
-		const colorArray = widgetHeader.style.backgroundColor.split('(')[1].split(',');
+		if(!widgetHeader.style.boxShadow){
+			const colorArray = widgetHeader.style.backgroundColor.split('(')[1].split(',');
 		
-		let R = Number(colorArray[0]);
-		let G = Number(colorArray[1]);
-		let B = Number(colorArray[2].substring(0, colorArray[2].indexOf(')')));
+			let R = Number(colorArray[0]);
+			let G = Number(colorArray[1]);
+			let B = Number(colorArray[2].substring(0, colorArray[2].indexOf(')')));
 		
-		R = R-30 < 0? 0 : R-30;
-		G = G-30 < 0? 0 : G-30;
-		B = B-30 < 0? 0 : B-30;
+			R = R-30 < 0? 0 : R-30;
+			G = G-30 < 0? 0 : G-30;
+			B = B-30 < 0? 0 : B-30;
+			
+			widgetHeader.style.boxShadow = 'inset 0 0 5px 3px ' + `rgb(${R}, ${G}, ${B})`; 		
+		}
 		
-		widgetHeader.style.boxShadow = 'inset 0 0 5px 3px ' + `rgb(${R}, ${G}, ${B})`; 		
+		areaClone.style.opacity = 0;
+		areaClone.style.zIndez = 20000;
 		
-		mouseArea.addEventListener('mousemove', mousemove);
-		body.addEventListener('mouseup', mouseOutAndUp);
-		body.addEventListener('mouseout', mouseOutAndUp);
+		mouseArea.parentNode.appendChild(areaClone);
+		
+		areaClone.addEventListener('mousemove', mousemove);
+		areaClone.addEventListener('mouseup', mouseOutAndUp);
+		areaClone.addEventListener('mouseout', mouseOutAndUp);
 		
 	}
 	
 	function mouseOutAndUp(e){
+		
+		
 		
 		target.info.wtop = target.style.top.split('px')[0];
 		target.info.wleft = target.style.left.split('px')[0];
@@ -145,9 +150,8 @@ function mouseEventFun(target, clickArea, mouseArea ){
 		
 		widgetHeader.style.boxShadow = '';
 		
-		mouseArea.removeEventListener('mousemove', mousemove);
-		body.removeEventListener('mouseup', mouseOutAndUp);
-		body.removeEventListener('mouseout', mouseOutAndUp);
+		areaClone.remove();
+		
 		
 	}
 	
@@ -164,9 +168,9 @@ function scaleEventFun(target, settingArea, mouseArea){
 	let originX, originY;
 	let mouseX, mouseY;
 	
-	let state;
+	let widgetContent = target.querySelector('.widgetContent');
 	
-	const body = document.querySelector('body');
+	let state;
 	
 	function mousemoveDown(e){
 		
@@ -183,9 +187,12 @@ function scaleEventFun(target, settingArea, mouseArea){
 			const newTop = target.offsetTop;
 			
 			target.style.height = height + (oldTop - newTop) + 'px';
+			
+			widgetContent.style.height = 100 - 35/(Number(target.style.height.split('px')[0])-10)*100 + '%';
 		} else if (state === 'sw-resize' || state === 'se-resize' || state === 's-resize'){
 			
 			target.style.height = (e.pageY - 33 - originY) + 'px';
+			widgetContent.style.height = 100 - 35/(Number(target.style.height.split('px')[0])-10)*100 + '%';
 			
 		}
 		
@@ -207,6 +214,9 @@ function scaleEventFun(target, settingArea, mouseArea){
 	}
 	
 	function mousemoveOver(e){
+		
+		e.preventDefault();
+		e.stopPropagation();
 		
 		width = target.offsetWidth;
 		height = target.offsetHeight;
@@ -244,7 +254,6 @@ function scaleEventFun(target, settingArea, mouseArea){
 			target.style.cursor = 's-resize';
 		} else {
 			target.style.cursor = 'default';
-			return false;
 		}
 		
 	}
@@ -304,7 +313,7 @@ function scaleEventFun(target, settingArea, mouseArea){
 		} else if (mouseY-33 < originY +5 && mouseY-33 > originY-5){
 			// 위
 			areaClone.style.cursor = 'n-resize';
-		} else if (mouseY-33< originY + height +5 && mouseY-33 > originY + height -5){
+		} else if (mouseY-33< originY + height +7 && mouseY-33 > originY + height -7){
 			// 아래
 			areaClone.style.cursor = 's-resize';
 		} else {
@@ -441,6 +450,9 @@ function widgetFun(setting){
 		
 		
 	};
+	
+	let widgetContent = widget.querySelector('.widgetContent');
+	widgetContent.style.height = 100 - 35/(Number(widget.style.height.split('px')[0])-10)*100 + '%';
 	
 	return widget;
 }
@@ -1248,8 +1260,8 @@ function contextMenuFun(target, setting){
 							l.style.borderBottom = '1px solid #ccc';
 						}
 					}
-					l.addEventListener('click',value[k]);
-					l.addEventListener('click',()=>{
+					l.addEventListener('mousedown',value[k]);
+					l.addEventListener('mousedown',()=>{
 						
 						menu.remove();
 						
@@ -1260,11 +1272,13 @@ function contextMenuFun(target, setting){
 		
 		
 	});
+	const body = document.querySelector('body');
 	
-	document.addEventListener('click',(e)=>{
+	body.addEventListener('mousedown',(e)=>{
 		
-		e.preventDefault();
-		e.stopPropagation();
+//		e.preventDefault();
+//		e.stopPropagation();
+//		e.stopimmediatePropagation();
 		
 		const menu = document.querySelector('.customMenu');
 		
