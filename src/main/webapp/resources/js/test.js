@@ -23,7 +23,7 @@ window.onload = ()=>{
 	const boldBtn = document.querySelector('.boldBtn');
 	
 	boldBtn.addEventListener('click', (e)=>{
-		document.execCommand('enableInlineTableEditing');
+		document.execCommand('bold');
 		
 	});
 	/*

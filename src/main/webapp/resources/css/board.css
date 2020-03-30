@@ -149,6 +149,21 @@ span.selectRule {
     background-color:#417d98 !important;
 }
 
+.widgetMoveArea {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+.widgetHeaderArea {
+	position: absolute;
+    top: 0;
+    left: 0;
+    margin: 4px;
+    width: -webkit-fill-available;
+    height: 19px;
+}
+
 .widgetRuleSetting span{
     display: block;
     padding: 4px 0;

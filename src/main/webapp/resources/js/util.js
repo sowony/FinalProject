@@ -20,6 +20,37 @@ function logout(){
 		
 }
 
+// 버튼 리스트
+
+function btnList(pop, btn, className, liContent, lisFunArray){
+	
+	const chk = pop.querySelector('.btnList');
+	const chkName = chk? chk.className.split(' ')[0] : null;
+	
+	if(chk) chk.remove();
+	
+	if(chkName === className) {
+		return;
+	}
+	
+	const openBoxLeft = btn.offsetLeft;
+	const box = addObject(pop, 'ul', [className, 'btnList'], true, (o)=>{
+		
+		o.parentNode.style.left = openBoxLeft + 'px';
+		o.innerHTML = liContent;
+		
+		const lis = o.querySelectorAll('li');
+			
+		lis.forEach((li,i)=>{
+			li.addEventListener('mousedown',(e)=>{
+				lisFunArray[i]();
+				li.parentNode.remove();
+			});
+		});
+	});
+	
+}
+
 // 배열 정렬
 function arrSort(arr){
 	
@@ -52,7 +83,7 @@ function mouseEventFun(target, clickArea, mouseArea ){
 	
 	let originX, originY;
 	let mouseX, mouseY;
-	
+	const widgetHeader = clickArea.parentNode.parentNode.querySelector('.widgetHeader');
 	const body = document.querySelector('body');
 	
 	function mousemove(e){
@@ -63,8 +94,11 @@ function mouseEventFun(target, clickArea, mouseArea ){
 	
 	function mousedown(e){
 		
-		let width = clickArea.offsetWidth;
-		let height = clickArea.offsetHeight;
+		e.preventDefault();
+		e.stopPropagation();
+		
+//		let width = clickArea.offsetWidth;
+//		let height = clickArea.offsetHeight;
 		
 		originX = target.offsetLeft;
 		originY = target.offsetTop;
@@ -73,18 +107,18 @@ function mouseEventFun(target, clickArea, mouseArea ){
 		mouseY = e.pageY;
 		
 		
-		if (mouseY-33 < originY +5 && mouseY-33 > originY-5){
-			return;
-		} else if (mouseY-33< originY + height +5 && mouseY-33 > originY + height -5){
-			return;
-		} else if(mouseX < originX + width +15 && mouseX > originX + width -15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
-			return;
-		} else if(mouseX < originX+15 && mouseX > originX-15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
-			return;
-		}
+//		if (mouseY-33 < originY +5 && mouseY-33 > originY-5){
+//			return;
+//		} else if (mouseY-33< originY + height +5 && mouseY-33 > originY + height -5){
+//			return;
+//		} else if(mouseX < originX + width +15 && mouseX > originX + width -15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
+//			return;
+//		} else if(mouseX < originX+15 && mouseX > originX-15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
+//			return;
+//		}
 		
 		
-		const colorArray = clickArea.style.backgroundColor.split('(')[1].split(',');
+		const colorArray = widgetHeader.style.backgroundColor.split('(')[1].split(',');
 		
 		let R = Number(colorArray[0]);
 		let G = Number(colorArray[1]);
@@ -94,10 +128,11 @@ function mouseEventFun(target, clickArea, mouseArea ){
 		G = G-30 < 0? 0 : G-30;
 		B = B-30 < 0? 0 : B-30;
 		
-		clickArea.style.boxShadow = 'inset 0 0 1px 3px ' + `rgb(${R}, ${G}, ${B})`; 		
+		widgetHeader.style.boxShadow = 'inset 0 0 5px 3px ' + `rgb(${R}, ${G}, ${B})`; 		
 		
 		mouseArea.addEventListener('mousemove', mousemove);
 		body.addEventListener('mouseup', mouseOutAndUp);
+		body.addEventListener('mouseout', mouseOutAndUp);
 		
 	}
 	
@@ -108,10 +143,11 @@ function mouseEventFun(target, clickArea, mouseArea ){
 		
 		xhrLoad('post', 'widget/topleftupdate',target.info);
 		
-		clickArea.style.boxShadow = '';
+		widgetHeader.style.boxShadow = '';
 		
 		mouseArea.removeEventListener('mousemove', mousemove);
 		body.removeEventListener('mouseup', mouseOutAndUp);
+		body.removeEventListener('mouseout', mouseOutAndUp);
 		
 	}
 	
@@ -119,7 +155,7 @@ function mouseEventFun(target, clickArea, mouseArea ){
 	
 }
 
-function scaleEventFun(target, mouseArea){
+function scaleEventFun(target, settingArea, mouseArea){
 	
 	let areaClone;
 	
@@ -133,7 +169,6 @@ function scaleEventFun(target, mouseArea){
 	const body = document.querySelector('body');
 	
 	function mousemoveDown(e){
-		
 		
 		width = target.offsetWidth;
 		height = target.offsetHeight;
@@ -173,11 +208,9 @@ function scaleEventFun(target, mouseArea){
 	
 	function mousemoveOver(e){
 		
-		
 		width = target.offsetWidth;
 		height = target.offsetHeight;
 	
-		
 		originX = target.offsetLeft;
 		originY = target.offsetTop;
 		
@@ -211,7 +244,7 @@ function scaleEventFun(target, mouseArea){
 			target.style.cursor = 's-resize';
 		} else {
 			target.style.cursor = 'default';
-			return;
+			return false;
 		}
 		
 	}
@@ -276,7 +309,7 @@ function scaleEventFun(target, mouseArea){
 			areaClone.style.cursor = 's-resize';
 		} else {
 			areaClone.style.cursor = 'default';
-			return;
+			return false;
 		}
 		
 		areaClone.style.opacity = 0;
@@ -291,9 +324,8 @@ function scaleEventFun(target, mouseArea){
 		
 	}
 	
-	
-	target.addEventListener('mousemove', mousemoveOver);
-	target.addEventListener('mousedown', mousedown);
+	settingArea.addEventListener('mousemove', mousemoveOver);
+	settingArea.addEventListener('mousedown', mousedown);
 }
 
 
@@ -327,6 +359,9 @@ function widgetFun(setting){
 			<div class="widgetHeader" style="color:${wtitlefontcolor};background-color:${setting['wtitlecolor']};">
 				<p style="color: inherit;"><span>${setting['wcategory']}</span><span>${setting['wtitle']}</span></p>
 			</div>
+			<div class="widgetMoveArea">
+				<div class="widgetHeaderArea"></div>
+			</div>
 			<div class="widgetContent" style="color:${wcontentfontcolor};">
 			</div>
 			<div class="widgetFooter">
@@ -335,12 +370,15 @@ function widgetFun(setting){
 		
 	});
 	
+	const widgetMoveArea = widget.querySelector('.widgetMoveArea');
+	const widgetHeaderArea = widget.querySelector('.widgetHeaderArea');
+	
 	widget['mouseEventFun'] = ()=>{
-		mouseEventFun(widget, widget.querySelector('.widgetHeader'), widget.parentNode);
+		mouseEventFun(widget, widgetHeaderArea, widget.parentNode);
 	};
 	
 	widget['scaleEventFun'] = ()=>{
-		scaleEventFun(widget, widget.parentNode);
+		scaleEventFun(widget, widgetMoveArea, widget.parentNode);
 	};
 	
 	widget['contextMenuAddFun'] = ()=>{
