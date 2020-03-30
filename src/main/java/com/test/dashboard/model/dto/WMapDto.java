@@ -13,8 +13,8 @@ public class WMapDto {
 	private String wmapkeyword;
 	private String wmapjibun;
 	private String wmapaddr;
-	private String wmaplong;
 	private String wmaplat;
+	private String wmaplng;
 	private String wmapmemo;
 
 }

@@ -61,7 +61,6 @@ public class LoginInterceptor implements HandlerInterceptor{
 		else if(request.getRequestURI().endsWith("wboard")) return true;
 		else if(request.getRequestURI().endsWith("summerwrite")) return true;
 		
-		else if(request.getRequestURI().endsWith("map")) return true;
 		else if(request.getRequestURI().endsWith("footer")) return true;
 		else if(request.getRequestURI().endsWith("header")) return true;
 		else if(request.getRequestURI().endsWith("wboard")) return true;
@@ -76,6 +75,13 @@ public class LoginInterceptor implements HandlerInterceptor{
 		
 		else if(request.getRequestURI().endsWith("pagechange")) return true;
 		else if(request.getRequestURI().endsWith("crwl")) return true;
+		
+		else if(request.getRequestURI().endsWith("map")) return true;
+		else if(request.getRequestURI().endsWith("search")) return true;
+		else if(request.getRequestURI().endsWith("marker")) return true;
+		else if(request.getRequestURI().endsWith("delete")) return true;
+		else if(request.getRequestURI().endsWith("update")) return true;
+		
 		else {
 			
 			if(user == null) response.sendRedirect("/dashboard/login");

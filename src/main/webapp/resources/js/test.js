@@ -6,7 +6,6 @@
 
 window.onload = ()=>{
 	
-	
 	/*
 	 
 	1. addObject
@@ -180,7 +179,7 @@ window.onload = ()=>{
 //		
 //	}, false);
 //	
-	
+//	
 //	//시계
 //	const clock = addObject(null, 'div', 'clock',false,(o)=>{
 //	
@@ -196,6 +195,5 @@ window.onload = ()=>{
 //	
 //	boxFun();
 	
-	new colorPickerFun();
-	
+	new colorPickerFun();	
 };

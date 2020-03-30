@@ -5,14 +5,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script type="text/javascript" src="./resources/js/xhr.js"></script>
 <script type="text/javascript" src="./resources/js/util.js"></script>
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
 <link rel="stylesheet" href="./resources/css/map.css" type="text/css" />
-<link rel="stylesheet" href="./resources/css/defaultstyle.css" type="text/css"/>
-</head>
+<link rel="stylesheet" href="./resources/css/defaultstyle.css" type="text/css" />
 </head>
 <body>
 
@@ -26,8 +24,8 @@
 			<div class="option">
 				<div>
 					<form onsubmit="searchPlaces(); return false;">
-						키워드 : <input type="text" value="" id="keyword" size="15">
-						<button type="submit">검색하기</button>
+						<input type="text" value="" id="keyword" size="15" placeholder="키워드를 입력해주세요">
+						<button id="testbtn" type="submit">검색하기</button>
 					</form>
 				</div>
 			</div>
@@ -35,10 +33,17 @@
 			<ul id="placesList"></ul>
 			<div id="pagination"></div>
 		</div>
+		
+		
+		
 	</div>
 	<script type="text/javascript"
 		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cfc755aece03a07263adb8e92484665e&libraries=services"></script>
 	<script type="text/javascript" src="./resources/js/map.js"></script>
+	<!-- <script type="text/javascript" src="./resources/js/map_map.js"></script>
+	<script type="text/javascript" src="./resources/js/map_placesSearchCB.js"></script>
+	<script type="text/javascript" src="./resources/js/map_search.js"></script>
+	<script type="text/javascript" src="./resources/js/map_displayPlaces.js"></script> -->
 	
 </body>
 </html>
