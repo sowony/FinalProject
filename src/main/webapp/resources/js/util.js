@@ -20,6 +20,315 @@ function logout(){
 		
 }
 
+// 버튼 리스트
+
+function btnList(pop, btn, className, liContent, lisFunArray){
+	
+	const chk = pop.querySelector('.btnList');
+	const chkName = chk? chk.className.split(' ')[0] : null;
+	
+	if(chk) chk.remove();
+	
+	if(chkName === className) {
+		return;
+	}
+	
+	const openBoxLeft = btn.offsetLeft;
+	const box = addObject(pop, 'ul', [className, 'btnList'], true, (o)=>{
+		
+		o.parentNode.style.left = openBoxLeft + 'px';
+		o.innerHTML = liContent;
+		
+		const lis = o.querySelectorAll('li');
+			
+		lis.forEach((li,i)=>{
+			li.addEventListener('mousedown',(e)=>{
+				lisFunArray[i]();
+				li.parentNode.remove();
+			});
+		});
+	});
+	
+}
+
+// 배열 정렬
+function arrSort(arr){
+	
+	let chkNum = 0;
+	const len = arr.length;
+	
+	let returnArr = [];
+	
+	for(let i = 0 ; i < len ; i++ ){
+		returnArr.push('');
+	}
+	
+	arr.forEach(val=>{
+		arr.forEach((checkVal,i)=>{
+			if(val > checkVal){
+				chkNum++;
+			}
+			if(i === len-1){
+				returnArr[chkNum] = val;
+				chkNum = 0;
+			}
+		});
+	});
+	
+	return returnArr;
+}
+
+function mouseEventFun(target, clickArea, mouseArea ){
+	
+	
+	let originX, originY;
+	let mouseX, mouseY;
+	const widgetHeader = clickArea.parentNode.parentNode.querySelector('.widgetHeader');
+	const body = document.querySelector('body');
+	
+	function mousemove(e){
+		
+		target.style.top = originY - (mouseY - e.pageY) + 'px';
+		target.style.left = originX - (mouseX - e.pageX) + 'px';
+	}
+	
+	function mousedown(e){
+		
+		e.preventDefault();
+		e.stopPropagation();
+		
+//		let width = clickArea.offsetWidth;
+//		let height = clickArea.offsetHeight;
+		
+		originX = target.offsetLeft;
+		originY = target.offsetTop;
+		
+		mouseX = e.pageX;
+		mouseY = e.pageY;
+		
+		
+//		if (mouseY-33 < originY +5 && mouseY-33 > originY-5){
+//			return;
+//		} else if (mouseY-33< originY + height +5 && mouseY-33 > originY + height -5){
+//			return;
+//		} else if(mouseX < originX + width +15 && mouseX > originX + width -15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
+//			return;
+//		} else if(mouseX < originX+15 && mouseX > originX-15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
+//			return;
+//		}
+		
+		
+		const colorArray = widgetHeader.style.backgroundColor.split('(')[1].split(',');
+		
+		let R = Number(colorArray[0]);
+		let G = Number(colorArray[1]);
+		let B = Number(colorArray[2].substring(0, colorArray[2].indexOf(')')));
+		
+		R = R-30 < 0? 0 : R-30;
+		G = G-30 < 0? 0 : G-30;
+		B = B-30 < 0? 0 : B-30;
+		
+		widgetHeader.style.boxShadow = 'inset 0 0 5px 3px ' + `rgb(${R}, ${G}, ${B})`; 		
+		
+		mouseArea.addEventListener('mousemove', mousemove);
+		body.addEventListener('mouseup', mouseOutAndUp);
+		body.addEventListener('mouseout', mouseOutAndUp);
+		
+	}
+	
+	function mouseOutAndUp(e){
+		
+		target.info.wtop = target.style.top.split('px')[0];
+		target.info.wleft = target.style.left.split('px')[0];
+		
+		xhrLoad('post', 'widget/topleftupdate',target.info);
+		
+		widgetHeader.style.boxShadow = '';
+		
+		mouseArea.removeEventListener('mousemove', mousemove);
+		body.removeEventListener('mouseup', mouseOutAndUp);
+		body.removeEventListener('mouseout', mouseOutAndUp);
+		
+	}
+	
+	clickArea.addEventListener('mousedown', mousedown);
+	
+}
+
+function scaleEventFun(target, settingArea, mouseArea){
+	
+	let areaClone;
+	
+	let width, height;
+	
+	let originX, originY;
+	let mouseX, mouseY;
+	
+	let state;
+	
+	const body = document.querySelector('body');
+	
+	function mousemoveDown(e){
+		
+		width = target.offsetWidth;
+		height = target.offsetHeight;
+		
+		state = areaClone.style.cursor;
+		
+		if(state === 'ne-resize' || state === 'nw-resize' || state === 'n-resize'){
+			
+			const oldTop = target.offsetTop;
+			target.style.top = originY - (mouseY - e.pageY - mouseArea.scrollTop) + 'px';
+			
+			const newTop = target.offsetTop;
+			
+			target.style.height = height + (oldTop - newTop) + 'px';
+		} else if (state === 'sw-resize' || state === 'se-resize' || state === 's-resize'){
+			
+			target.style.height = (e.pageY - 33 - originY) + 'px';
+			
+		}
+		
+
+		if(state === 'nw-resize' || state === 'sw-resize' || state === 'w-resize'){
+			
+			const oldLeft = target.offsetLeft;
+			target.style.left = originX - (mouseX - e.pageX - mouseArea.scrollLeft) + 'px';
+			
+			const newLeft = target.offsetLeft;
+			
+			target.style.width = width + (oldLeft - newLeft) + 'px';
+		} else if (state === 'ne-resize' || state === 'se-resize' || state === 'e-resize'){
+			
+			target.style.width = (e.pageX - originX) + 'px';
+			
+		}
+		
+	}
+	
+	function mousemoveOver(e){
+		
+		width = target.offsetWidth;
+		height = target.offsetHeight;
+	
+		originX = target.offsetLeft;
+		originY = target.offsetTop;
+		
+		mouseX = e.pageX + mouseArea.scrollLeft;
+		mouseY = e.pageY + mouseArea.scrollTop;
+		
+		
+		if(mouseX < originX+15 && mouseX > originX-15 && mouseY-33< originY + height +15 && mouseY-33 > originY + height -15){
+			// 왼쪽 아래
+			target.style.cursor = 'sw-resize';
+		} else if(mouseX < originX+15 && mouseX > originX-15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
+			// 왼쪽 위
+			target.style.cursor = 'nw-resize';
+		} else if(mouseX < originX + width +15 && mouseX > originX + width -15 && mouseY-33< originY + height +15 && mouseY-33 > originY + height -5){
+			// 오른쪽 아래
+			target.style.cursor = 'se-resize';
+		} else if(mouseX < originX + width +15 && mouseX > originX + width -15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
+			// 오른쪽 위
+			target.style.cursor = 'ne-resize';
+		} else if(mouseX < originX+5 && mouseX > originX-5){
+			// 왼쪽
+			target.style.cursor = 'w-resize';
+		} else if (mouseX < originX + width +5 && mouseX > originX + width -5){
+			// 오른쪽
+			target.style.cursor = 'e-resize';
+		} else if (mouseY-33 < originY +5 && mouseY-33 > originY-5){
+			// 위
+			target.style.cursor = 'n-resize';
+		} else if (mouseY-33< originY + height +5 && mouseY-33 > originY + height -5){
+			// 아래
+			target.style.cursor = 's-resize';
+		} else {
+			target.style.cursor = 'default';
+			return false;
+		}
+		
+	}
+	
+	function mouseOutAndUp(e){
+		
+		target.style.cursor = 'default';
+		
+		target.info.wwidth = target.style.width.split('px')[0];
+		target.info.wheight = target.style.height.split('px')[0];
+		
+		xhrLoad('post', 'widget/widthHeightUpdate', target.info);
+		
+		areaClone.remove();
+		
+	}
+	
+	function mousedown(e){
+		
+		e.preventDefault();
+		e.stopPropagation();
+		
+		width = target.offsetWidth;
+		height = target.offsetHeight;
+		
+		originX = target.offsetLeft;
+		originY = target.offsetTop;
+		
+		mouseX = e.pageX + mouseArea.scrollLeft;
+		mouseY = e.pageY + mouseArea.scrollTop;
+		
+		if(areaClone){
+			areaClone.remove();
+		} else {
+			areaClone = mouseArea.cloneNode();
+			areaClone.classList.add('mousemoveArea');
+		}
+		
+		if(mouseX < originX+15 && mouseX > originX-15 && mouseY-33< originY + height +15 && mouseY-33 > originY + height -15){
+			// 왼쪽 아래
+			areaClone.style.cursor = 'sw-resize';
+		} else if(mouseX < originX+15 && mouseX > originX-15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
+			// 왼쪽 위
+			areaClone.style.cursor = 'nw-resize';
+		} else if(mouseX < originX + width +15 && mouseX > originX + width -15 && mouseY-33< originY + height +15 && mouseY-33 > originY + height -15){
+			// 오른쪽 아래
+			areaClone.style.cursor = 'se-resize';
+		} else if(mouseX < originX + width +15 && mouseX > originX + width -15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
+			// 오른쪽 위
+			areaClone.style.cursor = 'ne-resize';
+		} else if(mouseX < originX+5 && mouseX > originX-5){
+			// 왼쪽
+			areaClone.style.cursor = 'w-resize';
+		} else if (mouseX < originX + width +5 && mouseX > originX + width -5){
+			// 오른쪽
+			areaClone.style.cursor = 'e-resize';
+		} else if (mouseY-33 < originY +5 && mouseY-33 > originY-5){
+			// 위
+			areaClone.style.cursor = 'n-resize';
+		} else if (mouseY-33< originY + height +5 && mouseY-33 > originY + height -5){
+			// 아래
+			areaClone.style.cursor = 's-resize';
+		} else {
+			areaClone.style.cursor = 'default';
+			return false;
+		}
+		
+		areaClone.style.opacity = 0;
+		areaClone.style.zIndez = 20000;
+		
+		mouseArea.parentNode.appendChild(areaClone);
+		
+		
+		areaClone.addEventListener('mouseup', mouseOutAndUp);
+		areaClone.addEventListener('mouseout', mouseOutAndUp);
+		areaClone.addEventListener('mousemove', mousemoveDown);
+		
+	}
+	
+	settingArea.addEventListener('mousemove', mousemoveOver);
+	settingArea.addEventListener('mousedown', mousedown);
+}
+
+
 
 function widgetFun(setting){
 	
@@ -28,7 +337,10 @@ function widgetFun(setting){
 		o.style.width = setting['wwidth']+'px';
 		o.style.height = setting['wheight']+'px';
 		o.style.zIndex = setting['wzindex'];
-		o.style.position = setting['position'];
+		o.style.position = setting['wposition'];
+		
+		if(setting['wtop']) o.style.top = setting['wtop'] + 'px';
+		if(setting['wleft']) o.style.left = setting['wleft'] + 'px';
 		
 		if(!setting['wtitlecolor']){
 			setting['wtitlecolor'] = 'rgb(65, 198, 241)';
@@ -47,16 +359,146 @@ function widgetFun(setting){
 			<div class="widgetHeader" style="color:${wtitlefontcolor};background-color:${setting['wtitlecolor']};">
 				<p style="color: inherit;"><span>${setting['wcategory']}</span><span>${setting['wtitle']}</span></p>
 			</div>
+			<div class="widgetMoveArea">
+				<div class="widgetHeaderArea"></div>
+			</div>
 			<div class="widgetContent" style="color:${wcontentfontcolor};">
 			</div>
 			<div class="widgetFooter">
 			</div>
 		`;
 		
-		middlePositionFun(o);
 	});
 	
+	const widgetMoveArea = widget.querySelector('.widgetMoveArea');
+	const widgetHeaderArea = widget.querySelector('.widgetHeaderArea');
+	
+	widget['mouseEventFun'] = ()=>{
+		mouseEventFun(widget, widgetHeaderArea, widget.parentNode);
+	};
+	
+	widget['scaleEventFun'] = ()=>{
+		scaleEventFun(widget, widgetMoveArea, widget.parentNode);
+	};
+	
+	widget['contextMenuAddFun'] = ()=>{
+		contextMenuFun(widget, {
+			'new' : {
+				'새 위젯 만들기' : ()=>{
+					widgetAdd();
+				}
+			},
+			'widget' : {
+				'위젯 수정' : ()=>{},
+				'위젯 삭제' : ()=>{},
+				'위젯 위로 올리기' : ()=>{
+					
+					widgetZMove(widget, 'up', 'min');
+					
+				},
+				'위젯 가장 위로 올리기' : ()=>{
+					
+					
+					widgetZMove(widget, 'up', 'max');
+				},
+				
+				'위젯 아래로 내리기' : ()=>{
+					
+					widgetZMove(widget, 'down', 'min');
+					
+				},
+				'위젯 가장 아래로 내리기' : ()=>{
+					
+					widgetZMove(widget, 'down', 'max');
+				}
+			},
+			'dashboardInfo' : {
+				'대시보드 자세히 보기' : ()=>{}
+			},
+			'letter' : {
+				'쪽지함 보기' : ()=>{},
+				'쪽지 작성' : ()=>{}
+			},
+			'alram' : {
+				'말람함 보기' : ()=>{}
+			},
+			'myInfo' : {
+				'내 정보 보기' : ()=>{},
+				'로그아웃' : ()=>{logout();}
+			}
+			
+		});
+	};
+	
+	
+	widget['cateFun'] = ()=>{
+		
+		const wcategory = widget.info.wcategory.toLowerCase();
+		
+		if(wcategory === 'memo'){
+			wmemoBox(widget);
+		}
+		
+		
+	};
+	
 	return widget;
+}
+function widgetZMove(widget, upDown, maxMin){
+	
+	const area = widget.parentNode;
+	const nodes = area.childNodes;
+	const maxZIndex = nodes.length;
+	const zindex = Number(widget.style.zIndex);
+	
+	if(upDown === 'up'){
+		if(zindex < maxZIndex){
+			nodes.forEach(node=>{
+				if(Number(node.style.zIndex) === zindex + 1){
+					
+					node.style.zIndex = zindex;
+					if(maxMin ==='min'){
+						widget.style.zIndex = zindex + 1;
+						return;
+					}
+					
+				} else if(Number(node.style.zIndex) > zindex) {
+					if(maxMin ==='max'){
+						node.style.zIndex = Number(node.style.zIndex)-1;
+					}
+				}
+				
+			});
+			
+			if(maxMin === 'max'){
+				widget.style.zIndex = maxZIndex;
+			}
+		}
+		
+	} else {
+		if(zindex > 0){
+			nodes.forEach(node=>{
+				if(Number(node.style.zIndex) === zindex - 1){
+					
+					node.style.zIndex = zindex;
+					if(maxMin ==='min'){
+						widget.style.zIndex = zindex - 1;
+						return;
+					}
+					
+				} else if(Number(node.style.zIndex) < zindex) {
+					if(maxMin ==='max'){
+						node.style.zIndex = Number(node.style.zIndex)+1;
+					}
+				}
+				
+			});
+			
+			if(maxMin === 'max'){
+				widget.style.zIndex = 1;
+			}
+		}
+	}
 }
 
 function colorPickerBtn(parentNode, beforeNode, submit){
@@ -512,7 +954,20 @@ function middlePositionFun(obj){
 	obj.style.position = 'absolute';
 	obj.style.top = '50%';
 	obj.style.left = '50%';
-	obj.style.transform = 'translateX(-50%) translateY(-50%)';
+	if(obj.style.transform){
+		
+		const transformArray = obj.style.transform.split(' ');
+		const tmpArray = [];
+		transformArray.forEach(style=>{
+			if(!style.indexOf('translateX') > 0 || !style.indexOf('translateY') > 0 ){
+				tmpArray.push(style);
+			}
+		});
+		
+		obj.style.transform = style.toString().replace(/,/g,' ') + 'translateX(-50%) translateY(-50%)';
+		
+	} else obj.style.transform = 'translateX(-50%) translateY(-50%)';
+
 }
 
 // 유틸 오브젝트 모두 삭제 함수
@@ -675,19 +1130,47 @@ function boxFun(text,bg, addTagObject, closeBtnDelete, boxSelector, callback, au
 			});
 			
 			contentBox['closeDisabledDelete'] = (callObject)=>{
+				
+				if(callObject.tagName === 'A'){
+					if(callObject.getAttribute('style')) callObject.setAttribute('style', callObject.getAttribute('style') + 'pointer-events: none;');
+					else callObject.setAttribute('style', 'pointer-events: none;');
+				} else {
+					callObject.setAttribute('disabled', 'true');
+				}
+				
 				closeBtn.addEventListener('click', (e)=>{
-					callObject.removeAttribute('disabled');
+					if(callObject.tagName === 'A'){
+						
+						let styleArray = callObject.getAttribute('style').split(';');
+						styleArray.splice(styleArray.length-2, 1);
+						const styleStr = styleArray.toString().replace(/,/g, ';');
+						callObject.setAttribute('style',styleStr );
+						
+					} else callObject.removeAttribute('disabled');
 				});
 			};
 			
 		}
+		
+		contentBox['removeDisabledDelete'] = (callObject)=>{
+			console.log(callObject);
+			if(callObject.tagName === 'A'){
+				
+				let styleArray = callObject.getAttribute('style').split(';');
+				styleArray.splice(styleArray.length-2, 1);
+				const styleStr = styleArray.toString().replace(/,/g, ';');
+				callObject.setAttribute('style',styleStr);
+				console.log(callObject.getAttribute('style'));
+				
+			} else callObject.removeAttribute('disabled');
+		};
+		
 		if(addTagObject){
 			for(let tag of addTagObject){
 				if(closeBtn) boxOpen.insertBefore(tag, closeBtn);
 				else boxOpen.appendChild(tag);
 			}
 		}
-		
 		
 		if(autoMotion) {
 			motionOnOff(boxOpen, 0.8, bg, { setting : 'onDefault' });
@@ -696,10 +1179,10 @@ function boxFun(text,bg, addTagObject, closeBtnDelete, boxSelector, callback, au
 		middlePositionFun(boxOpen);
 		
 		if(callback){
+			
+			
 			callback(contentBox, contentBox.childNodes, boxSelector);
 		}
-		
-		
 		
 		return contentBox;
 		

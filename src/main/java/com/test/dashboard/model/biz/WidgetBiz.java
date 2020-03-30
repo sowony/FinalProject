@@ -14,5 +14,9 @@ public interface WidgetBiz {
 	
 	public int update(WidgetDto widgetDto);
 	
+	public int topLeftUpdate(WidgetDto widgetDto);
+
+	public int widthHeightUpdate(WidgetDto widgetDto);
+	
 	public int delete(int wno);
 }

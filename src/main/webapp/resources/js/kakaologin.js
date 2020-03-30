@@ -20,7 +20,7 @@
         	
         	if(info['signcheck'] === 'true'){
         		
-        		xhrLoad('post', 'login', { mid : info['info']['id']+'_kakao', mpw : window.btoa(unescape(encodeURIComponent(info['info']['id']+'_kakao'))) }, (data)=>{
+        		xhrLoad('post', 'login', { mid : info['info']['id']+'_kakao' }, (data)=>{
         			
         			if(data === 'true'){
         				location.reload();
@@ -84,7 +84,6 @@
            								
            								const memberInfo = {
            										'mid' : info['info']['id']+'_kakao',
-           										'mpw' : window.btoa(unescape(encodeURIComponent(info['info']['id']+'_kakao'))),
            										'mname' : document.querySelector('input[name="mname"]').value,
            										'mnick' : document.querySelector('input[name="mnick"]').value,
            										'memail' : document.querySelector('input[name="memail"]').value,

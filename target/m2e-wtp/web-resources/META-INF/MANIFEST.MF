@@ -1,5 +1,10 @@
 Manifest-Version: 1.0
+<<<<<<< HEAD
 Built-By: Sowon
 Build-Jdk: 1.8.0_221
+=======
+Built-By: skgog
+Build-Jdk: 1.8.0_231
+>>>>>>> Jinhan/master
 Created-By: Maven Integration for Eclipse
 
