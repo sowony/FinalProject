@@ -74,14 +74,14 @@ p.wcrwlcontent {
     padding-top:5px;
 }
 
-.wcrwllink{
-	
-}
-
 .crawlingHeader>* {
     vertical-align: middle;
 
 }
 .wcrwlcontent>* {
     display: inline-block;
+}
+
+img.crawlingLogo {
+    width: 20px;
 }

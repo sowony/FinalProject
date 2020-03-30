@@ -17,6 +17,7 @@ CREATE TABLE member
     CONSTRAINT MEMBER_PK PRIMARY KEY (mno)
 )
 /
+select * from member;
 
 CREATE SEQUENCE member_SEQ
 START WITH 1
@@ -42,8 +43,8 @@ DROP TRIGGER member_AI_TRG;
 COMMENT ON TABLE member IS '회원 테이블'
 /
 
-COMMENT ON COLUMN member.mno IS '회원 정보'
 /
+COMMENT ON COLUMN member.mno IS '회원 정보'
 
 COMMENT ON COLUMN member.mid IS '회원 아이디'
 /
@@ -587,6 +588,103 @@ COMMENT ON COLUMN wfile.wfext IS '파일첨부확장자'
 ALTER TABLE wfile
     ADD CONSTRAINT FK_wfile_wno_widget_wno FOREIGN KEY (wno)
         REFERENCES widget (wno) on delete cascade
+/
+
+
+CREATE SEQUENCE MSGNOSEQ
+START WITH 1
+INCREMENT BY 1
+;
+DROP TABLE MSGTABLE;
+--쪽지 
+CREATE TABLE MSGTABLE(
+		MSGNO 		NUMBER 			NOT NULL,
+		MSGFROM 	VARCHAR2(100) 	NOT NULL,
+		MSGTO 		VARCHAR2(200) 	NOT NULL,
+		MSGDATE 	VARCHAR2(200) 	NOT NULL,
+		MSGOPENED 	VARCHAR2(2) 	NOT NULL,
+		DNO			NUMBER			NOT NULL,
+		MSGCONTENT 	VARCHAR2(2000) 	NOT NULL,
+		MSGTITLE 	VARCHAR2(500) 	NOT NULL,
+	
+		CONSTRAINT MSGTABLE_PK PRIMARY KEY (msgno)
+);
+SELECT * from MSGTABLE ;
+DELETE MSGTABLE;
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'N',1,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'Y',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'Y',3,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'N',1,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'Y',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'N',3,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'N',1,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'Y',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'N',3,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'N',1,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'N',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'N',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin02','jiaemin01', '2020/03/26', 'N',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin02','jiaemin01', '2020/03/26', 'N',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin02','jiaemin01', '2020/03/26', 'N',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin02','jiaemin01', '2020/03/26', 'N',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin02','jiaemin01', '2020/03/26', 'N',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin02','jiaemin01', '2020/03/26', 'N',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+
+SELECT dno, count(msgtitle) from (select * from msgtable where msgto='jiaemin02' AND msgopened ='N')  GROUP BY dno; 
+SELECT * from (select * from msgtable where msgto='jiaemin02')  where dno='3'; 
+
+CREATE OR REPLACE TRIGGER msgtable_AI_TRG
+BEFORE INSERT ON msgtable 
+REFERENCING NEW AS NEW FOR EACH ROW 
+BEGIN 
+    SELECT msgtable_SEQ.NEXTVAL
+    INTO :NEW.msgno
+    FROM DUAL;
+END;
+/
+
+--DROP TRIGGER msgtable_AI_TRG;
+/
+
+--DROP SEQUENCE msgtable_SEQ;
+/
+
+COMMENT ON TABLE msgtable IS '쪽지'
+/
+
+COMMENT ON COLUMN msgtable.msgno IS '쪽지 고유번호'
+/
+
+COMMENT ON COLUMN msgtable.msgfrom IS '쪽지 발송인'
+/
+
+COMMENT ON COLUMN msgtable.msgto IS '쪽지 수신인'
+/
+
+COMMENT ON COLUMN msgtable.msgdate IS '쪽지 보낸 날짜'
+/
+
+COMMENT ON COLUMN msgtable.msgopened IS '쪽지 개봉 여부(y/n)'
+/
+
+COMMENT ON COLUMN msgtable.dno IS '대쉬보드 테이블 번호'
+/
+
+COMMENT ON COLUMN msgtable.msgcontent IS '쪽지 내용'
+/
+
+COMMENT ON COLUMN msgtable.msgtitle IS '쪽지 제목'
+/
+
+ALTER TABLE msgtable
+    ADD CONSTRAINT FK_msgtable_msgfrom_member_mid FOREIGN KEY (msgfrom)
+        REFERENCES member (mid)
+/
+
+ALTER TABLE msgtable
+    ADD CONSTRAINT FK_msgtable_msgto_member_mid FOREIGN KEY (msgto)
+        REFERENCES member (mid)
 /
 
 

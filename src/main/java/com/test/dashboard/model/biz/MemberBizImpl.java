@@ -28,7 +28,7 @@ public class MemberBizImpl implements MemberBiz{
 	@Override
 	public int insert(MemberDto memberDto) {
 		// TODO Auto-generated method stub
-		memberDto.setMabout(Util.brChange(memberDto.getMabout()));
+//		memberDto.setMabout(Util.brChange(memberDto.getMabout()));
 		return memberDao.insert(memberDto);
 	}
 	

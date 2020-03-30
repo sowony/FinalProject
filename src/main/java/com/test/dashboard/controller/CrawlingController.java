@@ -22,7 +22,7 @@ public class CrawlingController {
 	@ResponseBody
 	@RequestMapping("/crwl")
 	public List<CrawlingDto> crwl (@RequestBody @RequestParam(value="keyword", required = false, defaultValue = "null") String keyword) {
-		System.out.println("========================================>>>>>>>>"+keyword);
+	
 		crawling crwl = new crawling();
 		if (keyword != null) {
 			return crwl.crwlparser(keyword); 

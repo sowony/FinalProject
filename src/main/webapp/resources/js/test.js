@@ -3,13 +3,13 @@
  */
 
 
-
+//
 window.onload = ()=>{
 	
 	
 	/*
 	 
-	1. addObject
+====>	1. addObject	<===================================================================================
 	
 	일정 동작을 한 후 객체가 만들어진다거나 할때 상용하면 조금이나마 편함
 	코드 길이가 길어지는 것을 방지하기 위함,
@@ -50,7 +50,7 @@ window.onload = ()=>{
 	-> 만약 값이 들어간 인자 다음 오는 인자들이 전부 false 이나 null이면 생략 가능
 	
 	
-	2. boxFun
+====>	2. boxFun	<===================================================================================
 	기본적인 DIV 태그의 박스 생성
 	- 타이틀명
 	- 본문
@@ -97,7 +97,7 @@ window.onload = ()=>{
 	backgroundDiv.classList.add('darkBg');
 	
 	const outputBox = document.createElement('div');
-	outputBox.classList.add('boxOpen');
+	outputBaox.classList.add('boxOpen');
 	
 	const innerBoxOpenBtn = document.createElement('button');
 	innerBoxOpenBtn.value = '오픈';
