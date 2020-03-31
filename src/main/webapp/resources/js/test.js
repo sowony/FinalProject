@@ -6,8 +6,7 @@
 
 window.onload = ()=>{
 	
-<<<<<<< HEAD
-=======
+
 	const div = document.querySelectorAll('div');
 	
 	div[0].addEventListener('keypress', function(e){
@@ -28,7 +27,6 @@ window.onload = ()=>{
 		document.execCommand('bold');
 		
 	});
->>>>>>> Jinhan/master
 	/*
 	 
 	1. addObject

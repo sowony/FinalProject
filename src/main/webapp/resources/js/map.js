@@ -19,6 +19,8 @@ var infowindow = new kakao.maps.InfoWindow({zIndex:1});
 // 키워드로 장소를 검색합니다
 //searchPlaces();
 
+var body = document.body;
+
 //키워드 검색을 요청하는 함수입니다
 function searchPlaces() {
 
@@ -29,7 +31,8 @@ function searchPlaces() {
 	console.log(keyword);
 
 	if (!keyword.replace(/^\s+|\s+$/g, '')) {
-        boxFun('키워드를 입력해주세요!', true, null, false, 'keywordNull', null, false);
+        boxFun('키워드를 입력해주세요!', true, null, false, 'keywordNull', null, true);
+
         return true;
     }
 
@@ -50,14 +53,11 @@ function placesSearchCB(data, status, pagination) {
 
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
 
-        alert('검색 결과가 존재하지 않습니다.');
-        //boxFun('검색 결과가 존재하지 않습니다.', true, null, false, 'search'', null, false);
-        return;
+        boxFun('검색 결과가 존재하지 않습니다.', true, null, false, 'search', null, true);
 
     } else if (status === kakao.maps.services.Status.ERROR) {
 
-        alert('검색 결과 중 오류가 발생했습니다.');
-        return;
+        boxFun('검색 오류', true, null, false, 'error', null, true);
 
     }
 }
@@ -148,19 +148,18 @@ function addMemo(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplng){
     let btn = addObject(null, 'button', 'grayBtn', false, (o)=>{
 
     	o.innerHTML = '확인';
-    	o.addEventListener('click', ()=>{
+    	o.addEventListener('click', (o)=>{
     		
     		let wmapmemo = document.querySelector('.memo').value;
     		let boxOpen = document.querySelector('.memopopup');
 //    		console.log(wmapmemo);
 //    		console.log(document.querySelector('.memopopup'));
             
-    		motionOnOff(boxOpen, 0.8, true, { setting : 'offDefault' }, null, (o)=>{
-    			o.remove();
-    			
-    		});
-    		//motionOnOff(boxOpen, 0.8, bg, {setting L })
-    		
+//    		motionOnOff(boxOpen, 1, true, { setting : 'onDefault' }, null, (o)=>{
+//    			o.remove();
+//    			
+//    		});
+    		boxOpen.remove();
     		
     		var markerPosition  = new kakao.maps.LatLng(wmaplat, wmaplng); 
     		var marker = addMarker(markerPosition);
@@ -190,7 +189,7 @@ function removeMarker(fakeMarker,marker, markerDiv){
 	fakeMarker.remove();
 	markerDiv.remove();
 	marker.setMap(null);
-	openMarker();
+	//location.reload();
 }
 
 
@@ -252,10 +251,7 @@ function clickMenu(marker, mapno, mapmemo, realMarker, divAjax){
 					o.innerHTML = '삭제';
 					o.addEventListener('click', ()=>{
 						let boxOpen = document.querySelector('.deletePopup');
-						motionOnOff(boxOpen, 0.8, true, { setting : 'offDefault' }, null, (o)=>{
-			    			o.remove();
-			    			
-			    		});
+						boxOpen.remove();
 						$.ajax({
 							url: 'delete',
 							accept: 'application/json',
@@ -265,18 +261,16 @@ function clickMenu(marker, mapno, mapmemo, realMarker, divAjax){
 							data: JSON.stringify(mapno),
 							success: function(res){
 								if(res){
-									//alert("삭제되었습니다!");
-									boxFun('삭제되었습니다!', true, null, false, 'deleteSuccess', (o)=>{
-										removeMarker(marker, realMarker, divAjax);
-										openMarker();
-									}, false);
+									removeMarker(marker, realMarker, divAjax);
+									
+									boxFun('삭제되었습니다!', true, null, false, 'deleteSuccess', null, true);
 									
 								} else {
-									boxFun('삭제 실패', true, null, false, 'deleteFail', null, false);
+									boxFun('삭제 실패', true, null, false, 'deleteFail', null, true);
 								}
 							},
 							error: function(){
-								boxFun('삭제 에러', true, null, false, 'deleteError', null, false);
+								boxFun('삭제 에러', true, null, false, 'deleteError', null, true);
 							}
 						});
 					})
@@ -297,9 +291,7 @@ function clickMenu(marker, mapno, mapmemo, realMarker, divAjax){
 						
 						let newMemo = document.querySelector('.updateMemo').value;
 						let boxOpen = document.querySelector('.updatePopup');
-						motionOnOff(boxOpen, 0.8, true, {setting : 'offDefault'}, null, (o)=>{
-							o.remove();
-						});
+						boxOpen.remove();
 						var dd = {
 								wmapmemo: newMemo,
 								wmapno: mapno.temp
@@ -317,13 +309,13 @@ function clickMenu(marker, mapno, mapmemo, realMarker, divAjax){
 								if(res) {
 									boxFun('수정 완료', true, null, false, 'updateSucc', (o)=>{
 										openMarker();
-									}, false);
+									}, true);
 								} else{
-									boxFun('수정 실패', true, null, false, 'updateFail', null, false);
+									boxFun('수정 실패', true, null, false, 'updateFail', null, true);
 								}
 							},
 							error: function(){
-								boxFun('수정 에러', true, null, false, 'updateError', null, false);
+								boxFun('수정 에러', true, null, false, 'updateError', null, true);
 							}
 						});
 						
@@ -361,13 +353,13 @@ function saveData(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplng, wmapmemo, 
 			if(res){
 				boxFun('저장!', true, null, false, 'savedPopup', (o)=>{
 					openMarker();
-				}, false);
+				}, true);
 			} else {
-				boxFun('이미 저장된 장소입니다.', true, null, false, 'existsPopup', null, false);
+				boxFun('이미 저장된 장소입니다.', true, null, false, 'existsPopup', null, true);
 			}
 		},
 		error: function(){
-			boxFun('다시 선택해주세요!', true, null, false, 'saveError', null, false);
+			boxFun('다시 선택해주세요!', true, null, false, 'saveError', null, true);
 		}
 	});	
 }
@@ -390,12 +382,12 @@ function openMarker(){
 			// console.log(data);
 			
 			data.forEach(function(item){
-				var markerPositionAjax  = new kakao.maps.LatLng(item.wmaplat, item.wmaplng); 
+				let markerPositionAjax  = new kakao.maps.LatLng(item.wmaplat, item.wmaplng); 
 
-				var markerAjax = addMarker(markerPositionAjax);
-				var divAjax = markerAjax.pd.parentNode;
-				var qsAjax = divAjax.querySelector('img');
-				var chkAjax = addObject(divAjax, 'div', 'map_test', true, (o)=>{
+				let markerAjax = addMarker(markerPositionAjax);
+				let divAjax = markerAjax.pd.parentNode;
+				let qsAjax = divAjax.querySelector('img');
+				let chkAjax = addObject(divAjax, 'div', 'map_test', true, (o)=>{
 					o.style.position = 'absolute';
 					o.style.width = qsAjax.style.width;
 					o.style.height = qsAjax.style.height;
@@ -423,7 +415,7 @@ function openMarker(){
 			});
 		},
 		error: function(){
-			boxFun('마커 생성 실패', true, null, false, 'markerError', null, false);
+			boxFun('마커 생성 실패', true, null, false, 'markerError', null, true);
 		},
 		complete: function(){
 			document.getElementById('testbtn').addEventListener('click',function(){

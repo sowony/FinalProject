@@ -9,20 +9,23 @@
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
-<link rel="stylesheet" href="./resources/css/map.css" type="text/css" />
 <link rel="stylesheet" href="./resources/css/defaultstyle.css" type="text/css" />
+<link rel="stylesheet" href="./resources/css/map.css" type="text/css" />
 </head>
 <body>
 
 	<h1>지도입니다!</h1>
 
 	<div class="map_wrap">
+		<div id="mapHeader">
+			MAP : 장소 추가
+		</div>
 		<div id="map"
 			style="width: 100%; height: 100%; position: relative; overflow: hidden;"></div>
 
 		<div id="menu_wrap" class="bg_white">
 			<div class="option">
-				<div>
+				<div id="searchBar">
 					<form onsubmit="searchPlaces(); return false;">
 						<input type="text" value="" id="keyword" size="15" placeholder="키워드를 입력해주세요">
 						<button id="testbtn" type="submit">검색하기</button>

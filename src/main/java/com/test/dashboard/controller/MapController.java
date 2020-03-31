@@ -118,10 +118,10 @@ public class MapController {
 
 		List<WMapDto> list = wMapBiz.selectList(1);
 		
+		System.out.println(list);
+		
 		return list;
 	}
-	
-	
 	
 
 }
