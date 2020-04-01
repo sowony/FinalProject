@@ -6,64 +6,79 @@
 // 글꼴 | 사이즈 | 굵기 | 이미지 업로드
 function wmemoBox(widget){
 	
+	
+	if(!widget.info.preivew){
+		xhrLoad('get', 'widget/wmemo/'+ widget.info.wno, null, (res)=>{
+			
+			if(res){
+				widget.info.wmemo = JSON.parse(res);
+			}
+			
+		});
+	}
+	
 	const widgetContent = widget.querySelector('.widgetContent');
-	
-	
 	
 	const wmemoDiv = addObject(widgetContent, 'div', 'wmemoDiv', true, (o)=>{
 		
 		o.innerHTML = `
-			
 			<div class="wmSetting">
 				<button class="fontBtn">글꼴</button>
 				<button class="fontSizeBtn">글꼴 크기</button>
-				<button class="fontSmallBtn">S</button>
 				<button class="fontBoldBtn">B</button>
 				<button class="imagesUploadBtn">이미지 업로드</button>
 				<span class="wmMsg"></span>
 			</div>
-			<div contenteditable="true" class="wmContent"></div>
+			<div contenteditable="true" class="wmContent">`+ ((widget.info.wmemo)? widget.info.wmemo.wmcontent : ``) + `</div>
 			<div class="pop"></div>
-			
 		`;
+		
+		if(!widget.info.preivew){
+		
+		const imgs = o.querySelectorAll('img');
+		imgs.forEach(img=>{
+			imageScaleBoxFun(img, o, widget);
+		});
 		
 		const wmMsg = o.querySelector('span.wmMsg');
 		
 		const wmContent = o.querySelector('.wmContent');
 		
 		o.addEventListener('mousemove',(e)=>{
-			e.preventDefault();
-			e.stopPropagation();
+//			e.preventDefault();
+//			e.stopPropagation();
 			widget.style.cursor = 'default';
 		});
 		
-		
-		
-		wmContent.addEventListener('input',(e)=>{
+		wmContent.addEventListener('keypress',(e)=>{
 			
 			if(e.keyCode === 13){
 				document.execCommand('formatBlock', false, 'p');
 			}
 			
-			if(wmContent['saveTimeoutCheckId']) window.clearTimeout(wmContent['saveTimeoutCheckId']);
+		});
+		
+		wmContent.addEventListener('input',(e)=>{
 			
-			wmContent['saveTimeoutCheckId'] = window.setTimeout(()=>{
-				wmMsg.innerHTML = '자동 저장되었습니다.';
-				motionOnOff(wmMsg,1,false, { setting : 'onDefault'});
-				window.setTimeout(()=>{
-					motionOnOff(wmMsg, 1,false, { setting : 'offDefault'}, null, (o)=>{
-						o.innerHTML = '';
-					});
-				},2000);
-				
-			},3000);
+			
+			const tmpSpan = getCusor(wmContent);
+			const prevTag = tmpSpan.previousSibling;
+			
+			if(prevTag && prevTag.tagName && prevTag.tagName.toLowerCase() === 'img'){
+				imageScaleBoxFun(prevTag, wmemoDiv, widget);
+			}
+			
+			setCusor(wmContent);
+			
+			setSaveTime(widget);
+			
 		});
 		
 		const pop = o.querySelector('.pop');
 		
 		const fontBtn = o.querySelector('.fontBtn');
 		
-		fontBtn.addEventListener('click', (e)=>{
+		fontBtn.addEventListener('mousedown', (e)=>{
 			
 			const con = `
 				<li style="font-family: 'Noto Sans KR', sans-serif;">Noto Sans KR</li>
@@ -91,7 +106,7 @@ function wmemoBox(widget){
 		
 		const fontSizeBtn = o.querySelector('.fontSizeBtn');
 		
-		fontSizeBtn.addEventListener('click', (e)=>{
+		fontSizeBtn.addEventListener('mousedown', (e)=>{
 			
 			const con = `
 				<li style = "font-size:8pt;">가나다라마</li>
@@ -160,6 +175,8 @@ function wmemoBox(widget){
 		
 		imagesUploadBtn.addEventListener('mousedown',(e)=>{
 			
+			getCusor(wmContent);
+			
 			imagesUploadBtn.disabled = 'true';
 			
 			const imageDiv = addObject(null,'div','imageDiv',false, (o)=>{
@@ -195,9 +212,19 @@ function wmemoBox(widget){
 							
 							if(res > -1){
 								
-								wmContent.focus();
+								const resSrc = e.target.result;
 								
-								document.execCommand('insertImage', false, e.target.result);
+								const img = `<img id="addImg" src="${resSrc}"/>`;
+								
+								setCusor(wmContent);
+								
+								document.execCommand('insertHTML', false, img );
+								
+								const tag = wmContent.querySelector('#addImg');
+								
+								tag.id = '';
+								
+								imageScaleBoxFun(tag, wmemoDiv, widget);
 								
 								const imageBox = imageDiv.parentNode;
 								
@@ -230,8 +257,18 @@ function wmemoBox(widget){
 				o.addEventListener('mousedown',(e)=>{
 					
 					const fileURL = imageDiv.querySelector('input[name=fileURL]');
-					wmContent.focus();
-					document.execCommand('insertImage', false, fileURL.value);
+					
+					const img = `<img id="addImg" src="${fileURL}"/>`;
+					
+					setCusor(wmContent);
+					
+					document.execCommand('insertHTML', false, img );
+					
+					const tag = wmContent.querySelector('#addImg');
+					
+					tag.id = '';
+					
+					imageScaleBoxFun(tag, wmemoDiv, widget);
 					
 					const imageBox = o.parentNode;
 					
@@ -248,6 +285,7 @@ function wmemoBox(widget){
 			
 		});
 		
+		}
 		
 	});
 	

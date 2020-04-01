@@ -43,8 +43,6 @@ public class WidgetBizImpl implements WidgetBiz{
 				
 				out.setWno(widgetDto.getWno());
 				
-				System.out.println(out);
-				
 				int ruleRes = wRuleBiz.insert(out);
 				
 				if(ruleRes <= 0) {
@@ -85,8 +83,39 @@ public class WidgetBizImpl implements WidgetBiz{
 	@Override
 	public int update(WidgetDto widgetDto) {
 		// TODO Auto-generated method stub
-		return widgetDao.update(widgetDto);
+		
+		int res = widgetDao.update(widgetDto);
+		
+		if(res > 0) {
+			
+			wRuleBiz.wnoDelete(widgetDto.getWno());
+			
+			List<WRuleDto> wRuleDtos = widgetDto.getRules();
+			
+			for(WRuleDto out : wRuleDtos) {
+				
+				out.setWno(widgetDto.getWno());
+				
+				int ruleRes = wRuleBiz.insert(out);
+				
+				if(ruleRes <= 0) {
+					throw new TransactionException();
+				}
+				
+			}
+			
+		}
+		
+		return res;
+		
 	}
+	
+	@Override
+	public int updateWdel(int wno) {
+		// TODO Auto-generated method stub
+		return widgetDao.updateWdel(wno);
+	}
+	
 	
 	@Override
 	public int topLeftUpdate(WidgetDto widgetDto) {
@@ -98,4 +127,7 @@ public class WidgetBizImpl implements WidgetBiz{
 	public int widthHeightUpdate(WidgetDto widgetDto) {
 		return widgetDao.widthHeightUpdate(widgetDto);
 	}
+	
+	
+	
 }

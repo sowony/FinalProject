@@ -36,8 +36,12 @@
 	margin : 8px 0;
 }
 
-.widgetAddBox1 p,
-.widgetAddBox2 p {
+.widgetSetting > p,
+.widgetRuleSetting > p,
+.widgetAddBox1 fieldset > div > p,
+.widgetAddBox2 fieldset > div > p,
+.widgetRuleGroupBox p,
+.widgetRuleIndividualBox p {
 	display: inline-block;
 	min-width: 80px;
     max-width: max-content;
@@ -139,7 +143,7 @@
 }
 
 .widgetContent {
-    margin: 5px;
+	margin: 5px !important;
     position: relative;
     overflow: overlay;
 }

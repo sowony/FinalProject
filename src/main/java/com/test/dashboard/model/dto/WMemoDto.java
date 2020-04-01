@@ -16,9 +16,6 @@ public class WMemoDto {
     // 소속 위젯 번호 
     private int wno;
 
-    // 메모 제목 
-    private String wtitle;
-
     // 메모 내용 
     private String wmcontent;
 

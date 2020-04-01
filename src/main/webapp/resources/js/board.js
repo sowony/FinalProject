@@ -151,10 +151,21 @@ window.onload = ()=>{
 	
 	const widgetArea = document.querySelector('#widgetArea');
 	
+	
+	// scroll bug fix
+	widgetArea.addEventListener('scroll', function() {
+		
+		if(widgetArea.scrollHeight - widgetArea.clientHeight - Math.floor(widgetArea.scrollTop) <= 1){
+			widgetArea.scrollTop = widgetArea.scrollTop-3;
+		}
+		
+	});
+	
+	
 	contextMenuFun(widgetArea, {
 		'new' : {
 			'새 위젯 만들기' : ()=>{
-				widgetAdd();
+				widgetAddAndModify();
 			}
 		},
 		'dashboardInfo' : {

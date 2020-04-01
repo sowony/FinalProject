@@ -89,4 +89,5 @@ function widgetload(){
 		}
 	});
 	
+	console.log(widgets);
 }

@@ -20,8 +20,158 @@ function logout(){
 		
 }
 
-// 버튼 리스트
 
+function setCusor(target){
+	target.focus();
+	const c = target.querySelector('#editCusor');
+	if(c){
+		const range = document.createRange();
+		range.selectNode(c);
+		var selection = window.getSelection();
+		selection.removeAllRanges();
+    	selection.addRange(range);
+    	range.deleteContents();
+	}
+}
+
+function getCusor(target){
+	target.focus();
+	const tmpSpan = document.createElement('span');
+	tmpSpan.id = 'editCusor';
+	
+	window.getSelection().getRangeAt(0).insertNode(tmpSpan);
+	
+	return tmpSpan;
+}
+
+function setSaveTime(widget){
+	
+	const wmContent = widget.querySelector('.wmContent');
+	const wmMsg = widget.querySelector('span.wmMsg'); 
+	
+	if(wmContent['saveTimeoutCheckId']) window.clearTimeout(wmContent['saveTimeoutCheckId']);
+	
+	wmContent['saveTimeoutCheckId'] = window.setTimeout(()=>{
+		
+		let wmno = 0;
+		
+		if(widget.info.wmemo){
+			wmno = widget.info.wmemo.wmno;
+		}
+		
+		xhrLoad('post','widget/wmemo', { wno : widget.info.wno, wmno, wmcontent : wmContent.innerHTML }, (res)=>{
+			
+			if(res){
+				
+				widget.info.wmemo = JSON.parse(res);
+				
+				wmMsg.innerHTML = '자동 저장되었습니다.';
+				motionOnOff(wmMsg,1,false, { setting : 'onDefault'});
+				window.setTimeout(()=>{
+					motionOnOff(wmMsg, 1,false, { setting : 'offDefault'}, null, (o)=>{
+						o.innerHTML = '';
+					});
+				},2000);
+			}
+			
+		});
+		
+	},3000);
+}
+
+function imageScaleBoxFun(targetImage, area, widget){
+	
+	targetImage.addEventListener('mousedown', (e)=>{
+		
+		
+		const selectImgChk = document.querySelector('#selectImg');
+		const oldMenu = document.querySelector('.imageScaleBox');
+		
+		if(oldMenu) oldMenu.remove();
+		
+		if(selectImgChk){
+			selectImgChk.id = '';
+			selectImgChk.style.border= '';
+		}
+		
+		
+		targetImage.id = 'selectImg';
+		targetImage.style.border = '1px dashed #888';
+		
+		const menu = addObject(area, 'div', 'imageScaleBox', true, (o)=>{
+				
+			o.style.top = e.offsetY+e.target.offsetTop + 5 + 'px';
+			o.style.left = e.offsetX+e.target.offsetLeft + 5 + 'px';
+			
+			o.innerHTML = `
+			<p>OriginWidgth : ${targetImage.naturalWidth}</p>
+			<p>OriginHeight : ${targetImage.naturalHeight}</p>
+			<p>가로 세로 비율 맞추기 : <input type="checkbox" valeu="wAndHchk"/></p>
+			<p><input type="number" name="imgWidth" value = "${targetImage.offsetWidth}" placeholder="가로"/><input type="number" name="imgHeight" value = "${targetImage.offsetHeight}" placeholder="세로"/></p>
+			<p style="text-align:center;"><input type="button" class="grayBtn" value = "닫기"/></p>
+			`;
+			
+
+			const imgWidth = o.querySelector('input[name=imgWidth]');
+			const imgHeight = o.querySelector('input[name=imgHeight]');
+			
+			const checkbox = o.querySelector('input[type=checkbox]');
+			
+			imgWidth.addEventListener('change',()=>{
+				const width = imgWidth.value;
+				targetImage.style.width = width + 'px';
+				
+				let height;
+				
+				if(checkbox.checked){
+					
+					height = targetImage.naturalHeight * width/targetImage.naturalWidth;
+					imgHeight.value = height;
+					
+				} else {
+					height = imgHeight.value;
+				}
+				
+				targetImage.style.height = height + 'px';
+				
+				setSaveTime(widget);
+			});
+			
+			imgHeight.addEventListener('change',()=>{
+				const height = imgHeight.value;
+				targetImage.style.height = height + 'px';
+				
+				let width;
+				
+				if(checkbox.checked){
+					
+					width = targetImage.naturalWidth * height/targetImage.naturalHeight;
+					imgWidth.value = width;
+					
+				} else {
+					width = imgWidth.value;
+				}
+				
+				targetImage.style.width = width + 'px';
+				
+				setSaveTime(widget);
+				
+			});
+			
+			const closeBtn =  o.querySelector('input[type=button]');
+			
+			closeBtn.addEventListener('mousedown',()=>{
+				targetImage.style.border = '';
+				menu.remove();
+			});
+			
+		});
+		
+	});
+}
+
+
+//버튼 리스트
 function btnList(pop, btn, className, liContent, lisFunArray){
 	
 	const chk = pop.querySelector('.btnList');
@@ -36,8 +186,13 @@ function btnList(pop, btn, className, liContent, lisFunArray){
 	const openBoxLeft = btn.offsetLeft;
 	const box = addObject(pop, 'ul', [className, 'btnList'], true, (o)=>{
 		
-		o.parentNode.style.left = openBoxLeft + 'px';
 		o.innerHTML = liContent;
+		
+		let top = btn.offsetTop + btn.offsetHeight;
+		
+		o.parentNode.style.top = top + 'px';;
+		o.parentNode.style.left = openBoxLeft + 'px';
+		
 		
 		const lis = o.querySelectorAll('li');
 			
@@ -83,6 +238,8 @@ function mouseEventFun(target, clickArea, mouseArea){
 	let areaClone;
 	let originX, originY;
 	let mouseX, mouseY;
+	
+	
 	const widgetHeader = clickArea.parentNode.parentNode.querySelector('.widgetHeader');
 	
 	function mousemove(e){
@@ -164,7 +321,6 @@ function scaleEventFun(target, settingArea, mouseArea){
 	let areaClone;
 	
 	let width, height;
-	
 	let originX, originY;
 	let mouseX, mouseY;
 	
@@ -180,7 +336,7 @@ function scaleEventFun(target, settingArea, mouseArea){
 		state = areaClone.style.cursor;
 		
 		if(state === 'ne-resize' || state === 'nw-resize' || state === 'n-resize'){
-			
+			console.log('dd');
 			const oldTop = target.offsetTop;
 			target.style.top = originY - (mouseY - e.pageY - mouseArea.scrollTop) + 'px';
 			
@@ -191,7 +347,7 @@ function scaleEventFun(target, settingArea, mouseArea){
 			widgetContent.style.height = 100 - 35/(Number(target.style.height.split('px')[0])-10)*100 + '%';
 		} else if (state === 'sw-resize' || state === 'se-resize' || state === 's-resize'){
 			
-			target.style.height = (e.pageY - 33 - originY) + 'px';
+			target.style.height = (e.pageY + mouseArea.scrollTop - 33 - originY) + 'px';
 			widgetContent.style.height = 100 - 35/(Number(target.style.height.split('px')[0])-10)*100 + '%';
 			
 		}
@@ -207,7 +363,7 @@ function scaleEventFun(target, settingArea, mouseArea){
 			target.style.width = width + (oldLeft - newLeft) + 'px';
 		} else if (state === 'ne-resize' || state === 'se-resize' || state === 'e-resize'){
 			
-			target.style.width = (e.pageX - originX) + 'px';
+			target.style.width = (e.pageX + mouseArea.scrollLeft - originX) + 'px';
 			
 		}
 		
@@ -313,7 +469,7 @@ function scaleEventFun(target, settingArea, mouseArea){
 		} else if (mouseY-33 < originY +5 && mouseY-33 > originY-5){
 			// 위
 			areaClone.style.cursor = 'n-resize';
-		} else if (mouseY-33< originY + height +7 && mouseY-33 > originY + height -7){
+		} else if (mouseY-33< originY + height +5 && mouseY-33 > originY + height -5){
 			// 아래
 			areaClone.style.cursor = 's-resize';
 		} else {
@@ -382,6 +538,51 @@ function widgetFun(setting){
 	const widgetMoveArea = widget.querySelector('.widgetMoveArea');
 	const widgetHeaderArea = widget.querySelector('.widgetHeaderArea');
 	
+	widget['update'] = ()=>{
+		
+		xhrLoad('post','widget/update', widget.info, (res)=>{
+			
+			if(res){
+				
+				widget.style.width = widget.info.wwidth +'px';
+				widget.style.height = widget.info.wheight +'px';
+				
+				if(widget.info.wtop) widget.style.top = widget.info.wtop + 'px';
+				if(widget.info.wleft) widget.style.left = widget.info.wleft + 'px';
+				
+				if(!widget.info.wtitlecolor){
+					widget.info.wtitlecolor = 'rgb(65, 198, 241)';
+				}
+				
+				if(!widget.info.wcontentcolor){
+					widget.info.wcontentcolor = 'rgb(255, 255, 255)';
+				}
+				
+				const wtitlefontcolor = fontColorCheck(widget.info.wtitlecolor);
+				const wcontentfontcolor = fontColorCheck(widget.info.wcontentcolor);
+				
+				widget.querySelector('.widgetContent').style.color = wcontentfontcolor;
+				widget.style.backgroundColor = widget.info.wcontentcolor;
+				
+				const widgetHeader = widget.querySelector('.widgetHeader');
+				
+				widgetHeader.style.color = wtitlefontcolor;
+				widgetHeader.style.backgroundColor = widget.info.wtitlecolor;
+				
+				const wcategorySpan = widgetHeader.querySelector('span:nth-child(1)');
+				
+				wcategorySpan.innerHTML = widget.info.wcategory;
+				
+				const wtitleSpan = widgetHeader.querySelector('span:nth-child(2)');
+				
+				wtitleSpan.innerHTML = widget.info.wtitle;
+				
+			}
+			
+		});
+		
+	};
+	
 	widget['mouseEventFun'] = ()=>{
 		mouseEventFun(widget, widgetHeaderArea, widget.parentNode);
 	};
@@ -391,61 +592,121 @@ function widgetFun(setting){
 	};
 	
 	widget['contextMenuAddFun'] = ()=>{
-		contextMenuFun(widget, {
-			'new' : {
-				'새 위젯 만들기' : ()=>{
-					widgetAdd();
+		
+		const menuSetting = {
+				'new' : {
+					'새 위젯 만들기' : ()=>{
+						widgetAddAndModify();
+					}
+				},
+				'widget' : {
+					
+					'위젯 위로 올리기' : ()=>{
+						
+						widgetZMove(widget, 'up', 'min');
+						
+					},
+					'위젯 가장 위로 올리기' : ()=>{
+						
+						
+						widgetZMove(widget, 'up', 'max');
+					},
+					
+					'위젯 아래로 내리기' : ()=>{
+						
+						widgetZMove(widget, 'down', 'min');
+						
+					},
+					'위젯 가장 아래로 내리기' : ()=>{
+						
+						widgetZMove(widget, 'down', 'max');
+					}
+				},
+				'dashboardInfo' : {
+					'대시보드 자세히 보기' : ()=>{}
+				},
+				'letter' : {
+					'쪽지함 보기' : ()=>{},
+					'쪽지 작성' : ()=>{}
+				},
+				'alram' : {
+					'말람함 보기' : ()=>{}
+				},
+				'myInfo' : {
+					'내 정보 보기' : ()=>{},
+					'로그아웃' : ()=>{logout();}
 				}
-			},
-			'widget' : {
-				'위젯 수정' : ()=>{},
-				'위젯 삭제' : ()=>{},
-				'위젯 위로 올리기' : ()=>{
-					
-					widgetZMove(widget, 'up', 'min');
-					
-				},
-				'위젯 가장 위로 올리기' : ()=>{
-					
-					
-					widgetZMove(widget, 'up', 'max');
-				},
 				
-				'위젯 아래로 내리기' : ()=>{
-					
-					widgetZMove(widget, 'down', 'min');
-					
-				},
-				'위젯 가장 아래로 내리기' : ()=>{
-					
-					widgetZMove(widget, 'down', 'max');
-				}
-			},
-			'dashboardInfo' : {
-				'대시보드 자세히 보기' : ()=>{}
-			},
-			'letter' : {
-				'쪽지함 보기' : ()=>{},
-				'쪽지 작성' : ()=>{}
-			},
-			'alram' : {
-				'말람함 보기' : ()=>{}
-			},
-			'myInfo' : {
-				'내 정보 보기' : ()=>{},
-				'로그아웃' : ()=>{logout();}
-			}
+			};
+		
+		if(userInfo.mid === widget.info.mid){
+			menuSetting.widget['위젯 수정'] = ()=>{
+				
+				widgetAddAndModify(widget);
+				
+			};
 			
-		});
+			menuSetting.widget['위젯 삭제'] = (e)=>{
+				
+				const widgetDelRes = document.querySelector('.widgetDelRes');
+				if(widgetDelRes) widgetDelRes.remove();
+				
+				const submitBtn = addObject(null, 'input', ['grayBtn', 'widgetDelSubmitBtn'], false, (o)=>{
+					
+					o.type = 'button';
+					o.value = '삭제';
+					o.style.width = 'max-content';
+					o.style.marginRight = '5px';
+					
+					o.addEventListener('click', ()=>{
+						
+						xhrLoad('get', 'widget/updatewdel/'+widget.info.wno, null, (res)=>{
+							if(res === 'true'){
+								
+								const widgetDelRes = document.querySelector('.widgetDelRes');
+								motionOnOff(widgetDelRes, 0.8, false, { setting : 'offDefault' }, false, (o)=>{
+									
+									motionOnOff(widget, 0.8, false, { onOff : 'off' }, false, (o)=>{
+										
+										widgets.forEach((w,i)=>{
+											if(w === widget){
+												widgets.splice(i,1);
+												return;
+											}
+										});
+										o.remove();
+									});
+									o.remove();
+									
+									boxFun('삭제에 성공하였습니다.', false, null,false, null, false, true);
+								});
+							}
+						});
+						
+					});
+				});
+				
+				
+				boxFun('위젯을 정말 삭제하시겠습니까?', false, [submitBtn],false, 'widgetDelRes', false, true);
+				
+			};
+			
+		}
+		
+		contextMenuFun(widget, menuSetting);
 	};
 	
 	
 	widget['cateFun'] = ()=>{
 		
+		const widgetContent = widget.querySelector('.widgetContent');
+		widgetContent.innerHTML = '';
 		const wcategory = widget.info.wcategory.toLowerCase();
 		
 		if(wcategory === 'memo'){
 			wmemoBox(widget);
+		} else if(wcategory === 'chat'){
+			wchatBox(widget);
 		}
 		
 		
@@ -456,6 +717,7 @@ function widgetFun(setting){
 	
 	return widget;
 }
+
 function widgetZMove(widget, upDown, maxMin){
 	
 	const area = widget.parentNode;
@@ -467,7 +729,7 @@ function widgetZMove(widget, upDown, maxMin){
 		if(zindex < maxZIndex){
 			nodes.forEach(node=>{
 				if(Number(node.style.zIndex) === zindex + 1){
-					
+					console.log(node);
 					node.style.zIndex = zindex;
 					if(maxMin ==='min'){
 						widget.style.zIndex = zindex + 1;
@@ -971,12 +1233,12 @@ function middlePositionFun(obj){
 		const transformArray = obj.style.transform.split(' ');
 		const tmpArray = [];
 		transformArray.forEach(style=>{
-			if(!style.indexOf('translateX') > 0 || !style.indexOf('translateY') > 0 ){
+			if(!style.indexOf('translateX') > 0 && !style.indexOf('translateY') > 0 ){
 				tmpArray.push(style);
 			}
 		});
 		
-		obj.style.transform = style.toString().replace(/,/g,' ') + 'translateX(-50%) translateY(-50%)';
+		obj.style.transform = tmpArray.toString().replace(/,/g,' ') + 'translateX(-50%) translateY(-50%)';
 		
 	} else obj.style.transform = 'translateX(-50%) translateY(-50%)';
 

@@ -85,7 +85,7 @@ legend {
 	background-color: #ccf2ff;
 }
 
-.dashItem ._owner:hover {
+._owner:hover {
     background-color: #ccf2ff;
     box-shadow: inset 0 0 2px 4px #85dde6, 0 1px 2px 1px #a0a8ab;
 }
@@ -94,9 +94,9 @@ legend {
 	background-color: #dce9ab;
 }
 
-.dashItem ._belong:hover {
+._belong:hover {
     background-color: #dce9ab;
-    box-shadow: inset 0 0 2px 4px #5a682e, 0 1px 2px 1px #a0a8ab;
+    box-shadow: inset 0 0 2px 4px #afc36f, 0 1px 2px 1px #a0a8ab;
 }
 
 .dashItem p {

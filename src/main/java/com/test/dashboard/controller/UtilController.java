@@ -3,6 +3,7 @@ package com.test.dashboard.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.test.dashboard.common.util.Util;
@@ -29,8 +31,8 @@ public class UtilController {
 	@GetMapping("smscheck")
 	public String getSmsCheck(MemberDto memberDto) {
 		
-		logger.info("[ INFO ] : MainController > getSmsCheck [path : /smscheck]");
-		logger.info("[ INFO ] : MainController > phone > " + memberDto.getMphone());
+		logger.info("[ INFO ] : UtilController > getSmsCheck [path : /smscheck]");
+		logger.info("[ INFO ] : UtilController > phone > " + memberDto.getMphone());
 //		return "1";
 		return new Util().smsCheckFun(memberDto.getMphone(), "웹에서 온 인증번호 입니다. 확인해주세요.");
 	}
@@ -44,7 +46,7 @@ public class UtilController {
 	@GetMapping("nickcheck")
 	public MemberDto getNickSearch(MemberDto memberDto) {
 		
-		logger.info("[ INFO ] : MyPageController > getNickSearch [path : /nickcheck]");
+		logger.info("[ INFO ] : UtilController > getNickSearch [path : /nickcheck]");
 		logger.info("[ INFO ] : SearchNick > " + memberDto.getMnick());
 		
 		MemberDto user = memberBiz.selectByNick(memberDto.getMnick());
@@ -60,7 +62,7 @@ public class UtilController {
 	
 	@GetMapping("namesearch")
 	public boolean getNameSearch(MemberDto memberDto) {
-		logger.info("[ INFO ] : MyPageController > postIdSearch [path : /namesearch]");
+		logger.info("[ INFO ] : UtilController > postIdSearch [path : /namesearch]");
 		logger.info("[ INFO ] : SearchName > " + memberDto.getMname());
 		
 		int res = memberBiz.selectByName(memberDto.getMname());
@@ -76,7 +78,7 @@ public class UtilController {
 	@GetMapping("idcheck")
 	public boolean getIdCheck(MemberDto memberDto) {
 		
-		logger.info("[ INFO ] : MyPageController > getIdCheck [path : /idcheck]");
+		logger.info("[ INFO ] : UtilController > getIdCheck [path : /idcheck]");
 		logger.info("[ INFO ] : SearchID > " + memberDto.getMid());
 		
 		MemberDto user = memberBiz.selectById(memberDto.getMid());
@@ -93,8 +95,8 @@ public class UtilController {
 	
 	@GetMapping("emailAuthCheck")
 	public String getSignUpCheck(MemberDto memberDto) {
-		logger.info("[ INFO ] : MainController > getSignUpCheck [path : /signupcheck]");
-		logger.info("[ INFO ] : MainController > email > " + memberDto.getMemail());
+		logger.info("[ INFO ] : UtilController > getSignUpCheck [path : /signupcheck]");
+		logger.info("[ INFO ] : UtilController > email > " + memberDto.getMemail());
 		return new Util().signUpEmail(memberDto.getMemail());
 	}
 	
@@ -102,8 +104,8 @@ public class UtilController {
 	@GetMapping("kakaologin")
 	public String kakaologin(KakaoMemberDto kakaoMemberDto, HttpSession session) {
 		
-		logger.info("[ INFO ] : MainController > kakaologin [path : /kakaologin]");
-		logger.info("[ INFO ] : MainController > kakaoMemberDto > " + kakaoMemberDto);
+		logger.info("[ INFO ] : UtilController > kakaologin [path : /kakaologin]");
+		logger.info("[ INFO ] : UtilController > kakaoMemberDto > " + kakaoMemberDto);
 		
 		Map<String, String> params = new HashMap<String, String>();
 		
@@ -147,11 +149,11 @@ public class UtilController {
 	@GetMapping("kakaologout")
 	public String kakaologout(HttpSession session) {
 		
-		logger.info("[ INFO ] : MainController > kakaologout [path : /kakaologout]");
+		logger.info("[ INFO ] : UtilController > kakaologout [path : /kakaologout]");
 		
 		KakaoMemberDto kakaoMemberDto = (KakaoMemberDto) session.getAttribute("platformInfo");
 		
-		logger.info("[ INFO ] : MainController > kakaoMemberDto > " + kakaoMemberDto);
+		logger.info("[ INFO ] : UtilController > kakaoMemberDto > " + kakaoMemberDto);
 		
 		Map<String, String> params = new HashMap<String, String>();
 		
@@ -165,11 +167,11 @@ public class UtilController {
 	@GetMapping("kakaoout")
 	public String kakaoout(HttpSession session) {
 		
-		logger.info("[ INFO ] : MainController > kakaoout [path : /kakaoout]");
+		logger.info("[ INFO ] : UtilController > kakaoout [path : /kakaoout]");
 		
 		KakaoMemberDto kakaoMemberDto = (KakaoMemberDto) session.getAttribute("platformInfo");
 		
-		logger.info("[ INFO ] : MainController > kakaoMemberDto > " + kakaoMemberDto);
+		logger.info("[ INFO ] : UtilController > kakaoMemberDto > " + kakaoMemberDto);
 		
 		Map<String, String> params = new HashMap<String, String>();
 		
@@ -178,6 +180,15 @@ public class UtilController {
 		session.invalidate();
 		
 		return Util.restRequest("POST", "https://kapi.kakao.com/v1/user/unlink", null, params);
+	}
+	
+	@GetMapping( value = "fileread" , produces = "application/text; charset=utf8")
+	public String fileread(@RequestParam(name = "path") String path, HttpServletRequest req) {
+		
+		logger.info("[ INFO ] : UtilController > fileread [path :" + path + "]");
+		
+		return Util.fileRead(req.getServletContext().getRealPath("/")+path.split("dashboard")[1]);
+		
 	}
 	
 }
