@@ -17,8 +17,8 @@ public class WboardBizImpl implements WboardBiz{
 	private WboardDao wboardDao; 
 	
 	@Override
-	public List<WboardDto> boardListAll(int dgno) {
-		return wboardDao.boardListAll(dgno);
+	public List<WboardDto> boardListAll(int wno) {
+		return wboardDao.boardListAll(wno);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class WboardBizImpl implements WboardBiz{
 			System.out.println("wboardDao biz 에러 발생");
 			e.printStackTrace();
 		}
-		System.out.println(wbtodono);
+		//System.out.println(wbtodono);
 		
 		return wboardDao.wSelectOne(wbtodono);
 	}
@@ -60,7 +60,21 @@ public class WboardBizImpl implements WboardBiz{
 	@Override
 	public int summerUpdate(WboardDto dto) {
 
+		try {
+			wboardDao.summerUpdate(dto);
+		} catch (Exception e) {
+			System.out.println("수정에서 에러남 -비즈");
+			e.printStackTrace();
+		}
+		
 		return wboardDao.summerUpdate(dto);
+	}
+
+	//내게시글보기 
+	@Override
+	public List<WboardDto> boardMyList(WboardDto dto) {
+		// TODO Auto-generated method stub
+		return wboardDao.boardMyList(dto);
 	}
 
 }

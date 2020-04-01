@@ -50,11 +50,15 @@ INSERT INTO wboard VALUES
 
 SELECT * FROM WBOARD;
 
-SELECT * FROM WBOARD WHERE mid = 'a';
+SELECT * FROM WBOARD WHERE mid = 'f';
 
 delete from wboard where wbtodono = 2;
 
 select to_char(wbstartdate,'yyyy-mm-dd') FROM WBOARD;
+select * from wboard where wno =1;
+
+update wboard set wbtitle='수정수'where wbtodono =3;
+
 
 --썸머노트
 drop SEQUENCE  "SUMMERBOARD_SEQ";

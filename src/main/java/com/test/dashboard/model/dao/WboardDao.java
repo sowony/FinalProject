@@ -14,9 +14,13 @@ import com.test.dashboard.model.dto.WboardDto;
 @Repository
 public interface WboardDao {
 
-	//전체 목록 조회 , id는 떠다닌는 애를 잡아다가 넣자 
-	@Select("select * from wboard where dgno = #{dgno}")
-	public List<WboardDto> boardListAll(int dgno);
+	//전체 목록 조회 , id는 떠다닌는 애를 잡아다가 넣자  dgno???넣었었음
+	@Select("select * from wboard where wno = #{wno}")
+	public List<WboardDto> boardListAll(int wno);
+	
+	//내글 목록 조회 
+	@Select("select * from wboard where mid = #{mid} and wno = #{wno}")
+	public List<WboardDto> boardMyList(WboardDto dto);
 	
 	//연습용 
 	@Select("select * from wboard")

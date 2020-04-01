@@ -7,7 +7,10 @@ import com.test.dashboard.model.dto.WboardDto;
 public interface WboardBiz {
 	
 	//전체 목록 조회
-	public List<WboardDto> boardListAll(int dgno);
+	public List<WboardDto> boardListAll(int wno);
+	
+	//내글만 보기 
+	public List<WboardDto> boardMyList(WboardDto dto);
 	
 	//연습용 
 	public List<WboardDto> boardList();

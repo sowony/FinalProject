@@ -112,6 +112,40 @@ div.wcontent {
 .winsertbtn{
 	margin-top: 10px;
 }
+#wbhibtn{
+	margin-top: 10px;
+}
 .wdate span{
 	min-width: 50px;
+}
+
+#summernotediv{
+	text-align: left;
+}
+
+#wbstartdate{
+	width: 125px !important;
+	text-align: center;
+}
+#wbenddate{
+	width: 125px !important;
+	text-align: center;
+}
+ .wbtadd{
+    width: 15px !important;
+    height: 15px !important;
+    font-family: serif;
+    margin-left: 13px;
+    margin-top: -2px;
+    background: powderblue;
+    text-align: center;
+    cursor: pointer;
+    padding-top: 0px;
+    padding-bottom: 14px;
+    border-radius: 75px !important;
+    font-size: 18pt;
+    box-sizing: content-box;
+}
+.cpwtasklist{
+	display: inline-flex;
 }
