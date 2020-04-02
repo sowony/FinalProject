@@ -9,25 +9,27 @@ import org.springframework.web.socket.config.annotation.WebSocketTransportRegist
 
 @Configuration
 @EnableWebSocketMessageBroker
-public class WidgetInfo implements WebSocketMessageBrokerConfigurer{
+public class WChatWebSocket implements WebSocketMessageBrokerConfigurer{
 
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
 		// TODO configureMessageBroker method active
-		registry.enableSimpleBroker("/widgetinfo_sub");
-		registry.setApplicationDestinationPrefixes("/widgetinfo_pub");
+		registry.enableSimpleBroker("/wchat_sub");
+		registry.setApplicationDestinationPrefixes("/wchat_pub");
 	}
 	
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		// TODO endpoint method active
-		registry.addEndpoint("/widgetinfobroker").setAllowedOrigins("*").withSockJS();
+		registry.addEndpoint("/wchatbroker").setAllowedOrigins("*").withSockJS();
 	}
 	
 	@Override
 	public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
 		// TODO configureWebSocketTransport init
 		registry.setSendTimeLimit(15*1000);
+		registry.setMessageSizeLimit(1024 * 1024 * 16);
+		registry.setSendBufferSizeLimit(1024 * 1024 * 16);
 	}
 	
 }

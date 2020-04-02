@@ -21,14 +21,17 @@ function xhrLoad(method, url, reqeustObjet,callBack, async){
     	} else xhr.open(method, url);
     }
     
-    xhr.onreadystatechange = function(){
-        let {readyState, status, responseText} = xhr;
-        if(readyState === xhr.DONE){
-            if(status === 200){
-            	callBack(responseText);
-            }
-        }
-    };
+    if(callBack){
+    	xhr.onreadystatechange = function(){
+        	let {readyState, status, responseText} = xhr;
+        	if(readyState === xhr.DONE){
+            	if(status === 200){
+            		callBack(responseText);
+            	}
+        	}
+    	};
+    }
+    
     xhr.setRequestHeader('Content-Type', 'application/json');
     //xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     //xhr.setRequestHeader('X-HTTP-Method-Override', method);

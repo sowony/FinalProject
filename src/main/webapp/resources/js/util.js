@@ -10,6 +10,64 @@ const backgroundDiv = addObject(null,'div',null,false,(t)=>{
 });
 
 
+function imageView(img){
+	
+	const viewImg = img.cloneNode(true);
+	
+	function plus(e){
+			
+		console.log(e.offsetX, e.offsetY);
+			
+		
+			
+	}
+	
+	function minus(e){
+		console.log(e.offsetX, e.offsetY);
+		e.target.style.transform = 'scale(1.0)';
+		viewImg.addEventListener('click',plus);
+		
+	}
+	
+	viewImg.addEventListener('mouseover',(e)=>{
+		if(e.ctrlKey){
+			viewImg.style.cursor = 'zoom-out';
+		} else {
+			viewImg.style.cursor = 'zoom-in';
+		}
+	});
+	
+	viewImg.addEventListener('mousemove',(e)=>{
+		if(e.ctrlKey){
+			viewImg.style.cursor = 'zoom-out';
+		} else {
+			viewImg.style.cursor = 'zoom-in';
+		}
+	});
+	
+	viewImg.addEventListener('click',(e)=>{
+		
+		const originW = viewImg.offsetWidth;
+		const originH = viewImg.offsetHeight;
+		
+		if(e.ctrlKey){
+			viewImg.style.width = originW * 0.8 + 'px';
+			viewImg.style.height = originH * 0.8 + 'px';
+		} else {
+			viewImg.style.width = originW * 1.2 + 'px';
+			viewImg.style.height = originH * 1.2 + 'px';
+		}		
+	});
+	
+	
+	const viewImgDiv = addObject(null, 'div', 'viewImgDiv', false, (o)=>{
+		o.appendChild(viewImg);
+	});
+	
+	const viewBox = boxFun(null, false, [viewImgDiv], false, 'viewBox', null, true);
+	
+};
+
 function logout(){
 	
 	xhrLoad('get','logout', null, (res)=>{
@@ -18,6 +76,192 @@ function logout(){
 		}
 	});
 		
+}
+
+
+function setCusor(target){
+	target.focus();
+	const c = target.querySelector('#editCusor');
+	if(c){
+		const range = document.createRange();
+		range.selectNode(c);
+		var selection = window.getSelection();
+		selection.removeAllRanges();
+    	selection.addRange(range);
+    	range.deleteContents();
+	}
+}
+
+function getCusor(target){
+	target.focus();
+	const tmpSpan = document.createElement('span');
+	tmpSpan.id = 'editCusor';
+	
+	window.getSelection().getRangeAt(0).insertNode(tmpSpan);
+	
+	return tmpSpan;
+}
+
+function setSaveTime(widget){
+	
+	const wmContent = widget.querySelector('.wmContent');
+	const wmMsg = widget.querySelector('span.wmMsg'); 
+	
+	if(wmContent['saveTimeoutCheckId']) window.clearTimeout(wmContent['saveTimeoutCheckId']);
+	
+	wmContent['saveTimeoutCheckId'] = window.setTimeout(()=>{
+		
+		let wmno = 0;
+		
+		if(widget.info.wmemo){
+			wmno = widget.info.wmemo.wmno;
+		}
+		
+		xhrLoad('post','widget/wmemo', { wno : widget.info.wno, wmno, wmcontent : wmContent.innerHTML }, (res)=>{
+			
+			if(res){
+				
+				widget.info.wmemo = JSON.parse(res);
+				
+				wmMsg.innerHTML = '자동 저장되었습니다.';
+				motionOnOff(wmMsg,1,false, { setting : 'onDefault'});
+				window.setTimeout(()=>{
+					motionOnOff(wmMsg, 1,false, { setting : 'offDefault'}, null, (o)=>{
+						o.innerHTML = '';
+					});
+				},2000);
+			}
+			
+		});
+		
+	},3000);
+}
+
+function imageScaleBoxFun(targetImage, area, widget){
+	
+	targetImage.addEventListener('mousedown', (e)=>{
+		
+		
+		const selectImgChk = document.querySelector('#selectImg');
+		const oldMenu = document.querySelector('.imageScaleBox');
+		
+		if(oldMenu) oldMenu.remove();
+		
+		if(selectImgChk){
+			selectImgChk.id = '';
+			selectImgChk.style.border= '';
+		}
+		
+		
+		targetImage.id = 'selectImg';
+		targetImage.style.border = '1px dashed #888';
+		
+		const menu = addObject(area, 'div', 'imageScaleBox', true, (o)=>{
+				
+			o.style.top = e.offsetY+e.target.offsetTop + 5 + 'px';
+			o.style.left = e.offsetX+e.target.offsetLeft + 5 + 'px';
+			
+			o.innerHTML = `
+			<p>OriginWidgth : ${targetImage.naturalWidth}</p>
+			<p>OriginHeight : ${targetImage.naturalHeight}</p>
+			<p>가로 세로 비율 맞추기 : <input type="checkbox" valeu="wAndHchk"/></p>
+			<p><input type="number" name="imgWidth" value = "${targetImage.offsetWidth}" placeholder="가로"/><input type="number" name="imgHeight" value = "${targetImage.offsetHeight}" placeholder="세로"/></p>
+			<p style="text-align:center;"><input type="button" class="grayBtn" value = "닫기"/></p>
+			`;
+			
+
+			const imgWidth = o.querySelector('input[name=imgWidth]');
+			const imgHeight = o.querySelector('input[name=imgHeight]');
+			
+			const checkbox = o.querySelector('input[type=checkbox]');
+			
+			imgWidth.addEventListener('change',()=>{
+				const width = imgWidth.value;
+				targetImage.style.width = width + 'px';
+				
+				let height;
+				
+				if(checkbox.checked){
+					
+					height = targetImage.naturalHeight * width/targetImage.naturalWidth;
+					imgHeight.value = height;
+					
+				} else {
+					height = imgHeight.value;
+				}
+				
+				targetImage.style.height = height + 'px';
+				
+				setSaveTime(widget);
+			});
+			
+			imgHeight.addEventListener('change',()=>{
+				const height = imgHeight.value;
+				targetImage.style.height = height + 'px';
+				
+				let width;
+				
+				if(checkbox.checked){
+					
+					width = targetImage.naturalWidth * height/targetImage.naturalHeight;
+					imgWidth.value = width;
+					
+				} else {
+					width = imgWidth.value;
+				}
+				
+				targetImage.style.width = width + 'px';
+				
+				setSaveTime(widget);
+				
+			});
+			
+			const closeBtn =  o.querySelector('input[type=button]');
+			
+			closeBtn.addEventListener('mousedown',()=>{
+				targetImage.style.border = '';
+				menu.remove();
+			});
+			
+		});
+		
+	});
+}
+
+
+//버튼 리스트
+function btnList(pop, btn, className, liContent, lisFunArray){
+	
+	const chk = pop.querySelector('.btnList');
+	const chkName = chk? chk.className.split(' ')[0] : null;
+	
+	if(chk) chk.remove();
+	
+	if(chkName === className) {
+		return;
+	}
+	
+	const openBoxLeft = btn.offsetLeft;
+	const box = addObject(pop, 'ul', [className, 'btnList'], true, (o)=>{
+		
+		o.innerHTML = liContent;
+		
+		let top = btn.offsetTop + btn.offsetHeight;
+		
+		o.parentNode.style.top = top + 'px';;
+		o.parentNode.style.left = openBoxLeft + 'px';
+		
+		
+		const lis = o.querySelectorAll('li');
+			
+		lis.forEach((li,i)=>{
+			li.addEventListener('mousedown',(e)=>{
+				lisFunArray[i]();
+				li.parentNode.remove();
+			});
+		});
+	});
+	
 }
 
 // 배열 정렬
@@ -47,43 +291,266 @@ function arrSort(arr){
 	return returnArr;
 }
 
-function mouseEventFun(){
+function mouseEventFun(target, clickArea, mouseArea){
 	
-	const widgetArea = this.parentNode;
-	const widgetHeader = this.querySelector('.widgetHeader');
-	const widget = widgetHeader.parentNode;
-	
+	let areaClone;
 	let originX, originY;
 	let mouseX, mouseY;
 	
+	
+	const widgetHeader = clickArea.parentNode.parentNode.querySelector('.widgetHeader');
+	
 	function mousemove(e){
 		
-		widget.style.top = originY - (mouseY - e.pageY) + 'px';
-		widget.style.left = originX - (mouseX - e.pageX) + 'px';
+		e.preventDefault();
+		e.stopPropagation();
+		
+		target.style.top = originY - (mouseY - e.pageY) + 'px';
+		target.style.left = originX - (mouseX - e.pageX) + 'px';
+	
 	}
 	
 	function mousedown(e){
 		
-		originX = widget.offsetLeft;
-		originY = widget.offsetTop;
+		e.preventDefault();
+		e.stopPropagation();
+		
+		originX = target.offsetLeft;
+		originY = target.offsetTop;
+		
 		mouseX = e.pageX;
 		mouseY = e.pageY;
 		
-		widgetArea.addEventListener('mousemove', mousemove);
-		widgetHeader.addEventListener('mouseup', mouseOutAndUp);
+		if(areaClone){
+			areaClone.remove();
+		} else {
+			areaClone = mouseArea.cloneNode();
+			areaClone.classList.add('mousemoveArea');
+		}
+		
+		
+		if(!widgetHeader.style.boxShadow){
+			const colorArray = widgetHeader.style.backgroundColor.split('(')[1].split(',');
+		
+			let R = Number(colorArray[0]);
+			let G = Number(colorArray[1]);
+			let B = Number(colorArray[2].substring(0, colorArray[2].indexOf(')')));
+		
+			R = R-30 < 0? 0 : R-30;
+			G = G-30 < 0? 0 : G-30;
+			B = B-30 < 0? 0 : B-30;
+			
+			widgetHeader.style.boxShadow = 'inset 0 0 5px 3px ' + `rgb(${R}, ${G}, ${B})`; 		
+		}
+		
+		areaClone.style.opacity = 0;
+		areaClone.style.zIndez = 20000;
+		
+		mouseArea.parentNode.appendChild(areaClone);
+		
+		areaClone.addEventListener('mousemove', mousemove);
+		areaClone.addEventListener('mouseup', mouseOutAndUp);
+		areaClone.addEventListener('mouseout', mouseOutAndUp);
 		
 	}
 	
 	function mouseOutAndUp(e){
 		
-		widgetArea.removeEventListener('mousemove', mousemove);
-		widgetHeader.removeEventListener('mouseup', mouseOutAndUp);
+		
+		
+		target.info.wtop = target.style.top.split('px')[0];
+		target.info.wleft = target.style.left.split('px')[0];
+		
+		xhrLoad('post', 'widget/topleftupdate',target.info);
+		
+		widgetHeader.style.boxShadow = '';
+		
+		areaClone.remove();
+		
 		
 	}
 	
-	widgetHeader.addEventListener('mousedown', mousedown);
+	clickArea.addEventListener('mousedown', mousedown);
 	
 }
+
+function scaleEventFun(target, settingArea, mouseArea){
+	
+	let areaClone;
+	
+	let width, height;
+	let originX, originY;
+	let mouseX, mouseY;
+	
+	let widgetContent = target.querySelector('.widgetContent');
+	
+	let state;
+	
+	function mousemoveDown(e){
+		
+		width = target.offsetWidth;
+		height = target.offsetHeight;
+		
+		state = areaClone.style.cursor;
+		
+		if(state === 'ne-resize' || state === 'nw-resize' || state === 'n-resize'){
+			console.log('dd');
+			const oldTop = target.offsetTop;
+			target.style.top = originY - (mouseY - e.pageY - mouseArea.scrollTop) + 'px';
+			
+			const newTop = target.offsetTop;
+			
+			target.style.height = height + (oldTop - newTop) + 'px';
+			
+			widgetContent.style.height = 100 - 35/(Number(target.style.height.split('px')[0])-10)*100 + '%';
+		} else if (state === 'sw-resize' || state === 'se-resize' || state === 's-resize'){
+			
+			target.style.height = (e.pageY + mouseArea.scrollTop - 33 - originY) + 'px';
+			widgetContent.style.height = 100 - 35/(Number(target.style.height.split('px')[0])-10)*100 + '%';
+			
+		}
+		
+
+		if(state === 'nw-resize' || state === 'sw-resize' || state === 'w-resize'){
+			
+			const oldLeft = target.offsetLeft;
+			target.style.left = originX - (mouseX - e.pageX - mouseArea.scrollLeft) + 'px';
+			
+			const newLeft = target.offsetLeft;
+			
+			target.style.width = width + (oldLeft - newLeft) + 'px';
+		} else if (state === 'ne-resize' || state === 'se-resize' || state === 'e-resize'){
+			
+			target.style.width = (e.pageX + mouseArea.scrollLeft - originX) + 'px';
+			
+		}
+		
+	}
+	
+	function mousemoveOver(e){
+		
+		e.preventDefault();
+		e.stopPropagation();
+		
+		width = target.offsetWidth;
+		height = target.offsetHeight;
+	
+		originX = target.offsetLeft;
+		originY = target.offsetTop;
+		
+		mouseX = e.pageX + mouseArea.scrollLeft;
+		mouseY = e.pageY + mouseArea.scrollTop;
+		
+		
+		if(mouseX < originX+15 && mouseX > originX-15 && mouseY-33< originY + height +15 && mouseY-33 > originY + height -15){
+			// 왼쪽 아래
+			target.style.cursor = 'sw-resize';
+		} else if(mouseX < originX+15 && mouseX > originX-15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
+			// 왼쪽 위
+			target.style.cursor = 'nw-resize';
+		} else if(mouseX < originX + width +15 && mouseX > originX + width -15 && mouseY-33< originY + height +15 && mouseY-33 > originY + height -5){
+			// 오른쪽 아래
+			target.style.cursor = 'se-resize';
+		} else if(mouseX < originX + width +15 && mouseX > originX + width -15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
+			// 오른쪽 위
+			target.style.cursor = 'ne-resize';
+		} else if(mouseX < originX+5 && mouseX > originX-5){
+			// 왼쪽
+			target.style.cursor = 'w-resize';
+		} else if (mouseX < originX + width +5 && mouseX > originX + width -5){
+			// 오른쪽
+			target.style.cursor = 'e-resize';
+		} else if (mouseY-33 < originY +5 && mouseY-33 > originY-5){
+			// 위
+			target.style.cursor = 'n-resize';
+		} else if (mouseY-33< originY + height +5 && mouseY-33 > originY + height -5){
+			// 아래
+			target.style.cursor = 's-resize';
+		} else {
+			target.style.cursor = 'default';
+		}
+		
+	}
+	
+	function mouseOutAndUp(e){
+		
+		target.style.cursor = 'default';
+		
+		target.info.wwidth = target.style.width.split('px')[0];
+		target.info.wheight = target.style.height.split('px')[0];
+		
+		xhrLoad('post', 'widget/widthHeightUpdate', target.info);
+		
+		areaClone.remove();
+		
+	}
+	
+	function mousedown(e){
+		
+		e.preventDefault();
+		e.stopPropagation();
+		
+		width = target.offsetWidth;
+		height = target.offsetHeight;
+		
+		originX = target.offsetLeft;
+		originY = target.offsetTop;
+		
+		mouseX = e.pageX + mouseArea.scrollLeft;
+		mouseY = e.pageY + mouseArea.scrollTop;
+		
+		if(areaClone){
+			areaClone.remove();
+		} else {
+			areaClone = mouseArea.cloneNode();
+			areaClone.classList.add('mousemoveArea');
+		}
+		
+		if(mouseX < originX+15 && mouseX > originX-15 && mouseY-33< originY + height +15 && mouseY-33 > originY + height -15){
+			// 왼쪽 아래
+			areaClone.style.cursor = 'sw-resize';
+		} else if(mouseX < originX+15 && mouseX > originX-15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
+			// 왼쪽 위
+			areaClone.style.cursor = 'nw-resize';
+		} else if(mouseX < originX + width +15 && mouseX > originX + width -15 && mouseY-33< originY + height +15 && mouseY-33 > originY + height -15){
+			// 오른쪽 아래
+			areaClone.style.cursor = 'se-resize';
+		} else if(mouseX < originX + width +15 && mouseX > originX + width -15 && mouseY-33 < originY +15 && mouseY-33 > originY-15){
+			// 오른쪽 위
+			areaClone.style.cursor = 'ne-resize';
+		} else if(mouseX < originX+5 && mouseX > originX-5){
+			// 왼쪽
+			areaClone.style.cursor = 'w-resize';
+		} else if (mouseX < originX + width +5 && mouseX > originX + width -5){
+			// 오른쪽
+			areaClone.style.cursor = 'e-resize';
+		} else if (mouseY-33 < originY +5 && mouseY-33 > originY-5){
+			// 위
+			areaClone.style.cursor = 'n-resize';
+		} else if (mouseY-33< originY + height +5 && mouseY-33 > originY + height -5){
+			// 아래
+			areaClone.style.cursor = 's-resize';
+		} else {
+			areaClone.style.cursor = 'default';
+			return false;
+		}
+		
+		areaClone.style.opacity = 0;
+		areaClone.style.zIndez = 20000;
+		
+		mouseArea.parentNode.appendChild(areaClone);
+		
+		
+		areaClone.addEventListener('mouseup', mouseOutAndUp);
+		areaClone.addEventListener('mouseout', mouseOutAndUp);
+		areaClone.addEventListener('mousemove', mousemoveDown);
+		
+	}
+	
+	settingArea.addEventListener('mousemove', mousemoveOver);
+	settingArea.addEventListener('mousedown', mousedown);
+}
+
 
 
 function widgetFun(setting){
@@ -93,7 +560,10 @@ function widgetFun(setting){
 		o.style.width = setting['wwidth']+'px';
 		o.style.height = setting['wheight']+'px';
 		o.style.zIndex = setting['wzindex'];
-		o.style.position = setting['position'];
+		o.style.position = setting['wposition'];
+		
+		if(setting['wtop']) o.style.top = setting['wtop'] + 'px';
+		if(setting['wleft']) o.style.left = setting['wleft'] + 'px';
 		
 		if(!setting['wtitlecolor']){
 			setting['wtitlecolor'] = 'rgb(65, 198, 241)';
@@ -112,6 +582,9 @@ function widgetFun(setting){
 			<div class="widgetHeader" style="color:${wtitlefontcolor};background-color:${setting['wtitlecolor']};">
 				<p style="color: inherit;"><span>${setting['wcategory']}</span><span>${setting['wtitle']}</span></p>
 			</div>
+			<div class="widgetMoveArea">
+				<div class="widgetHeaderArea"></div>
+			</div>
 			<div class="widgetContent" style="color:${wcontentfontcolor};">
 			</div>
 			<div class="widgetFooter">
@@ -120,9 +593,244 @@ function widgetFun(setting){
 		
 	});
 	
-	widget['mouseEventFun'] = mouseEventFun;
+	const widgetMoveArea = widget.querySelector('.widgetMoveArea');
+	const widgetHeaderArea = widget.querySelector('.widgetHeaderArea');
+	
+	widget['update'] = ()=>{
+		
+		xhrLoad('post','widget/update', widget.info, (res)=>{
+			
+			if(res){
+				
+				widget.style.width = widget.info.wwidth +'px';
+				widget.style.height = widget.info.wheight +'px';
+				
+				if(widget.info.wtop) widget.style.top = widget.info.wtop + 'px';
+				if(widget.info.wleft) widget.style.left = widget.info.wleft + 'px';
+				
+				if(!widget.info.wtitlecolor){
+					widget.info.wtitlecolor = 'rgb(65, 198, 241)';
+				}
+				
+				if(!widget.info.wcontentcolor){
+					widget.info.wcontentcolor = 'rgb(255, 255, 255)';
+				}
+				
+				const wtitlefontcolor = fontColorCheck(widget.info.wtitlecolor);
+				const wcontentfontcolor = fontColorCheck(widget.info.wcontentcolor);
+				
+				widget.querySelector('.widgetContent').style.color = wcontentfontcolor;
+				widget.style.backgroundColor = widget.info.wcontentcolor;
+				
+				const widgetHeader = widget.querySelector('.widgetHeader');
+				
+				widgetHeader.style.color = wtitlefontcolor;
+				widgetHeader.style.backgroundColor = widget.info.wtitlecolor;
+				
+				const wcategorySpan = widgetHeader.querySelector('span:nth-child(1)');
+				
+				wcategorySpan.innerHTML = widget.info.wcategory;
+				
+				const wtitleSpan = widgetHeader.querySelector('span:nth-child(2)');
+				
+				wtitleSpan.innerHTML = widget.info.wtitle;
+				
+			}
+			
+		});
+		
+	};
+	
+	widget['mouseEventFun'] = ()=>{
+		mouseEventFun(widget, widgetHeaderArea, widget.parentNode);
+	};
+	
+	widget['scaleEventFun'] = ()=>{
+		scaleEventFun(widget, widgetMoveArea, widget.parentNode);
+	};
+	
+	widget['contextMenuAddFun'] = ()=>{
+		
+		const menuSetting = {
+				'new' : {
+					'새 위젯 만들기' : ()=>{
+						widgetAddAndModify();
+					}
+				},
+				'widget' : {
+					
+					'위젯 위로 올리기' : ()=>{
+						
+						widgetZMove(widget, 'up', 'min');
+						
+					},
+					'위젯 가장 위로 올리기' : ()=>{
+						
+						
+						widgetZMove(widget, 'up', 'max');
+					},
+					
+					'위젯 아래로 내리기' : ()=>{
+						
+						widgetZMove(widget, 'down', 'min');
+						
+					},
+					'위젯 가장 아래로 내리기' : ()=>{
+						
+						widgetZMove(widget, 'down', 'max');
+					}
+				},
+				'dashboardInfo' : {
+					'대시보드 자세히 보기' : ()=>{}
+				},
+				'letter' : {
+					'쪽지함 보기' : ()=>{},
+					'쪽지 작성' : ()=>{}
+				},
+				'alram' : {
+					'말람함 보기' : ()=>{}
+				},
+				'myInfo' : {
+					'내 정보 보기' : ()=>{},
+					'로그아웃' : ()=>{logout();}
+				}
+				
+			};
+		
+		if(userInfo.mid === widget.info.mid){
+			menuSetting.widget['위젯 수정'] = ()=>{
+				
+				widgetAddAndModify(widget);
+				
+			};
+			
+			menuSetting.widget['위젯 삭제'] = (e)=>{
+				
+				const widgetDelRes = document.querySelector('.widgetDelRes');
+				if(widgetDelRes) widgetDelRes.remove();
+				
+				const submitBtn = addObject(null, 'input', ['grayBtn', 'widgetDelSubmitBtn'], false, (o)=>{
+					
+					o.type = 'button';
+					o.value = '삭제';
+					o.style.width = 'max-content';
+					o.style.marginRight = '5px';
+					
+					o.addEventListener('click', ()=>{
+						
+						xhrLoad('get', 'widget/updatewdel/'+widget.info.wno, null, (res)=>{
+							if(res === 'true'){
+								
+								const widgetDelRes = document.querySelector('.widgetDelRes');
+								motionOnOff(widgetDelRes, 0.8, false, { setting : 'offDefault' }, false, (o)=>{
+									
+									motionOnOff(widget, 0.8, false, { onOff : 'off' }, false, (o)=>{
+										
+										widgets.forEach((w,i)=>{
+											if(w === widget){
+												widgets.splice(i,1);
+												return;
+											}
+										});
+										o.remove();
+									});
+									o.remove();
+									
+									boxFun('삭제에 성공하였습니다.', false, null,false, null, false, true);
+								});
+							}
+						});
+						
+					});
+				});
+				
+				
+				boxFun('위젯을 정말 삭제하시겠습니까?', false, [submitBtn],false, 'widgetDelRes', false, true);
+				
+			};
+			
+		}
+		
+		contextMenuFun(widget, menuSetting);
+	};
+	
+	
+	widget['cateFun'] = ()=>{
+		
+		const widgetContent = widget.querySelector('.widgetContent');
+		widgetContent.innerHTML = '';
+		const wcategory = widget.info.wcategory.toLowerCase();
+		
+		if(wcategory === 'memo'){
+			wmemoBox(widget);
+		} else if(wcategory === 'chat'){
+			wchatBox(widget);
+		}
+		
+		
+	};
+	
+	let widgetContent = widget.querySelector('.widgetContent');
+	widgetContent.style.height = 100 - 35/(Number(widget.style.height.split('px')[0])-10)*100 + '%';
 	
 	return widget;
+}
+
+function widgetZMove(widget, upDown, maxMin){
+	
+	const area = widget.parentNode;
+	const nodes = area.childNodes;
+	const maxZIndex = nodes.length;
+	const zindex = Number(widget.style.zIndex);
+	
+	if(upDown === 'up'){
+		if(zindex < maxZIndex){
+			nodes.forEach(node=>{
+				if(Number(node.style.zIndex) === zindex + 1){
+					console.log(node);
+					node.style.zIndex = zindex;
+					if(maxMin ==='min'){
+						widget.style.zIndex = zindex + 1;
+						return;
+					}
+					
+				} else if(Number(node.style.zIndex) > zindex) {
+					if(maxMin ==='max'){
+						node.style.zIndex = Number(node.style.zIndex)-1;
+					}
+				}
+				
+			});
+			
+			if(maxMin === 'max'){
+				widget.style.zIndex = maxZIndex;
+			}
+		}
+		
+	} else {
+		if(zindex > 0){
+			nodes.forEach(node=>{
+				if(Number(node.style.zIndex) === zindex - 1){
+					
+					node.style.zIndex = zindex;
+					if(maxMin ==='min'){
+						widget.style.zIndex = zindex - 1;
+						return;
+					}
+					
+				} else if(Number(node.style.zIndex) < zindex) {
+					if(maxMin ==='max'){
+						node.style.zIndex = Number(node.style.zIndex)+1;
+					}
+				}
+				
+			});
+			
+			if(maxMin === 'max'){
+				widget.style.zIndex = 1;
+			}
+		}
+	}
 }
 
 function colorPickerBtn(parentNode, beforeNode, submit){
@@ -583,12 +1291,12 @@ function middlePositionFun(obj){
 		const transformArray = obj.style.transform.split(' ');
 		const tmpArray = [];
 		transformArray.forEach(style=>{
-			if(!style.indexOf('translateX') > 0 || !style.indexOf('translateY') > 0 ){
+			if(!style.indexOf('translateX') > 0 && !style.indexOf('translateY') > 0 ){
 				tmpArray.push(style);
 			}
 		});
 		
-		obj.style.transform = style.toString().replace(/,/g,' ') + 'translateX(-50%) translateY(-50%)';
+		obj.style.transform = tmpArray.toString().replace(/,/g,' ') + 'translateX(-50%) translateY(-50%)';
 		
 	} else obj.style.transform = 'translateX(-50%) translateY(-50%)';
 
@@ -872,8 +1580,8 @@ function contextMenuFun(target, setting){
 							l.style.borderBottom = '1px solid #ccc';
 						}
 					}
-					l.addEventListener('click',value[k]);
-					l.addEventListener('click',()=>{
+					l.addEventListener('mousedown',value[k]);
+					l.addEventListener('mousedown',()=>{
 						
 						menu.remove();
 						
@@ -884,11 +1592,13 @@ function contextMenuFun(target, setting){
 		
 		
 	});
+	const body = document.querySelector('body');
 	
-	document.addEventListener('click',(e)=>{
+	body.addEventListener('mousedown',(e)=>{
 		
-		e.preventDefault();
-		e.stopPropagation();
+//		e.preventDefault();
+//		e.stopPropagation();
+//		e.stopimmediatePropagation();
 		
 		const menu = document.querySelector('.customMenu');
 		

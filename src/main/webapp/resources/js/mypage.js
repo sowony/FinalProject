@@ -63,7 +63,8 @@ function dashboardLoad(loc){
 				
 					o.innerHTML = `
 					<div class="d_header">
-						<p class="d_title"><span>${dashItem.dtitle}</span><span>${new Intl.DateTimeFormat('ko-KR').format(new Date(dashItem.dcreatedate))}</span></p>
+						<p class="d_title"><span>${dashItem.dtitle}</span></p>
+						<p class="d_date"><span>${new Intl.DateTimeFormat('ko-KR').format(new Date(dashItem.dcreatedate))}</span></p>
 						<p class="d_nick">
 							<span style="background-image:url('${dashItem.mimgpath}');"></span><span>
 						`+
@@ -758,7 +759,7 @@ window.onload = ()=>{
 		o.innerHTML = `
 		<div id="myProfile">
 			<div id="p_header">
-				<p id="p_mnick"><span>${userInfo.mnick}</span><span>(${userInfo.mid})</span></p>
+				<p id="p_mnick"><span>${userInfo.mnick}</span><span>(${userInfo.midstate? userInfo.midstate : userInfo.mid})</span></p>
 			</div>
 			<div id="p_body">
 				<p id="p_mabout">${userInfo.mabout}</p>

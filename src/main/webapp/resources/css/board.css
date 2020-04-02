@@ -1,49 +1,5 @@
 @charset "UTF-8";
 
-li._dashLi {
-    padding: 0;
-    margin: 0 15px;
-}
-
-li._dashItem {
-    background-color: #5a94af;
-    border-radius: 25px;
-    box-shadow: 0px 1px 1px #22576f;
-    padding: 5px 15px;
-    margin: 1.5px 2.5px 0px 2.5px;
-    width: 100px;
-    text-align: center;
-    font-weight: 100;
-    font-size: 10pt;
-    word-break: break-all;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-li._dashItem:hover {
-    background-color: #abd5e8;
-    color : #3d3d3d;
-    box-shadow: 0px 1px 1px #22576f, inset 0 0 0px 2px #5a94af;
-}
-
-li.selectDash {
-    background-color: rgb(171, 213, 232);
-    color: rgb(61, 61, 61);
-    box-shadow: rgb(34, 87, 111) 0px 1px 1px, rgb(90, 148, 175) 0px 0px 0px 2px inset;
-}
-
-span.dashboardCloseBtn {
-    display: inline-block;
-    margin: 0 5px;
-    padding: 0px 4.5px;
-    background-color: #29B6F6;
-    border-radius: 50%;
-    box-shadow: 1px 1px 1px 0px #0277BD;
-    color: #fff;
-    font-size: 8pt;
-}
-
 
 .dashboard {
     display: block;
@@ -80,8 +36,12 @@ span.dashboardCloseBtn {
 	margin : 8px 0;
 }
 
-.widgetAddBox1 p,
-.widgetAddBox2 p {
+.widgetSetting > p,
+.widgetRuleSetting > p,
+.widgetAddBox1 fieldset > div > p,
+.widgetAddBox2 fieldset > div > p,
+.widgetRuleGroupBox p,
+.widgetRuleIndividualBox p {
 	display: inline-block;
 	min-width: 80px;
     max-width: max-content;
@@ -182,6 +142,12 @@ span.dashboardCloseBtn {
     color: inherit;
 }
 
+.widgetContent {
+	margin: 5px !important;
+    position: relative;
+    overflow: overlay;
+}
+
 .widgetAddFooter {
 	margin : 0 5px;
     display: block;
@@ -191,6 +157,22 @@ span.dashboardCloseBtn {
 span.selectRule {
 	color:#fff;
     background-color:#417d98 !important;
+}
+
+.widgetMoveArea {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.widgetHeaderArea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 5px 5px 0 5px;
+    width: -webkit-fill-available;
+    height: 25px;
 }
 
 .widgetRuleSetting span{
@@ -219,6 +201,7 @@ span.selectRule {
 .ruleItem span {
 	display: inline-block;
     position: relative;
+    width: 65px;
     top: 1px;
     word-break: break-all;
     overflow: hidden;
@@ -227,12 +210,16 @@ span.selectRule {
     color: inherit;
 }
 
-.memberItem span {
-    width: 120px;
+.memberItem span:nth-child(1),.ruleItem span:nth-child(1)  {
+    width: 150px;
 }
-
-.ruleItem span {
-    width: 48%;
+.memberItem span img {
+	border-radius: 50%;
+	width: 20px;
+    height: 20px;
+    position: relative;
+    top: 5px;
+    margin-right: 5px;
 }
 
 p.ruleItem:nth-last-child(1),
@@ -289,6 +276,14 @@ p.select {
     display: inline-block;
     border: 1px solid #ccc;
     float: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    white-space: nowrap;
+}
+
+.widgetRuleList ul li:nth-child(2){
+	width: 150px;
 }
 
 .widgetRuleList {
@@ -303,3 +298,4 @@ p.select {
     height: 27.2px;
     display: block;
 }
+

@@ -27,4 +27,7 @@ public interface WRuleDao {
 	
 	@Delete("delete from wrule where wrno = #{wrno}")
 	int delete(int wrno);
+
+	@Delete("delete from wrule where wno = #{wno}")
+	int wnoDelete(int wno);
 }

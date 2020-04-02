@@ -116,6 +116,7 @@ public class DashBoardController {
 				Iterator<Integer> iterator = selectBoardList.iterator();
 				if(iterator.hasNext()) {
 					int dno = iterator.next();
+					System.out.println(dno);
 					session.setAttribute("selectBoard", dno);
 					return dno;
 				} else {

@@ -21,8 +21,7 @@ function loginSignIn() {
 	  const profile = success.getBasicProfile();
   
 	  let memberInfo = {
-			  'mid' : profile.getName()+'_google',
-			  'mpw' : window.btoa(unescape(encodeURIComponent(profile.getName())))
+			  'mid' : profile.getName()+'_google'
 	  };
 	  
 	  xhrLoad('post', 'login', memberInfo, (res)=>{
@@ -86,7 +85,6 @@ function loginSignIn() {
          								
          								memberInfo = {
          										'mid' : profile.getName()+'_google',
-         										'mpw' : window.btoa(unescape(encodeURIComponent(profile.getName()))),
          										'mname' : profile.getName(),
          										'mnick' : document.querySelector('input[name="mnick"]').value,
          										'memail' : ((profile.getEmail())? profile.getEmail() : document.querySelector('input[name="memail"]').value),

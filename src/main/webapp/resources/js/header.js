@@ -40,7 +40,7 @@ function headerFun(){
 	}, false);
 	
 	if(userInfo.mplatform !== 'home'){
-		userInfo.mid = userInfo.mplatform + '에서 연동 중...';
+		userInfo.midstate = userInfo.mplatform + '에서 연동 중...';
 	}
 	
 	return userInfo;

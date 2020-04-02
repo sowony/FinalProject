@@ -51,7 +51,10 @@ function selectDashBoardLoad(){
 		
 		const widgetArea = dashboard.querySelector('.widgetArea');
 		
+		widgetload();
+		
 		console.log(dashboardInfo);
+		
 		
 	},false);
 	
@@ -90,16 +93,17 @@ function openDashBoardList(){
 							
 							xhrLoad('get', 'board/dashboardClose', { dno }, (res)=>{
 								
-								const dno = Number(res)
+								const resNo = Number(res)
 								
-								if(dno > 0){
+								if(resNo > 0){
 									const dashboard = document.querySelector('.dashboard');
 									
-									if(dashboard.dataset.dno !== dno){
-										selectDashBoardLoad(dno);
+									if(dashboard.dataset.dno === dno){
+										selectDashBoardLoad();
 									}
 									
 									dashItem.remove();
+									
 									
 								} else {
 									location.href = '/dashboard';
@@ -147,15 +151,22 @@ window.onload = ()=>{
 	
 	const widgetArea = document.querySelector('#widgetArea');
 	
+	
+	// scroll bug fix
+	widgetArea.addEventListener('scroll', function() {
+		
+		if(widgetArea.scrollHeight - widgetArea.clientHeight - Math.floor(widgetArea.scrollTop) <= 1){
+			widgetArea.scrollTop = widgetArea.scrollTop-3;
+		}
+		
+	});
+	
+	
 	contextMenuFun(widgetArea, {
 		'new' : {
 			'새 위젯 만들기' : ()=>{
-				widgetAdd();
+				widgetAddAndModify();
 			}
-		},
-		'widget' : {
-			'위젯 수정' : ()=>{},
-			'위젯 삭제' : ()=>{}
 		},
 		'dashboardInfo' : {
 			'대시보드 자세히 보기' : ()=>{}
