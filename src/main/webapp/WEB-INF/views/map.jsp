@@ -11,6 +11,10 @@
 
 <link rel="stylesheet" href="./resources/css/defaultstyle.css" type="text/css" />
 <link rel="stylesheet" href="./resources/css/map.css" type="text/css" />
+
+	<script type="text/javascript"
+		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cfc755aece03a07263adb8e92484665e&libraries=services"></script>
+	<script type="text/javascript" src="./resources/js/map.js"></script>
 </head>
 <body>
 
@@ -40,9 +44,11 @@
 		
 		
 	</div>
-	<script type="text/javascript"
-		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cfc755aece03a07263adb8e92484665e&libraries=services"></script>
-	<script type="text/javascript" src="./resources/js/map.js"></script>
+	<script>
+		const map = document.getElementById('map');
+		const menu = document.getElementById('menu_wrap');
+		startMap(map, menu);
+	</script>
 	<!-- <script type="text/javascript" src="./resources/js/map_map.js"></script>
 	<script type="text/javascript" src="./resources/js/map_placesSearchCB.js"></script>
 	<script type="text/javascript" src="./resources/js/map_search.js"></script>

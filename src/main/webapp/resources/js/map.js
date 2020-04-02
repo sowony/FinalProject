@@ -1,7 +1,9 @@
+
+function startMap(_map,_menu){
 // 마커를 담을 배열입니다
 var markers = [];
 
-var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+var mapContainer = _map, // 지도를 표시할 div
     mapOption = {
         center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
         level: 3 // 지도의 확대 레벨
@@ -26,7 +28,8 @@ function searchPlaces() {
 
 	console.log('여기까지 들어오나??');
 
-	var keyword = document.getElementById('keyword').value;
+	//var keyword = document.getElementById('keyword').value;
+	var keyword = _menu.querySelector('#keyword').value;
 	
 	console.log(keyword);
 
@@ -164,7 +167,7 @@ function addMemo(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplng){
     		var markerPosition  = new kakao.maps.LatLng(wmaplat, wmaplng); 
     		var marker = addMarker(markerPosition);
     		
-    		saveData(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplng, wmapmemo, boxOpen);
+    		saveData(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplng, wmapmemo, marker);
     		    		
     	});
     });
@@ -174,7 +177,6 @@ function addMemo(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplng){
 
 
 function addMarker(position){
-	
      
      var marker = new kakao.maps.Marker({
 			position: position
@@ -241,7 +243,7 @@ function removeAllChildNods(el) {
 }
 
 //오른쪽클릭시 창 생성
-function clickMenu(marker, mapno, mapmemo, realMarker, divAjax){
+function clickMenu(marker, mapno, mapmemo, realMarker, markerDiv){
 	
 	contextMenuFun(marker,{
 		'delete' : {
@@ -261,7 +263,7 @@ function clickMenu(marker, mapno, mapmemo, realMarker, divAjax){
 							data: JSON.stringify(mapno),
 							success: function(res){
 								if(res){
-									removeMarker(marker, realMarker, divAjax);
+									removeMarker(marker, realMarker, markerDiv);
 									
 									boxFun('삭제되었습니다!', true, null, false, 'deleteSuccess', null, true);
 									
@@ -307,10 +309,31 @@ function clickMenu(marker, mapno, mapmemo, realMarker, divAjax){
 							data: dd,
 							success: function(res){
 								if(res) {
-									boxFun('수정 완료', true, null, false, 'updateSucc', (o)=>{
-										openMarker();
-									}, true);
-								} else{
+									
+									$.ajax({
+										url: 'marker',
+										accept: 'application/json',
+										method: 'post',
+										contentType: 'application/json; charset=utf-8;',
+										async: false,
+										data: JSON.stringify(),
+										success: function(data){
+											data.forEach(function(item){
+												removeMarker(marker, realMarker, markerDiv);
+											});
+										},
+										error: function(){
+											boxFun('마커 생성 실패', true, null, false, 'markerError2', null, true);
+										},
+										complete: function(){
+											//openMarker();
+											console.log(markers[]);
+											alert('살려줘!!!');
+										}
+									});
+									
+									boxFun('수정 완료', true, null, false, 'updateSucc', null, true);
+								} else {
 									boxFun('수정 실패', true, null, false, 'updateFail', null, true);
 								}
 							},
@@ -330,7 +353,7 @@ function clickMenu(marker, mapno, mapmemo, realMarker, divAjax){
 
  
 // ajax function
-function saveData(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplng, wmapmemo, boxOpen){
+function saveData(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplng, wmapmemo, marker){
 	
 	const d = {
 			wmapkeyword,
@@ -352,8 +375,9 @@ function saveData(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplng, wmapmemo, 
 						
 			if(res){
 				boxFun('저장!', true, null, false, 'savedPopup', (o)=>{
-					openMarker();
+					//openMarker();
 				}, true);
+				
 			} else {
 				boxFun('이미 저장된 장소입니다.', true, null, false, 'existsPopup', null, true);
 			}
@@ -393,6 +417,7 @@ function openMarker(){
 					o.style.height = qsAjax.style.height;
 				});
 				
+				
 				//console.log("item.wmapno : " + item.wmapno);
 				let mapno = {temp:item.wmapno};
 				let mapmemo = {memo: item.wmapmemo}
@@ -407,7 +432,7 @@ function openMarker(){
 	                infowindow.close();
 	            };
 	            
-	            console.dir(markerAjax);
+	            //console.dir(markerAjax);
 				
 	            console.log(item.wmapkeyword);
 	            console.log(item.wmaplat);
@@ -423,4 +448,5 @@ function openMarker(){
 			});
 		}
 	});
+}
 }

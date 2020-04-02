@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 
 <script src="lib/codemirror.js"></script>
-<link rel="stylesheet">
+<link rel="stylesheet" href="lib/codemirror.css">
 <script type="mode/javascript/javascript.js"></script>
 </head>
 
