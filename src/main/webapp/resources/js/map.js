@@ -327,7 +327,6 @@ function clickMenu(marker, mapno, mapmemo, realMarker, markerDiv){
 										},
 										complete: function(){
 											//openMarker();
-											console.log(markers[]);
 											alert('살려줘!!!');
 										}
 									});
@@ -346,10 +345,10 @@ function clickMenu(marker, mapno, mapmemo, realMarker, markerDiv){
 				});
 				boxFun('메모 수정', true, [textarea, updateBtn], false, 'updatePopup', null, true);
 			}
-		}
-		
-	});
-}
+		}		
+	}
+)};
+
 
  
 // ajax function

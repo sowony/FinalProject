@@ -81,6 +81,8 @@ public class LoginInterceptor implements HandlerInterceptor{
 		else if(request.getRequestURI().endsWith("marker")) return true;
 		else if(request.getRequestURI().endsWith("delete")) return true;
 		else if(request.getRequestURI().endsWith("update")) return true;
+		else if(request.getRequestURI().endsWith("editor")) return true;
+		
 		
 		else {
 			
