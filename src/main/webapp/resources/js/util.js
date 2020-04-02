@@ -10,6 +10,64 @@ const backgroundDiv = addObject(null,'div',null,false,(t)=>{
 });
 
 
+function imageView(img){
+	
+	const viewImg = img.cloneNode(true);
+	
+	function plus(e){
+			
+		console.log(e.offsetX, e.offsetY);
+			
+		
+			
+	}
+	
+	function minus(e){
+		console.log(e.offsetX, e.offsetY);
+		e.target.style.transform = 'scale(1.0)';
+		viewImg.addEventListener('click',plus);
+		
+	}
+	
+	viewImg.addEventListener('mouseover',(e)=>{
+		if(e.ctrlKey){
+			viewImg.style.cursor = 'zoom-out';
+		} else {
+			viewImg.style.cursor = 'zoom-in';
+		}
+	});
+	
+	viewImg.addEventListener('mousemove',(e)=>{
+		if(e.ctrlKey){
+			viewImg.style.cursor = 'zoom-out';
+		} else {
+			viewImg.style.cursor = 'zoom-in';
+		}
+	});
+	
+	viewImg.addEventListener('click',(e)=>{
+		
+		const originW = viewImg.offsetWidth;
+		const originH = viewImg.offsetHeight;
+		
+		if(e.ctrlKey){
+			viewImg.style.width = originW * 0.8 + 'px';
+			viewImg.style.height = originH * 0.8 + 'px';
+		} else {
+			viewImg.style.width = originW * 1.2 + 'px';
+			viewImg.style.height = originH * 1.2 + 'px';
+		}		
+	});
+	
+	
+	const viewImgDiv = addObject(null, 'div', 'viewImgDiv', false, (o)=>{
+		o.appendChild(viewImg);
+	});
+	
+	const viewBox = boxFun(null, false, [viewImgDiv], false, 'viewBox', null, true);
+	
+};
+
 function logout(){
 	
 	xhrLoad('get','logout', null, (res)=>{

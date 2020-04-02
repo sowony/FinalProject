@@ -46,7 +46,6 @@ function wchatBox(widget){
 			
 		});
 		
-		console.log(oldChatLogs);
 	}
 	
 	
@@ -72,65 +71,58 @@ function wchatBox(widget){
 		`;
 		
 		if(!widget.info.preivew){
-		
-			const imgs = o.querySelectorAll('img');
-			imgs.forEach(img=>{
-				
-			});
-
+			
 			const wrContent = o.querySelector('.wrContent');
 			const wrChatLog = o.querySelector('.wrChatLog');
 			
+			function msgBoxLoad(msg){
+				
+				let writer;
+				let classNames = ['messageBox'];
+				
+				if(msg.mnick === userInfo.mnick){
+					writer = 'msgMe';
+					classNames.push('msgR');
+				} else {
+					writer = 'msgOther';
+					classNames.push('msgL');
+				}
+				
+				const messageBox = addObject(wrChatLog, 'div', classNames, true, (o)=>{
+					o.innerHTML = `
+						<p class="wcMnick ${classNames[1]}">${msg.mnick}</p>
+						<div class="msgCon ${writer} ${classNames[1]}">${msg.msg}</div>
+					`;
+				});
+				
+				const imgs = messageBox.querySelectorAll('img');
+				imgs.forEach(img=>{
+					img.addEventListener('mousedown', ()=>{
+						imageView(img);
+					});
+				});
+				
+			}
+			
+			
+			
 			if(oldChatObject){
 				oldChatObject.forEach(log=>{
-					
-					let writer;
-					let classNames = ['messageBox'];
-					
-					if(log.mnick === userInfo.mnick){
-						writer = 'msgMe';
-						classNames.push('msgR');
-					} else {
-						writer = 'msgOther';
-						classNames.push('msgL');
-					}
-					
-					const messageBox = addObject(wrChatLog, 'div', classNames, true, (o)=>{
-						o.innerHTML = `
-							<p class="wcMnick ${classNames[1]}">${log.mnick}</p>
-							<div class="msgCon ${writer} ${classNames[1]}">${log.msg}</div>
-						`;
-					});
-					
+					msgBoxLoad(log);
 				});
 			}
+			
+			
+			
+			// 소켓 연결
 			
 			const sock = new SockJS('wchatbroker');
 			const client = Stomp.over(sock);
 			
 			client.connect({}, ()=>{
 				client.subscribe('/wchat_sub/room/'+widget.info.wno, (res) =>{
-					
 					const msg = JSON.parse(res.body);
-					
-					let writer;
-					let classNames = ['messageBox'];
-					
-					if(msg.mnick === userInfo.mnick){
-						writer = 'msgMe';
-						classNames.push('msgR');
-					} else {
-						writer = 'msgOther';
-						classNames.push('msgL');
-					}
-					
-					const messageBox = addObject(wrChatLog, 'div', classNames, true, (o)=>{
-						o.innerHTML = `
-							<p class="wcMnick ${classNames[1]}">${msg.mnick}</p>
-							<div class="msgCon ${writer} ${classNames[1]}">${msg.msg}</div>
-						`;
-					});
-				
+					msgBoxLoad(msg);
 				});
 			});
 			
@@ -288,7 +280,7 @@ function wchatBox(widget){
 									const resSrc = e.target.result;
 
 									const img = `<img id="addImg" src="${resSrc}"/>`;
-
+									
 									setCusor(wrContent);
 
 									document.execCommand('insertHTML', false, img );
@@ -382,7 +374,7 @@ function wchatBox(widget){
 				}
 				
 			});
-		
+			
 		}
 		
 	});

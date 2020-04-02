@@ -205,20 +205,19 @@ button.messageSubmitBtn.grayBtn {
 .messageBox {
     width: max-content;
     height: max-content;
+    max-width: 93%;
     margin: 5px 15px !important;
 }
 
 .msgCon {
-	padding: 5px;
-    width: max-content;
-    height: max-content;
+    padding: 5px;
     border-radius: 5px;
     min-height: 20px;
     width: max-content;
     height: max-content;
-    max-width: -webkit-fill-available;
-	font-size:10pt;
-	margin-top: 5px !important;
+    max-width: 100%;
+    font-size: 10pt;
+    margin-top: 5px !important;
 }
 
 p.wcMnick {
@@ -226,6 +225,13 @@ p.wcMnick {
 	
 }
 
-.leftCusor {
-
+.wchatDiv img {
+    max-width: 100%;
 }
+
+.viewImgDiv {
+    max-width: 800px;
+    max-height: 505px;
+    overflow: overlay;
+}
+

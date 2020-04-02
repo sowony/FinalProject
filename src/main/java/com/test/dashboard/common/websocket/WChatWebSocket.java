@@ -28,6 +28,8 @@ public class WChatWebSocket implements WebSocketMessageBrokerConfigurer{
 	public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
 		// TODO configureWebSocketTransport init
 		registry.setSendTimeLimit(15*1000);
+		registry.setMessageSizeLimit(1024 * 1024 * 16);
+		registry.setSendBufferSizeLimit(1024 * 1024 * 16);
 	}
 	
 }
