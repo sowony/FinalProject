@@ -3,16 +3,24 @@
 @import url('https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800|Nanum+Myeongjo:400,700,800|Noto+Sans+KR:400,700,900&display=swap&subset=korean');
 
 * {
-	font-family: 'Noto Sans KR', sans-serif;
-	letter-spacing: 0.5pt;
-	font-weight: 400;
-	color: #3d3d3d;
 	padding: 0;
 	margin: 0;
 }
 
+*:focus {
+	outline:none !important;
+}
+
+body {
+	font-family: 'Noto Sans KR', sans-serif;
+	letter-spacing: 0.5pt;
+	font-weight: 400;
+	color: #3d3d3d;
+}
+
 a, a:link, a:hover, a:visited {
 	text-decoration: none;
+	color: #3d3d3d;
 }
 
 html, body {
@@ -211,6 +219,7 @@ input, textarea {
 	letter-spacing: 1pt;
 }
 
+
 input::placeholder, textarea::placeholder {
 	font-size: 9pt;
 	-webkit-text-fill-color: #aaaaaa !important;
@@ -218,7 +227,7 @@ input::placeholder, textarea::placeholder {
 
 input[type="text"], input[type="text"]:active, input[type="text"]:focus,
 	input[type="password"], input[type="password"]:active, input[type="password"]:focus,
-	input[type="email"], input[type="number"], input[type="tel"], textarea
+	input[type="email"], input[type="number"], input[type="tel"], input[type="url"], textarea
 	{
 	box-shadow: 0 0 0 1000px #eee inset, 0 0 4px #989898;
 	border: 0;

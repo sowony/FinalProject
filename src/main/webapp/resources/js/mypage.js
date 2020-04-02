@@ -759,7 +759,7 @@ window.onload = ()=>{
 		o.innerHTML = `
 		<div id="myProfile">
 			<div id="p_header">
-				<p id="p_mnick"><span>${userInfo.mnick}</span><span>(${userInfo.mid})</span></p>
+				<p id="p_mnick"><span>${userInfo.mnick}</span><span>(${userInfo.midstate? userInfo.midstate : userInfo.mid})</span></p>
 			</div>
 			<div id="p_body">
 				<p id="p_mabout">${userInfo.mabout}</p>

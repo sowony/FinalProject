@@ -44,4 +44,10 @@ public class WRuleBizImpl implements WRuleBiz{
 		return wRuleDao.update(wRuleDto);
 	}
 	
+	@Override
+	public int wnoDelete(int wno) {
+		// TODO Auto-generated method stub
+		return wRuleDao.wnoDelete(wno);
+	}
+	
 }

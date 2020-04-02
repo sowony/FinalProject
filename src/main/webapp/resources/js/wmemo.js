@@ -6,28 +6,51 @@
 // 글꼴 | 사이즈 | 굵기 | 이미지 업로드
 function wmemoBox(widget){
 	
+	
+	if(!widget.info.preivew){
+		xhrLoad('get', 'widget/wmemo/'+ widget.info.wno, null, (res)=>{
+			
+			if(res){
+				widget.info.wmemo = JSON.parse(res);
+			}
+			
+		});
+	}
+	
 	const widgetContent = widget.querySelector('.widgetContent');
 	
 	const wmemoDiv = addObject(widgetContent, 'div', 'wmemoDiv', true, (o)=>{
 		
 		o.innerHTML = `
-			
 			<div class="wmSetting">
 				<button class="fontBtn">글꼴</button>
 				<button class="fontSizeBtn">글꼴 크기</button>
-				<button class="fontWeigthBtn">B</button>
+				<button class="fontBoldBtn">B</button>
 				<button class="imagesUploadBtn">이미지 업로드</button>
+				<span class="wmMsg"></span>
 			</div>
-			<div contenteditable="true" class="wmContent"></div>
+			<div contenteditable="true" class="wmContent">`+ ((widget.info.wmemo)? widget.info.wmemo.wmcontent : ``) + `</div>
 			<div class="pop"></div>
-			
 		`;
 		
+		if(!widget.info.preivew){
+		
+		const imgs = o.querySelectorAll('img');
+		imgs.forEach(img=>{
+			imageScaleBoxFun(img, o, widget);
+		});
+		
+		const wmMsg = o.querySelector('span.wmMsg');
 		
 		const wmContent = o.querySelector('.wmContent');
 		
+		o.addEventListener('mousemove',(e)=>{
+//			e.preventDefault();
+//			e.stopPropagation();
+			widget.style.cursor = 'default';
+		});
+		
 		wmContent.addEventListener('keypress',(e)=>{
-			
 			
 			if(e.keyCode === 13){
 				document.execCommand('formatBlock', false, 'p');
@@ -35,11 +58,27 @@ function wmemoBox(widget){
 			
 		});
 		
+		wmContent.addEventListener('input',(e)=>{
+			
+			
+			const tmpSpan = getCusor(wmContent);
+			const prevTag = tmpSpan.previousSibling;
+			
+			if(prevTag && prevTag.tagName && prevTag.tagName.toLowerCase() === 'img'){
+				imageScaleBoxFun(prevTag, wmemoDiv, widget);
+			}
+			
+			setCusor(wmContent);
+			
+			setSaveTime(widget);
+			
+		});
+		
 		const pop = o.querySelector('.pop');
 		
 		const fontBtn = o.querySelector('.fontBtn');
 		
-		fontBtn.addEventListener('click', (e)=>{
+		fontBtn.addEventListener('mousedown', (e)=>{
 			
 			const con = `
 				<li style="font-family: 'Noto Sans KR', sans-serif;">Noto Sans KR</li>
@@ -54,7 +93,7 @@ function wmemoBox(widget){
 				},
 				()=>{
 					wmContent.focus();
-					document.execCommand('fontName', false,'NanumGothic');
+					document.execCommand('fontName', false,'Nanum Gothic');
 				},
 				()=>{
 					wmContent.focus();
@@ -67,7 +106,7 @@ function wmemoBox(widget){
 		
 		const fontSizeBtn = o.querySelector('.fontSizeBtn');
 		
-		fontSizeBtn.addEventListener('click', (e)=>{
+		fontSizeBtn.addEventListener('mousedown', (e)=>{
 			
 			const con = `
 				<li style = "font-size:8pt;">가나다라마</li>
@@ -114,16 +153,18 @@ function wmemoBox(widget){
 		
 		
 		
-		const fontWeigthBtn = o.querySelector('.fontWeigthBtn');
+		const fontBoldBtn = o.querySelector('.fontBoldBtn');
 
-		fontWeigthBtn.addEventListener('mousedown', (e)=>{
+		fontBoldBtn.addEventListener('mousedown', (e)=>{
 			
 			wmContent.focus();
 			
-			if(fontWeigthBtn.classList.contains('boldSelect')){
-				fontWeigthBtn.classList.remove('boldSelect');
+			const target = e.target;
+			
+			if(target.classList.contains('boldSelect')){
+				target.classList.remove('boldSelect');
 			} else {
-				fontWeigthBtn.classList.add('boldSelect');
+				target.classList.add('boldSelect');
 			}
 			
 			document.execCommand('bold');
@@ -132,7 +173,119 @@ function wmemoBox(widget){
 		
 		const imagesUploadBtn = o.querySelector('.imagesUploadBtn');
 		
+		imagesUploadBtn.addEventListener('mousedown',(e)=>{
+			
+			getCusor(wmContent);
+			
+			imagesUploadBtn.disabled = 'true';
+			
+			const imageDiv = addObject(null,'div','imageDiv',false, (o)=>{
+				
+				o.innerHTML = `
+					<div>
+						<p>파일 업로드 </p>
+						<div style = "position: relative;">
+							<input type="text" class="fileUploadName" readonly="readonly" placeholder="파일 선택"/>
+							<label class="fileLabel">파일 선택</label>
+							<input type="file"/>
+						</div>
+					</div>
+					<div>
+						<p>이미지 링크 </p>
+						<div><input style="width: 90%;margin: 10px 5px;" type="text" name="fileURL"/></div>
+					</div>
+				`;
+				
+				const fileUploadName = o.querySelector('.fileUploadName');
+				const fileLabel = o.querySelector('.fileLabel');
+				const file = o.querySelector('input[type="file"]');
+				
+				file.addEventListener('change',()=>{
+					let reader = new FileReader();
+
+					if(file.files){
+						reader.addEventListener('load',(e)=>{
+							
+							const fileInfo = e.target.result.split(',')[0];
+							
+							const res = fileInfo.indexOf('image');
+							
+							if(res > -1){
+								
+								const resSrc = e.target.result;
+								
+								const img = `<img id="addImg" src="${resSrc}"/>`;
+								
+								setCusor(wmContent);
+								
+								document.execCommand('insertHTML', false, img );
+								
+								const tag = wmContent.querySelector('#addImg');
+								
+								tag.id = '';
+								
+								imageScaleBoxFun(tag, wmemoDiv, widget);
+								
+								const imageBox = imageDiv.parentNode;
+								
+								motionOnOff(imageBox,0.8, false,{setting : 'offDefault'},null,(o)=>{
+									o.remove();
+								});
+								
+							} else {
+								boxFun('이미지만 업로드 할 수 있습니다.', false, false, false, 'failUpload', false, true);
+							}
+							
+						});
+						
+						reader.readAsDataURL(file.files[0]);
+					}
+					
+				});
+				
+				fileLabel.addEventListener('mousedown', (e)=>{
+					file.click();
+				});
+				
+			});
+			
+			const imageInsert = addObject(null, 'input', ['grayBtn', 'imageInsert'], false, (o)=>{
+				o.type='button';
+				o.value='이미지 삽입';
+				o.style.marginRight = '5px';
+				o.style.width = 'max-content';
+				o.addEventListener('mousedown',(e)=>{
+					
+					const fileURL = imageDiv.querySelector('input[name=fileURL]');
+					
+					const img = `<img id="addImg" src="${fileURL}"/>`;
+					
+					setCusor(wmContent);
+					
+					document.execCommand('insertHTML', false, img );
+					
+					const tag = wmContent.querySelector('#addImg');
+					
+					tag.id = '';
+					
+					imageScaleBoxFun(tag, wmemoDiv, widget);
+					
+					const imageBox = o.parentNode;
+					
+					motionOnOff(imageBox,0.8, false,{setting : 'offDefault'},null,(o)=>{
+						o.remove();
+					});
+					
+				});
+			});
+			
+			const imageBox = boxFun(null, false, [imageDiv, imageInsert], false, 'imageBox',false, true);
+			
+			imageBox.removeDisabledDelete(imagesUploadBtn);
+			
+		});
 		
+		}
 		
 	});
 	

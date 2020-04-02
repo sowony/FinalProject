@@ -3,6 +3,53 @@
  */
 
 // 룰 등록 버튼
+
+function ruleUlCreate(rule, widgetRuleList){
+		
+		const ul = addObject(widgetRuleList,'ul', null, true,(o)=>{
+			
+			o.dataset.wrcategory = rule.wrcategory;
+			
+			if(rule.wrcategory === 'group'){
+				o.dataset.wrmin = rule.wrmin;
+				o.dataset.wrmax = rule.wrmax;
+			} else if(rule.wrcategory === 'individual') {
+				o.dataset.dmcolor = rule.dmcolor;
+				o.dataset.mimgpath = rule.imgpath;
+				o.dataset.mnick = rule.mnick;
+				o.dataset.mid = (function(mnick){
+					let mid = '-';
+					dashboardInfo.dashmember.forEach(member=>{
+						if(member.mnick === mnick){
+							mid = member.mid;
+							return;
+						}
+					});
+					return mid;
+				})(rule.mnick);
+			}
+			
+			o.dataset.wrrwd = rule.wrrwd;
+			
+			
+			o.innerHTML = `
+				<li>${rule.wrcategory === 'individual'? '개인' : '그룹'}</li>
+				<li>${rule.mnick? rule.mnick : '-'}</li>
+				<li>${rule.wrmin? rule.wrmin: '-'}</li>
+				<li>${rule.wrmax? rule.wrmax : '-'}</li>
+				<li>${Number(rule.wrrwd) === 6? '모든 권한' : '읽기'}</li>
+			`;
+			
+			contextMenuFun(o, {
+				'delete' : {
+					'권한 삭제' : ()=>{
+						o.remove();
+					}
+				}
+			});
+		});
+}	
+
 function ruleAddBtn(that){
 	
 	const ruleSetting = document.querySelector('.widgetRuleSetting');
@@ -109,48 +156,7 @@ function ruleAddBtn(that){
 				tmpArray.push(rule.mnick + '님의 권한이 등록되었습니다.<br/>');
 			}
 			
-			const ul = addObject(widgetRuleList,'ul', null, true,(o)=>{
-				
-				o.dataset.wrcategory = rule.wrcategory;
-				
-				if(rule.wrcategory === 'group'){
-					o.dataset.wrmin = rule.wrmin;
-					o.dataset.wrmax = rule.wrmax;
-				} else if(rule.wrcategory === 'individual') {
-					o.dataset.dmcolor = rule.dmcolor;
-					o.dataset.mimgpath = rule.imgpath;
-					o.dataset.mnick = rule.mnick;
-					o.dataset.mid = (function(mnick){
-						let mid = '-';
-						dashboardInfo.dashmember.forEach(member=>{
-							if(member.mnick === mnick){
-								mid = member.mid;
-								return;
-							}
-						});
-						return mid;
-					})(rule.mnick);
-				}
-				
-				o.dataset.wrrwd = rule.wrrwd;
-				
-				
-				o.innerHTML = `
-					<li>${rule.wrcategory === 'individual'? '개인' : '그룹'}</li>
-					<li>${rule.mnick? rule.mnick : '-'}</li>
-					<li>${rule.wrmin? rule.wrmin: '-'}</li>
-					<li>${rule.wrmax? rule.wrmax : '-'}</li>
-					<li>${rule.wrrwd === '6'? '모든 권한' : '읽기'}</li>
-				`;
-				
-				contextMenuFun(o, {
-					'delete' : {
-						'권한 삭제' : ()=>{
-							o.remove();
-						}
-					}
-				});
-			});
+			ruleUlCreate(rule, widgetRuleList);
 		}
 		
 	});
@@ -316,33 +322,38 @@ function ruleListOpen(e){
 	return false;
 }
 
-function widgetAdd(){
+function widgetAddAndModify(){
 	
 	let widget;
+	
+	let paramWidget = arguments[0] || null;
+	
+	console.dir(paramWidget);
 	
 	// 1p 본문
 	const widgetSetting = addObject(null, 'div', 'widgetSetting', false, (o)=>{
 		o.style.textAlign = 'left';
 		o.innerHTML = `
-			<p style="display:block;">위젯 만들기</p>
+			<p style="display:block;">${paramWidget? '위젯 수정' : '위젯 만들기'}</p>
 			<fieldset>
 				<div>
 					<p>위젯 이름</p>
-					<input type="text" name="wtitle" value="테스트 중입니다."/>
+					<input type="text" name="wtitle" value="${paramWidget? paramWidget.info.wtitle : '제목입니다.'}"/>
 				</div>
 				<div>
 					<p>위젯 종류</p>
 					<select name="wcategory">
-						<option value="MEMO">메모</option>
+						<option name="MEMO" value="MEMO">메모</option>
+						<option name="CHAT" value="CHAT">채팅</option>
 					</select>
 				</div>
 				<div>
 					<p>위젯 가로</p>
-					<input type="number" name="wwidth" value="180" placeholder="가로"/>
+					<input type="number" name="wwidth" value="${paramWidget? paramWidget.info.wwidth : 180}" placeholder="가로"/>
 				</div>
 				<div>
 					<p>위젯 세로</p>
-					<input type="number" name="wheight" value="220" placeholder="세로"/>
+					<input type="number" name="wheight" value="${paramWidget? paramWidget.info.wheight : 220}" placeholder="세로"/>
 				</div>
 				<div>
 					<p>위젯 제목 배경색</p>
@@ -386,6 +397,8 @@ function widgetAdd(){
 			widgetHeader.style.color = fontColorCheck(color);
 		});
 		
+		colorTitle.style.backgroundColor = paramWidget ? paramWidget.info.wtitlecolor : '';
+		
 		colorTitle.style.width = '25px';
 		colorTitle.style.height = '25px';
 		colorTitle.style.position = 'relative';
@@ -397,6 +410,8 @@ function widgetAdd(){
 			const widget = widgetSetting.querySelector('.widget');
 			widget.style.backgroundColor = color;
 		});
+		
+		colorContent.style.backgroundColor = paramWidget ? paramWidget.info.wcontentcolor : '';
 		
 		colorContent.style.width = '25px';
 		colorContent.style.height = '25px';
@@ -412,6 +427,11 @@ function widgetAdd(){
 		const wtitlecolor = o.querySelectorAll('.colorPickerBtn')[0];
 		const wcontentcolor = o.querySelectorAll('.colorPickerBtn')[1];
 		
+		if(paramWidget){
+			let wcategory = paramWidget.info.wcategory
+			o.querySelector('option[name='+ wcategory +']').setAttribute('selected', 'true');
+		}
+		
 		widget = widgetFun({
 			'wtitle' : wtitle.value,
 			'wcategory' : wcategory.value,
@@ -420,9 +440,20 @@ function widgetAdd(){
 			wzindex,
 			'wtitlecolor' : wtitlecolor.style.backgroundColor,
 			'wcontentcolor' : wcontentcolor.style.backgroundColor,
-			'wposition' : 'absolute' 
+			'wposition' : 'absolute'
 		});
-
+		
+		widget['info'] = {
+			'wcategory' : wcategory.value,
+			'preivew' : true
+		};
+		
+		if(paramWidget){
+			widget.info['w'+paramWidget.info.wcategory.toLowerCase()] = paramWidget.info['w'+paramWidget.info.wcategory.toLowerCase()];
+		}
+		
+		widget.cateFun();
+		
 		middlePositionFun(widget);
 		
 		const widgetPreview = o.querySelector('.widgetPreview');
@@ -452,6 +483,13 @@ function widgetAdd(){
 			
 			widget.style.width = e.target.value + 'px';
 			middlePositionFun(widget);
+			
+		});
+		
+		wcategory.addEventListener('change',(e)=>{
+			
+			widget.info.wcategory = e.target.value;
+			widget.cateFun();
 			
 		});
 		
@@ -504,9 +542,10 @@ function widgetAdd(){
 	
 	// 2p
 	const widgetRuleSetting = addObject(null, 'div', 'widgetRuleSetting', false, (o)=>{
+		
 		o.style.textAlign = 'left';
 		o.innerHTML = `
-			<p style="display:block;">위젯 만들기</p>
+			<p style="display:block;">${paramWidget? '위젯 수정' : '위젯 만들기'}</p>
 			<fieldset>
 				<div class="wrcategory">
 					<p>권한 종류</p>
@@ -540,14 +579,27 @@ function widgetAdd(){
 		`;
 		
 		
+		// 수정할 룰 목록 갱신
+		const widgetRuleList = o.querySelector('.widgetRuleList');
+		
+		const ownerUl = widgetRuleList.querySelector('ul:nth-child(2)');
+		if(paramWidget){
+			paramWidget.info.rules.forEach(rule=>{
+				if(ownerUl.dataset.mnick !== rule.mnick){
+					ruleUlCreate(rule, widgetRuleList);
+				}
+			});
+		}
+		
+		
 		// 개인 조회 박스
 		const widgetRuleIndividualBox = addObject(null, 'div', ['widgetRuleIndividualBox','targetBox'], false, (o)=>{
 			
 			o.innerHTML = `
 			<div>
 				<p style="display:block;">맴버 조회<a href="#" style="margin: 0 10px; font-size:8pt;" onclick="return false;">모든 맴버 보기</a></p>
-				<input type="text" name="mnick" style="margin: 5px 0;width: 70%;" placeholder=",으로 여러 인원 검색 가능"/>
-				<input type="button" style="width:max-content;height:34px;margin: 0;" class="grayBtn memberSearch" value="유저 조회"/>
+				<input type="text" name="mnick" style="margin: 5px 0;width: 68%;" placeholder=",으로 여러 인원 검색 가능"/>
+				<input type="button" style="width:max-content;height:30px;margin: 0;" class="grayBtn memberSearch" value="유저 조회"/>
 			</div>
 			<input type="button" class="grayBtn" value="권한 등록"/>
 			`;
@@ -783,7 +835,7 @@ function widgetAdd(){
 		o.style.width = 'max-content';
 		o.style.margin = '5px 0px 5px 5px';
 		o.style.float = 'right';
-		o.value = '만들기';
+		o.value = paramWidget ? '수정' : '만들기';
 		o.addEventListener('click', (e)=>{
 			
 			const wtitle = widgetSetting.querySelector('input[name=wtitle]').value;
@@ -810,87 +862,112 @@ function widgetAdd(){
 				if(i > 1) rules.push(ul.dataset);
 			});
 			
-			widget['info'] = {
-					
-					wtitle,
-					wcategory,
-					wwidth,
-					wheight,
-					wzindex,
-					wtitlecolor,
-					wcontentcolor,
-					rules
-			};
-			
 			const widgetAddBox = e.target.parentNode;
 			
-			motionOnOff(widgetAddBox, 0.8, false, { setting : 'offDefault' }, null, (o)=>{
-				const widgetArea = document.querySelector('#widgetArea');
+			if(paramWidget){
 				
-				widget.style.transform = '';
+				paramWidget.info.wtitle = wtitle;
+				paramWidget.info.wcategory = wcategory;
+				paramWidget.info.wwidth = wwidth;
+				paramWidget.info.wheight = wheight;
+				paramWidget.info.wtitlecolor = wtitlecolor;
+				paramWidget.info.wcontentcolor = wcontentcolor;
+				paramWidget.info.rules = rules;
 				
-				widget.style.opacity = '0.5';
+				paramWidget.update();
+				paramWidget.cateFun();
 				
-				widgetArea.appendChild(widget);
+				motionOnOff(widgetAddBox, 0.8, false, { setting : 'offDefault' }, null, (o)=>{
+					o.remove();
+					boxFun('수정에 성공하였습니다.', false, null,false, null, false, true);
+				});
 				
-				widget.style.top = e.pageY - Math.floor(widget.offsetHeight/2) + widgetArea.scrollTop + 'px';
-				widget.style.left = e.pageX - Math.floor(widget.offsetWidth/2) + widgetArea.scrollLeft + 'px';
-				
-				
-				function mousemove(e){
-					
-					
+			} else { 
+			
+
+				widget['info'] = {
+						wtitle,
+						wcategory,
+						wwidth,
+						wheight,
+						wzindex,
+						wtitlecolor,
+						wcontentcolor,
+						rules
+				};
+
+
+				motionOnOff(widgetAddBox, 0.8, false, { setting : 'offDefault' }, null, (o)=>{
+					const widgetArea = document.querySelector('#widgetArea');
+
+					widget.style.transform = '';
+
+					widget.style.opacity = '0.5';
+
+					widgetArea.appendChild(widget);
+
 					widget.style.top = e.pageY - Math.floor(widget.offsetHeight/2) + widgetArea.scrollTop + 'px';
 					widget.style.left = e.pageX - Math.floor(widget.offsetWidth/2) + widgetArea.scrollLeft + 'px';
-				
-				}
-				
-				function mouseDownAndOut(e){
-					
-					
-					widget.style.top = e.pageY - Math.floor(widget.offsetHeight/2) + widgetArea.scrollTop + 'px';
-					widget.style.left = e.pageX - Math.floor(widget.offsetWidth/2) + widgetArea.scrollLeft + 'px';
-					
-					widgetArea.removeEventListener('mousemove', mousemove);
-					widgetArea.removeEventListener('mousedown', mouseDownAndOut);
-					
-					widget['info'].wposition = widget.style.position;
-					widget['info'].wtop = widget.style.top.split('px')[0];
-					widget['info'].wleft = widget.style.left.split('px')[0];
-					
-					
-					xhrLoad('post','widget/insert', widget['info'], (res)=>{
-						
-						widget.remove();
-						
-						xhrLoad('get', 'widget/'+res, null, (res)=>{
-							
-							const setting = JSON.parse(res);
-							
-							console.log(setting);
-							
-							const w = widgetSettingFun(setting);
-							
-							widgetArea.appendChild(w);
-							
-							w.mouseEventFun();
-							w.scaleEventFun();
-							w.contextMenuAddFun();
-							w.cateFun();
+
+
+					function mousemove(e){
+
+
+						widget.style.top = e.pageY - Math.floor(widget.offsetHeight/2) + widgetArea.scrollTop + 'px';
+						widget.style.left = e.pageX - Math.floor(widget.offsetWidth/2) + widgetArea.scrollLeft + 'px';
+
+					}
+
+					function mouseDownAndOut(e){
+
+
+						widget.style.top = e.pageY - Math.floor(widget.offsetHeight/2) + widgetArea.scrollTop + 'px';
+						widget.style.left = e.pageX - Math.floor(widget.offsetWidth/2) + widgetArea.scrollLeft + 'px';
+
+						widgetArea.removeEventListener('mousemove', mousemove);
+						widgetArea.removeEventListener('mousedown', mouseDownAndOut);
+
+						widget['info'].wposition = widget.style.position;
+						widget['info'].wtop = widget.style.top.split('px')[0];
+						widget['info'].wleft = widget.style.left.split('px')[0];
+
+
+						xhrLoad('post','widget/insert', widget['info'], (res)=>{
+
+							widget.remove();
+
+							xhrLoad('get', 'widget/'+res, null, (res)=>{
+
+								const setting = JSON.parse(res);
+
+								console.log(setting);
+
+								const w = widgetSettingFun(setting);
+
+								widgetArea.appendChild(w);
+
+								w.mouseEventFun();
+								w.scaleEventFun();
+								w.contextMenuAddFun();
+								w.cateFun();
+
+							});
+
 						});
-						
-					});
-					
-				}
-				
-				widgetArea.addEventListener('mousemove', mousemove);
-				widgetArea.addEventListener('mousedown', mouseDownAndOut);
-				
-				o.remove();
-				
-			});
+
+					}
+
+					widgetArea.addEventListener('mousemove', mousemove);
+					widgetArea.addEventListener('mousedown', mouseDownAndOut);
+
+					o.remove();
+
+				});
+			
+			}
 			
 		});
+		
 	});
 	
 	// close 버튼
@@ -972,8 +1049,6 @@ function widgetAdd(){
 			
 		});
 	});
-	
-	
 	
 	
 	// 1p

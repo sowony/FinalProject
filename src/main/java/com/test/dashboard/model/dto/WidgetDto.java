@@ -59,4 +59,7 @@ public class WidgetDto {
     
     // join 용
     private List<WRuleDto> rules;
+    
+    private WMemoDto wmemo;
+    
 }

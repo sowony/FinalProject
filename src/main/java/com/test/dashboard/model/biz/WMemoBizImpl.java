@@ -25,6 +25,7 @@ public class WMemoBizImpl implements WMemoBiz{
 	@Override
 	public int insert(WMemoDto wMemoDto) {
 		// TODO Auto-generated method stub
+		wMemoDto.setWmcontent(wMemoDto.getWmcontent().replaceAll("(\r\n|\r|\n|\n\r)", " "));
 		return wMemoDao.insert(wMemoDto);
 	}
 	@Override
