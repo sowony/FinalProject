@@ -60,12 +60,26 @@ select * from wboard where wno =1;
 update wboard set wbtitle='수정수'where wbtodono =3;
 
 
---썸머노트
+--썸머노트 안씁니다
 drop SEQUENCE  "SUMMERBOARD_SEQ";
 
 CREATE SEQUENCE  "SUMMERBOARD_SEQ"
 MINVALUE 1 MAXVALUE 9999999999999999999999999999 
 INCREMENT BY 1 START WITH 1 NOCACHE;
 
+--달력 
 
+create sequence wbcalseq
 
+create table wbcal(
+	wbcalno number primary key, --seq 번호가 될것 
+	wno number not null, --해당 위젯 넘버 / fk
+	mid varchar2(500) not null, -- fk
+	wbtodono NUMBER NOT NULL, --위젯보드 해야할일 전체 번호/fk
+	wbtitle VARCHAR2(1000), 
+	wbstartdate DATE NOT NULL,
+	wbenddate DATE,
+	wbcolor VARCHAR2(50)
+)
+
+select * from wbcal;

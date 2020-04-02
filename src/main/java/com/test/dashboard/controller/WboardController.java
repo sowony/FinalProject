@@ -118,28 +118,34 @@ public class WboardController {
 		}
 		
 		
-		
+		/*
 		@GetMapping("/summerwrite")
 		public String boardWrite() {
 		  return "summerboardwrite";
 		}
+		*/
 		
-		@PostMapping("/summerwrite")
-		public String wbinsert(WboardDto dto) {
+		//@PostMapping("/summerwrite")
+		@RequestMapping(value = "/summerwrite",method = RequestMethod.POST)
+		@ResponseBody
+		public boolean wbinsert(WboardDto dto) {
 			//System.out.println(dto.getWbstartdate()+"그리고"+dto.getWbenddate());
 			
 			int	res = biz.wbinsert(dto);
 			if(res > 0) {
 				System.out.println("저장완료");
-				return "redirect:wboard";
+				
+				return true;
 				
 			}else {
 				System.out.println("저장안됨");
-				return "summerboardwrite";
+				return false;
 			}
 			
 		
 		}
+		
+
 		
 		
 		//게시글 수정 폼으로 보내기 

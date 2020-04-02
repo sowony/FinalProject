@@ -37,6 +37,7 @@ input {
 
 }
 
+/*
 <!--드래그 방지 
 
    -ms-user-select: none; 
@@ -48,6 +49,7 @@ input {
 wbinnerbox
 width: max-content;
 -->
+*/
 
 .writeContent{
 	width: max-content; 	
@@ -149,3 +151,50 @@ div.wcontent {
 .cpwtasklist{
 	display: inline-flex;
 }
+
+.wblistdiv {
+	display: block;
+	width: max-content;
+	height: max-content;
+	border: 0;
+	box-shadow: none;
+}
+
+
+/*<!-- 글쓰기  -->*/
+
+.wblistdiv{
+	width: 350px;
+}
+
+#wbstartdate{
+	height:15px;
+	width: 90px !important;
+    text-align: center;
+    margin-left: 10px;	
+}
+#wbenddate{
+	height:15px;
+	width: 90px !important;
+    text-align: center;
+    margin-left: 10px;
+}
+
+#calconf{
+	width: 40px !important;
+    margin-left: 10px;
+}
+
+.sptag{
+	display: inline-flex;
+}
+
+#btnsc{
+	display: inline-flex;
+}
+
+#wbsend{
+	width: 85px !important;
+   
+}
+

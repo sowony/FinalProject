@@ -74,7 +74,6 @@ function wblist() {
 			"wno":wno},
 		success: function(data) {
 			
-			
 			data.forEach(function(item){
 				var mid = item.mid;
 				var wbtodono = item.wbtodono; 
@@ -94,7 +93,6 @@ function wblist() {
 				   console.log(selectno);
 				 selectbtn(selectno);
 			 }); 
-			
 
 			
 
@@ -142,6 +140,7 @@ function wblist() {
 			
 		},error:function(data){
 			alert("통신실패");
+			wbnewtask();
 		}
 		
 	});
@@ -178,11 +177,125 @@ function wblist() {
 		</div>
 		
 		`;
+		//!!! drag n drop 제이쿼리로 바꾸기 ~ 
 		
-		o.querySelector('.wbtadd').addEventListener('click',(e)=>{
+/*		o.querySelector('.wbtadd').addEventListener('click',(e)=>{
 			alert('ddddddd');
-		});
+
+		});*/
 		
+		
+		//+버튼 눌러서 새글 쓰기 
+		$(function() {
+			
+
+			$('.wbtadd').each(function (index, item){
+				$(item).on('click',function(){
+					
+					const wblistdiv = addObject(null, 'div', 'wblistdiv');
+					const wblistbox1 = boxFun('일정 추가', false, [ wblistdiv ],false,'wblistbox1',null,true);
+					const wblistobj = addObject(wblistdiv, 'div', 'wblistobj',true,(o)=>{
+						o.innerHTML=`
+						<p><span>작성자</span>
+							<span class="sptag"><input type="text" id="mid" name="mid"  placeholder="작성자"/></span></p>
+						<p><span>제목</span>
+							<span class="sptag"><input type="text" id="wbtitle" name="wbtitle"  placeholder="제목"/></span></p>
+						<p><span>날짜</span>
+							<span class="sptag">
+								<input type="text" id="rangeDate" placeholder="날짜를 선택해 주세요" >
+								<input id="calconf" type="button" value="확인" onclick="confirmbtn()">
+							</span>
+						</p>
+						<p>
+							<span>날짜 확인</span>
+							<span class="sptag">
+								<input type="text" id="wbstartdate" name="wbstartdate" >
+								<input type="text" id="wbenddate" name="wbenddate" >
+							</span>
+						</p>
+						<textarea id="summernote" name="wbcontent"></textarea>
+						<p id="btnsc">
+						<input type="button" id="wbsend" name="wbsend" value="글쓰기">
+						</p>
+						`;
+
+
+						
+						
+					    $(document).ready(function() {
+					    	//써머노트 호출 
+					    	  $('#summernote').summernote({
+					     	    	placeholder: 'content',
+					    	        minHeight: 220,
+					    	        maxHeight: null,
+					    	        focus: true, 
+					    	  });
+					    	  
+					    	  //플랫피커 호출 
+					    		$("#rangeDate").flatpickr({
+					    		    mode: 'range',
+					    		    dateFormat: "Y-m-d",
+					    		});
+					    		
+					    		//버튼 누르면 새글 저장 
+					    		$('#wbsend').on('click',function(){
+					    			
+					    			var mid = $('#mid').val();
+					    			var wbtitle = $('#wbtitle').val();
+					    			var wbstartdate = $('#wbstartdate').val();
+					    			var wbenddate = $('#wbenddate').val();
+					    			var wbcontent = $('#wbcontent').val();
+					    			
+					    			$.ajax({
+					    				url:'summerwrite',
+					    				method:'post',
+					    				data:{
+					    					"mid":mid,
+					    					"wbtitle":wbtitle,
+					    					"wbstartdate":wbstartdate,
+					    					"wbenddate":wbenddate,
+					    					"wbcontent":wbcontent
+					    				},
+					    				success: function(res) {
+					    					if(true){
+					    						$('.wblistbox1').remove();
+					    						var mid = $("#mid").val();
+					    						var wno = $("wno").val();
+					    						console.log(mid+'와'+wno+'는 무슨 값 ? ');
+					    						
+					    						
+					    					}else if(false){
+					    						alert('저장안됨');
+					    					}
+					    					//!!!
+					    					//컨트롤러에서  selectall & selectlist을 동시에 보내준다
+					    					//현재 여기서 보낼 수 있는 값인 mid, wno를 이용
+					    					//화면에 다시 뿌려준다 
+					    					//문제점? 중복되어 뿌려주기 때문에 갱신의 느낌이 아니고, 여러개로 생길 가능성 있음 
+					    					
+					    					
+					    					
+					    				},error:function(res){
+					    					alert('통신실패');
+					    				}
+					    			});//아작스 끝 
+					    			
+					    		});
+								
+					    	  
+					    	});//제이쿼리 호출 끝 
+						
+						
+					});
+					
+				});
+				
+			});
+	
+		});//새글 쓰기 쿼리문 끝 
+		
+
+
 		
 	});
 
@@ -268,7 +381,7 @@ function selectbtn(selectno){
 					console.log(res);
 					if(true){
 						alert("삭제되었습니다.");	
-						location.href="wboard";
+						location.href="wboard"; //이거 대신 삭제 되면 부분이 없어져야함.. !!!
 					}else if(false){
 						alert("삭제 실패 ");
 					}
@@ -288,10 +401,8 @@ function selectbtn(selectno){
 			$('.wtitle').hide();
 			$('.wdate').hide();$('.wcontent').hide();$('.winsertbtn').hide();
 			$('.wbinnerBox p').html('일정 수정');
-			//action="summerUpdateres" method="post"
 			const wucontents = addObject(writeContent,'div','wucontents',true,(o)=>{
 				o.innerHTML =`
-				<form id="summerUpdateres" name="summerUpdateres" >
 				<p><span>담당자</span><input id="wupic" class="wutxt" type="text" placeholder="담당자" name="mid"/></p>
 				<p><span>제목</span><input id="wutitle" class="wutxt" type="text" placeholder="제목" name="wbtitle"/></p>
 				<p><span>날짜</span>
@@ -302,7 +413,6 @@ function selectbtn(selectno){
 				<input type="hidden" name="wbtodono" id="wbtodono">
 				<input type="button" value="취소" id="wbcancle">
 				<input type="button" value="수정완료" id="wbupdateres"></p>
-				</form>
 				`;
 				
 
@@ -390,7 +500,7 @@ function selectbtn(selectno){
 						success: function(res){
 							if(true){
 								alert("수정내용 저장성공하였습니다.");
-								location.reload();
+								location.reload();//수정이 되었을 때 수정완료된 모습 혹은 목록으로 !!!
 								//location.href="wboard"; //목록으로~
 							}else{
 								alert("수정실패하였습니다");
@@ -420,16 +530,62 @@ function selectbtn(selectno){
 
 
 
-//글 새로 쓰기 버튼 
-function wbnewtask() {
-	const gggg = addObject(null, 'div', 'gggg');
-	const wblistbox1 = boxFun('글을 추가 하자', false, [ gggg ],false,'wblistbox1',null,true);
-	
-}
+//글목록 불러오기 - function으로 못뺏음 빼보기 !!!
 
+$(function() {
 	
+	$fn.listcall = function(){
+		data.forEach(function(item){
+			var mid = item.mid;
+			var wbtodono = item.wbtodono; 
+			var wbcontent = item.wbcontent; 
+			var wbtitle = item.wbtitle; 
+			
+			 $('<input class="wbinputMy" data-wbtodono="'+wbtodono+'"  type="text" readonly>').val(mid+':'+wbtitle).appendTo('#wtasklistMy');
+
+		});
+		
+		 
+		 $('.wbinputMy').on('click',function(){
+			 
+			 var index = $(".wbinputMy").index(this);
+			 var selectno =$(".wbinputMy:eq(" + index + ")").data('wbtodono');
+			
+			 selectbtn(selectno);
+		 }); 
+
+	}
+		
 	
+});
 	
+
+
+//달력 자르기 기능 
+function confirmbtn(){
+	
+	//날짜
+	var a =  document.getElementById('rangeDate').value;
+	var st = a.replace("to"," ");
+	var tri = st.replace(" ",""); 
+	var arr = tri.split("-");
+	var day = arr[2].substr(0,2);
+	var day2 = arr[2].substr(4,4);
+	
+	var wbst = arr[0]+arr[1]+day;
+	var wben = day2+arr[3]+arr[4];
+	
+	console.log(day);
+	console.log(wbst);
+	
+	document.getElementById('wbstartdate').value= wbst;
+	document.getElementById('wbenddate').value= wben;
+	
+
+}	
+	
+//달력 만들기 
+
 	
 	
 	
