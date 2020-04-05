@@ -50,7 +50,8 @@ INSERT INTO wboard VALUES
 
 SELECT * FROM WBOARD;
 
-SELECT * FROM WBOARD WHERE mid = 'f';
+--원하는 달의 날짜만 추출 
+SELECT TO_CHAR(wbenddate,'yyyymmdd') FROM WBOARD WHERE mid = 'b'and TO_CHAR(wbstartdate,'yyyymm')='202004';
 
 delete from wboard where wbtodono = 2;
 
@@ -67,19 +68,70 @@ CREATE SEQUENCE  "SUMMERBOARD_SEQ"
 MINVALUE 1 MAXVALUE 9999999999999999999999999999 
 INCREMENT BY 1 START WITH 1 NOCACHE;
 
---달력 
 
-create sequence wbcalseq
+-- 위젯 파일
+select * from wfile;
 
-create table wbcal(
-	wbcalno number primary key, --seq 번호가 될것 
-	wno number not null, --해당 위젯 넘버 / fk
-	mid varchar2(500) not null, -- fk
-	wbtodono NUMBER NOT NULL, --위젯보드 해야할일 전체 번호/fk
-	wbtitle VARCHAR2(1000), 
-	wbstartdate DATE NOT NULL,
-	wbenddate DATE,
-	wbcolor VARCHAR2(50)
+CREATE TABLE wfile
+(
+    wfno          NUMBER            NOT NULL, 
+    wno           NUMBER            NOT NULL, 
+    wfpath        VARCHAR2(2000)    NOT NULL, 
+    wffakename    VARCHAR2(1000)    NOT NULL, 
+    wfrealname    VARCHAR2(1000)    NOT NULL, 
+    wfext         VARCHAR2(500)     NOT NULL, 
+    CONSTRAINT WFILE_PK PRIMARY KEY (wfno)
 )
+/
 
-select * from wbcal;
+CREATE SEQUENCE wfile_SEQ
+START WITH 1
+INCREMENT BY 1;
+/
+
+CREATE OR REPLACE TRIGGER wfile_AI_TRG
+BEFORE INSERT ON wfile 
+REFERENCING NEW AS NEW FOR EACH ROW 
+BEGIN 
+    SELECT wfile_SEQ.NEXTVAL
+    INTO :NEW.wfno
+    FROM DUAL;
+END;
+/
+
+DROP TRIGGER wfile_AI_TRG;
+/
+
+--DROP SEQUENCE wfile_SEQ;
+/
+
+COMMENT ON TABLE wfile IS '위젯 파일 첨부 테이블'
+/
+
+COMMENT ON COLUMN wfile.wfno IS '파일 테이블 번호'
+/
+
+COMMENT ON COLUMN wfile.wno IS '소속 위젯 번호'
+/
+
+COMMENT ON COLUMN wfile.wfpath IS '파일 경로'
+/
+
+COMMENT ON COLUMN wfile.wffakename IS '파일저장첨부명'
+/
+
+COMMENT ON COLUMN wfile.wfrealname IS '파일실제첨부명'
+/
+
+COMMENT ON COLUMN wfile.wfext IS '파일첨부확장자'
+/
+
+ALTER TABLE wfile
+    ADD CONSTRAINT FK_wfile_wno_widget_wno FOREIGN KEY (wno)
+        REFERENCES widget (wno) on delete cascade
+/
+
+
+
+
+

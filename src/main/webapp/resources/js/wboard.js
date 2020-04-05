@@ -62,89 +62,31 @@ function dragEnter(ev) {
 		dragObj.id = '';
 	}
 	
+//예시를 위한 
+	function a() {
+		const bic1  = addObject(null,'div','bic1');
+		const box1 = boxFun(null,false,[bic1],false,'box1',null,true);
+		const con1 = addObject(bic1,'div','con1',true,(o)=>{
+			o.innerHTML=`
+			<input type="hidden" value="b" name="mid" id="mid">
+			<input type="hidden" value="1" name="wno" id="wno">
+				<input type="hidden" value="202004" name="wbstartdate" id="wbstartdate">
+				<input type="button" value="위젯  wno=1, mid=b" onclick='wblist();'>
+			`;
+			
+			
+			});
+	}
+	
 //글목록 게시판 
 function wblist() {
 	
-	
-	//프로그램 전체 일정 
-	$.ajax({
-		url:'wbAllList',
-		method:'post',
-		data:{
-			"wno":wno},
-		success: function(data) {
-			
-			data.forEach(function(item){
-				var mid = item.mid;
-				var wbtodono = item.wbtodono; 
-				var wbcontent = item.wbcontent; 
-				var wbtitle = item.wbtitle; 
-				
-				 $('<input class="wbinput" data-wbtodono="'+wbtodono+'"  type="text" readonly>').val(mid+':'+wbtitle).appendTo('#wtasklistAll');
+	//wno와 mid의 값을 받아와야함 
+	 var mid = document.querySelector('#mid').value; 
+	  var wno = document.querySelector('#wno').value;
+	  console.log(wno+mid);
 
-			});
-			
-			 
-			 $('.wbinput').on('click',function(){
-				 
-				 var index = $(".wbinput").index(this);
-				  var selectno =$(".wbinput:eq(" + index + ")").data('wbtodono');
-				
-				   console.log(selectno);
-				 selectbtn(selectno);
-			 }); 
 
-			
-
-			//append와 appendTo 붙이는 방식 다르다 
-			//$('.wtasklist').append('<input type="text" value="쨘">');
-            //$('<input type="text" value="어라" readonly>').appendTo('.wtasklist');
-         
-
-				
-		},error: function(data) {
-			alert("통신실패");
-		}
-	
-	});
-	
-	//나의 일정 
-	$.ajax({
-		url:'wbMyList',
-		method:'post',
-		data:{
-			"mid":mid, //로그인 세션에서 가져와야 할 mid 
-			"wno":wno
-		},
-		success:function(data){
-			
-			data.forEach(function(item){
-				var mid = item.mid;
-				var wbtodono = item.wbtodono; 
-				var wbcontent = item.wbcontent; 
-				var wbtitle = item.wbtitle; 
-				
-				 $('<input class="wbinputMy" data-wbtodono="'+wbtodono+'"  type="text" readonly>').val(mid+':'+wbtitle).appendTo('#wtasklistMy');
-
-			});
-			
-			 
-			 $('.wbinputMy').on('click',function(){
-				 
-				 var index = $(".wbinputMy").index(this);
-				 var selectno =$(".wbinputMy:eq(" + index + ")").data('wbtodono');
-				
-				 selectbtn(selectno);
-			 }); 
-			
-			
-		},error:function(data){
-			alert("통신실패");
-			wbnewtask();
-		}
-		
-	});
-	
 	
 	
 	
@@ -177,6 +119,90 @@ function wblist() {
 		</div>
 		
 		`;
+		
+		$(function() {
+
+			//프로그램 전체 일정 
+			$.ajax({
+				url:'wbAllList',
+				method:'post',
+				data:{
+					"wno":wno},
+				success: function(data) {
+					
+					data.forEach(function(item){
+						var mid = item.mid;
+						var wbtodono = item.wbtodono; 
+						var wbcontent = item.wbcontent; 
+						var wbtitle = item.wbtitle; 
+						
+						 $('<input class="wbinput" data-wbtodono="'+wbtodono+'"  type="text" readonly>').val(mid+':'+wbtitle).appendTo('#wtasklistAll');
+
+					});
+					
+					 
+					 $('.wbinput').on('click',function(){
+						 
+						 var index = $(".wbinput").index(this);
+						  var selectno =$(".wbinput:eq(" + index + ")").data('wbtodono');
+						
+						   console.log(selectno);
+						 selectbtn(selectno);
+					 }); 
+
+					
+
+					//append와 appendTo 붙이는 방식 다르다 
+					//$('.wtasklist').append('<input type="text" value="쨘">');
+		            //$('<input type="text" value="어라" readonly>').appendTo('.wtasklist');
+		         
+
+						
+				},error: function(data) {
+					alert("통신실패");
+				}
+			
+			});
+			
+			//나의 일정 
+			$.ajax({
+				url:'wbMyList',
+				method:'post',
+				data:{
+					"mid":mid, //로그인 세션에서 가져와야 할 mid 
+					"wno":wno
+				},
+				success:function(data){
+					
+					data.forEach(function(item){
+						var mid = item.mid;
+						var wbtodono = item.wbtodono; 
+						var wbcontent = item.wbcontent; 
+						var wbtitle = item.wbtitle; 
+						
+						 $('<input class="wbinputMy" data-wbtodono="'+wbtodono+'"  type="text" readonly>').val(mid+':'+wbtitle).appendTo('#wtasklistMy');
+
+					});
+					
+					 
+					 $('.wbinputMy').on('click',function(){
+						 
+						 var index = $(".wbinputMy").index(this);
+						 var selectno =$(".wbinputMy:eq(" + index + ")").data('wbtodono');
+						
+						 selectbtn(selectno);
+					 }); 
+					
+					
+				},error:function(data){
+					alert("통신실패");
+					wbnewtask();
+				}
+				
+			});
+			
+		});
+		
 		//!!! drag n drop 제이쿼리로 바꾸기 ~ 
 		
 /*		o.querySelector('.wbtadd').addEventListener('click',(e)=>{
@@ -529,7 +555,7 @@ function selectbtn(selectno){
 
 
 
-
+/*
 //글목록 불러오기 - function으로 못뺏음 빼보기 !!!
 
 $(function() {
@@ -558,7 +584,7 @@ $(function() {
 		
 	
 });
-	
+	*/
 
 
 //달력 자르기 기능 
@@ -567,16 +593,15 @@ function confirmbtn(){
 	//날짜
 	var a =  document.getElementById('rangeDate').value;
 	var st = a.replace("to"," ");
-	var tri = st.replace(" ",""); 
+	var tri = st.trim(); //공백제거 안먹힘 ~ 
 	var arr = tri.split("-");
-	var day = arr[2].substr(0,2);
-	var day2 = arr[2].substr(4,4);
+	var day = arr[2].substr(0,2);//2번쨰 배열에 일 까지 
+	var day2 = arr[2].substr(4,5);//2번째 배열에 연도까지 
 	
 	var wbst = arr[0]+arr[1]+day;
 	var wben = day2+arr[3]+arr[4];
 	
-	console.log(day);
-	console.log(wbst);
+	console.log("이젠 나오나 보자  "+wbst +"끝날짜 "+ wben);
 	
 	document.getElementById('wbstartdate').value= wbst;
 	document.getElementById('wbenddate').value= wben;

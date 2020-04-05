@@ -12,6 +12,10 @@
 <script type="text/javascript" src="./resources/js/wboard.js"></script>
 <link rel="stylesheet" href="./resources/css/wboard.css" type="text/css" />
 
+<!-- 위젯달력js -->
+<script type="text/javascript" src="./resources/js/wbcal.js"></script>
+<link rel="stylesheet" href="./resources/css/wbcal.css" type="text/css" />
+
 <!-- 커스텀 유틸  -->
 <link rel="stylesheet" href="./resources/css/defaultstyle.css"type="text/css" />
 <script type="text/javascript" src="./resources/js/util.js"></script>
@@ -34,8 +38,10 @@
 </head>
 <body>
 
-<input type="button" value="wno=1, mid=a" onclick='wblist(mid="b",wno=1);'>
 
+
+<input type="button" value="달력 wno=1, mid=b" onclick='b();'>
+<input type="button" value="위젯  wno=1, mid=b" onclick='a();'>
 	<div class="wboardcon">
 		<h1>프로젝트 일정</h1>
 

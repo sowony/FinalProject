@@ -195,6 +195,17 @@ public class WboardController {
 			
 		}
 		
+		//달력 날짜 보내기 
+		@RequestMapping(value = "/wbdatesend", method = RequestMethod.POST)
+		@ResponseBody
+		public List<WboardDto> wbdatesend(WboardDto dto){
+			
+			//String mid, int yyyymm 형태의 wbstartdate, int wno 3가지의 값이 일치하는 것 의 달력 ㄱㄱ 
+			List<WboardDto> list = biz.wbdatesend(dto);
+			System.err.println("어디까지 들어오는지 보기 위해서 여기느 달력 날짜 보내기 "+dto.getWno()+dto.getMid()+dto.getWbstartdate());
+			System.out.println(list);
+			return list;
+		}
 		
 
 		

@@ -28,12 +28,12 @@ public interface WboardDao {
 	
 	//글 상세보기 
 	@Select("select wbtodono, wno, dno, dgno, mid, wbtodo, wbtitle,"
-			+ "wbcontent, wfno_list, TO_CHAR(wbstartdate, 'YYYY-MM-DD') as wbstartdate , TO_CHAR(wbstartdate, 'YYYY-MM-DD') as wbenddate, wbcolor from wboard where wbtodono = #{wbtodono}")
+			+ "wbcontent, wfno_list, TO_CHAR(wbstartdate, 'YYYY-MM-DD') as wbstartdate , TO_CHAR(wbenddate, 'YYYY-MM-DD') as wbenddate, wbcolor from wboard where wbtodono = #{wbtodono}")
 	public WboardDto wSelectOne(int wbtodono);
 	
 	//써머노트  -게시글 작성 
 	@Insert("INSERT INTO wboard (wbtodono, mid, wbtitle, wbcontent,wno,dno, dgno, wbstartdate, wbenddate)"+
-			"VALUES (wboard_seq.NEXTVAL, #{mid}, #{wbtitle}, #{wbcontent},1,1,2,TO_DATE(#{wbstartdate},'YYYY-MM-DD')  ,TO_DATE(#{wbenddate},'YYYY-MM-DD'))")
+			"VALUES (wboard_seq.NEXTVAL, #{mid}, #{wbtitle}, #{wbcontent},1,1,2,TO_DATE(#{wbstartdate},'YYYYMMDD')  ,TO_DATE(#{wbenddate},'YYYYMMDD'))")
 	//@SelectKey(statement = "SELECT SUMMERBOARD_SEQ.NEXTVAL FROM DUAL", keyProperty = "SUMMERBOARD_SEQ",resultType = Integer.class, before = true)
 	public int wbinsert(WboardDto dto);
 	
@@ -46,6 +46,8 @@ public interface WboardDao {
 	@Update("update wboard set mid =#{mid}, wbtitle=#{wbtitle}, wbcontent=#{wbcontent}, wbstartdate=#{wbstartdate}, wbenddate=#{wbenddate} where wbtodono = #{wbtodono} ")
 	public int summerUpdate(WboardDto dto);
 	
-	
+	//달력 해당 아이디 날짜로 뽑아 오기  wno추가해야함 조건에 
+	@Select("select wbtitle,TO_CHAR(wbstartdate,'yyyymmdd') as wbstartdate,TO_CHAR(wbenddate,'yyyymmdd') as wbenddate from wboard where mid=#{mid} and wno=#{wno} and TO_CHAR(wbstartdate,'yyyymm')=#{wbstartdate}")
+	public List<WboardDto> wbdatesend(WboardDto dto);
 	
 }

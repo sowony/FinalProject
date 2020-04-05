@@ -27,4 +27,7 @@ public interface WboardBiz {
 	//게시물 수정
 	public int summerUpdate(WboardDto dto);
 	
+	//달력 자료 뿌려주기
+	public List<WboardDto> wbdatesend(WboardDto dto);
+	
 }

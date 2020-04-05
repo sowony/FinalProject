@@ -23,6 +23,7 @@ public class WboardBizImpl implements WboardBiz{
 
 	@Override
 	public List<WboardDto> boardList() {
+		System.out.println("dddd");
 		return wboardDao.boardList();
 	}
 
@@ -73,8 +74,13 @@ public class WboardBizImpl implements WboardBiz{
 	//내게시글보기 
 	@Override
 	public List<WboardDto> boardMyList(WboardDto dto) {
-		// TODO Auto-generated method stub
 		return wboardDao.boardMyList(dto);
+	}
+
+	//달력 다료 뿌려주기 
+	@Override
+	public List<WboardDto> wbdatesend(WboardDto dto) {
+		return wboardDao.wbdatesend(dto);
 	}
 
 }

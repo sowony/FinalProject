@@ -65,7 +65,7 @@ public class LoginInterceptor implements HandlerInterceptor{
 		else if(request.getRequestURI().endsWith("summerUpdateres")) return true;
 		else if(request.getRequestURI().endsWith("wbAllList")) return true;
 		else if(request.getRequestURI().endsWith("wbMyList")) return true;
-		
+		else if(request.getRequestURI().endsWith("wbdatesend")) return true;
 		else if(request.getRequestURI().endsWith("footer")) return true;
 		else if(request.getRequestURI().endsWith("header")) return true;
 		else if(request.getRequestURI().endsWith("wboard")) return true;
