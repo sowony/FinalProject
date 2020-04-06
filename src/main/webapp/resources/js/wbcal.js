@@ -323,20 +323,16 @@
 		    			
 		    			
 		    			var sDate = wbstartdate.substr(6,2);
-		    				
+		    			console.log("받아온 날짜 ~ "+sDate + "배열의 인덱스 번호 "+index);	
 		    			//!!! 시작날짜의 날짜와 달력의 날짜가 1개만 같게 나옴 ㅠㅠ 시작날짜의 중복되는 모든 값을 출력 해야함 
-		    			 var arr = [];
-		    			 arr.push(Number(sDate));
-		    			 console.log("알수없는 배열의 세계"+arr);
+
 		    			 
 		 		          for(var i=0;i<42;i++ ){
 		 		           	var ex1 =  $(".cal-day").eq(i).html();
 		 		        	
-		 		        		for(var j =0;j<arr.length;j++){
-		 		        			if(ex1 == arr[j]){
-		 		        			console.log("여기는 for j "+arr[j]);
-		 		        			$('.cal-schedule').eq(i).html(arr[j]+wbtitle);	
-		 		        		}
+		 		        			if(ex1 == Number(sDate)){
+		 		        			//console.log("여기는 for j "+arr[j]);
+		 		        			$('.cal-schedule').eq(i).html(Number(sDate)+wbtitle);	
 		 		           }
 		 		        }
 		    			 

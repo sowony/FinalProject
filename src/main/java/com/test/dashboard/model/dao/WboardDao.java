@@ -47,7 +47,7 @@ public interface WboardDao {
 	public int summerUpdate(WboardDto dto);
 	
 	//달력 해당 아이디 날짜로 뽑아 오기  wno추가해야함 조건에 
-	@Select("select wbtitle,TO_CHAR(wbstartdate,'yyyymmdd') as wbstartdate,TO_CHAR(wbenddate,'yyyymmdd') as wbenddate from wboard where mid=#{mid} and wno=#{wno} and TO_CHAR(wbstartdate,'yyyymm')=#{wbstartdate}")
+	@Select("select wbtitle,TO_CHAR(wbstartdate,'yyyymmdd') as wbstartdate,TO_CHAR(wbenddate,'yyyymmdd') as wbenddate from wboard where mid=#{mid} and wno=#{wno} and TO_CHAR(wbstartdate,'yyyymm')=#{wbstartdate} order by wbstartdate asc ")
 	public List<WboardDto> wbdatesend(WboardDto dto);
 	
 }

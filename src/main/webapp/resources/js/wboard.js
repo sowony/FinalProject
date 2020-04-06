@@ -57,7 +57,8 @@ function dragEnter(ev) {
 	function nomaldrop(ev) {
 		ev.preventDefault();
 		var data = ev.dataTransfer.getData("text");
-		var dragObj = document.querySelector('#' + data);
+		console.log(data);
+		var dragObj = ev.target.parentNode.querySelector('#' + data);
 		ev.target.appendChild(dragObj);
 		dragObj.id = '';
 	}
@@ -78,18 +79,16 @@ function dragEnter(ev) {
 			});
 	}
 	
+
+	
 //글목록 게시판 
 function wblist() {
 	
 	//wno와 mid의 값을 받아와야함 
 	 var mid = document.querySelector('#mid').value; 
 	  var wno = document.querySelector('#wno').value;
-	  console.log(wno+mid);
 
 
-	
-	
-	
 	const wbwraplist = addObject(null, 'div', 'wbwraplist');
 	const wboardcon = addObject(wbwraplist, 'div', 'wboardcon',true,(o)=>{
 		o.innerHTML = `
@@ -180,11 +179,10 @@ function wblist() {
 						var wbcontent = item.wbcontent; 
 						var wbtitle = item.wbtitle; 
 						
-						 $('<input class="wbinputMy" data-wbtodono="'+wbtodono+'"  type="text" readonly>').val(mid+':'+wbtitle).appendTo('#wtasklistMy');
-
+						 $('<input class="wbinputMy" draggable="true" data-wbtodono="'+wbtodono+'"  type="text" readonly  ondragstart="drag(event)">').val(mid+':'+wbtitle).appendTo('#wtasklistMy');
+						 
 					});
 					
-					 
 					 $('.wbinputMy').on('click',function(){
 						 
 						 var index = $(".wbinputMy").index(this);
@@ -203,7 +201,9 @@ function wblist() {
 			
 		});
 		
-		//!!! drag n drop 제이쿼리로 바꾸기 ~ 
+		//!!! drag n drop 
+		//child객체 뭔가 오류 그리고 #+data로 만드는 것도 오류나 ㅁ
+		
 		
 /*		o.querySelector('.wbtadd').addEventListener('click',(e)=>{
 			alert('ddddddd');
@@ -224,19 +224,20 @@ function wblist() {
 						o.innerHTML=`
 						<p><span>작성자</span>
 							<span class="sptag"><input type="text" id="mid" name="mid"  placeholder="작성자"/></span></p>
+			
 						<p><span>제목</span>
 							<span class="sptag"><input type="text" id="wbtitle" name="wbtitle"  placeholder="제목"/></span></p>
 						<p><span>날짜</span>
 							<span class="sptag">
 								<input type="text" id="rangeDate" placeholder="날짜를 선택해 주세요" >
-								<input id="calconf" type="button" value="확인" onclick="confirmbtn()">
+								<input id="calconf" type="button" value="확인" onclick="confirmbtn();">
 							</span>
 						</p>
 						<p>
 							<span>날짜 확인</span>
 							<span class="sptag">
-								<input type="text" id="wbstartdate" name="wbstartdate" >
-								<input type="text" id="wbenddate" name="wbenddate" >
+								<input type="text" id="wbstartdate1" name="wbstartdate" >
+								<input type="text" id="wbenddate1" name="wbenddate" >
 							</span>
 						</p>
 						<textarea id="summernote" name="wbcontent"></textarea>
@@ -266,10 +267,10 @@ function wblist() {
 					    		//버튼 누르면 새글 저장 
 					    		$('#wbsend').on('click',function(){
 					    			
-					    			var mid = $('#mid').val();
+					    			var mid = $('#mid').val();//session에서 받아올애 
 					    			var wbtitle = $('#wbtitle').val();
-					    			var wbstartdate = $('#wbstartdate').val();
-					    			var wbenddate = $('#wbenddate').val();
+					    			var wbstartdate = $('#wbstartdate1').val();
+					    			var wbenddate = $('#wbenddate1').val();
 					    			var wbcontent = $('#wbcontent').val();
 					    			
 					    			$.ajax({
@@ -285,21 +286,14 @@ function wblist() {
 					    				success: function(res) {
 					    					if(true){
 					    						$('.wblistbox1').remove();
-					    						var mid = $("#mid").val();
-					    						var wno = $("wno").val();
-					    						console.log(mid+'와'+wno+'는 무슨 값 ? ');
+					    						reloadList();
+					    						
 					    						
 					    						
 					    					}else if(false){
 					    						alert('저장안됨');
 					    					}
-					    					//!!!
-					    					//컨트롤러에서  selectall & selectlist을 동시에 보내준다
-					    					//현재 여기서 보낼 수 있는 값인 mid, wno를 이용
-					    					//화면에 다시 뿌려준다 
-					    					//문제점? 중복되어 뿌려주기 때문에 갱신의 느낌이 아니고, 여러개로 생길 가능성 있음 
-					    					
-					    					
+					   
 					    					
 					    				},error:function(res){
 					    					alert('통신실패');
@@ -384,7 +378,7 @@ function selectbtn(selectno){
 		
 	});
 		// 2번째,배경 투명 = false, 검정 = true/ true 4번째 취소버튼 없애기
-	const box = boxFun('일정', true, [ writeContent ],false,'wbinnerBox',null,true);
+	const box = boxFun('일정', false, [ writeContent ],false,'wbinnerBox',null,true);
 	
 	
 	const winsertbtn = addObject(writeContent,'p','winsertbtn',true,(o)=>{
@@ -407,7 +401,9 @@ function selectbtn(selectno){
 					console.log(res);
 					if(true){
 						alert("삭제되었습니다.");	
-						location.href="wboard"; //이거 대신 삭제 되면 부분이 없어져야함.. !!!
+						 $('.wbinnerBox').remove();
+						reloadList();
+						
 					}else if(false){
 						alert("삭제 실패 ");
 					}
@@ -526,8 +522,13 @@ function selectbtn(selectno){
 						success: function(res){
 							if(true){
 								alert("수정내용 저장성공하였습니다.");
-								location.reload();//수정이 되었을 때 수정완료된 모습 혹은 목록으로 !!!
-								//location.href="wboard"; //목록으로~
+								$('.wbinnerBox').remove();
+								reloadList();
+								
+								
+								
+								
+								
 							}else{
 								alert("수정실패하였습니다");
 							}
@@ -603,14 +604,101 @@ function confirmbtn(){
 	
 	console.log("이젠 나오나 보자  "+wbst +"끝날짜 "+ wben);
 	
-	document.getElementById('wbstartdate').value= wbst;
-	document.getElementById('wbenddate').value= wben;
+	document.querySelector('#wbstartdate1').value= wbst;
+	document.querySelector('#wbenddate1').value= wben;
 	
 
 }	
 	
-//달력 만들기 
+//리스트 불러오기 
 
+function reloadList(){
+	 var mid = document.querySelector('#mid').value; 
+	  var wno = document.querySelector('#wno').value;
+	  console.log(mid+wno + "여기는 수정 수정입니다 ");
+	$('.wbinput').remove();
+	$('.wbinputMy').remove();
+	
+	//프로그램 전체 일정 
+	$.ajax({
+		url:'wbAllList',
+		method:'post',
+		data:{
+			"wno":wno},
+		success: function(data) {
+			
+			data.forEach(function(item){
+				var mid = item.mid;
+				var wbtodono = item.wbtodono; 
+				var wbcontent = item.wbcontent; 
+				var wbtitle = item.wbtitle; 
+				
+				 $('<input class="wbinput" data-wbtodono="'+wbtodono+'"  type="text" readonly>').val(mid+':'+wbtitle).appendTo('#wtasklistAll');
+
+			});
+			
+			 
+			 $('.wbinput').on('click',function(){
+				 
+				 var index = $(".wbinput").index(this);
+				  var selectno =$(".wbinput:eq(" + index + ")").data('wbtodono');
+				
+				   console.log(selectno);
+				 selectbtn(selectno);
+			 }); 
+
+			
+
+			//append와 appendTo 붙이는 방식 다르다 
+			//$('.wtasklist').append('<input type="text" value="쨘">');
+           //$('<input type="text" value="어라" readonly>').appendTo('.wtasklist');
+        
+
+				
+		},error: function(data) {
+			alert("통신실패");
+		}
+	
+	});
+	
+	//나의 일정 
+	$.ajax({
+		url:'wbMyList',
+		method:'post',
+		data:{
+			"mid":mid, //로그인 세션에서 가져와야 할 mid 
+			"wno":wno
+		},
+		success:function(data){
+			
+			data.forEach(function(item){
+				var mid = item.mid;
+				var wbtodono = item.wbtodono; 
+				var wbcontent = item.wbcontent; 
+				var wbtitle = item.wbtitle; 
+				
+				 $('<input class="wbinputMy" data-wbtodono="'+wbtodono+'"  type="text" readonly>').val(mid+':'+wbtitle).appendTo('#wtasklistMy');
+
+			});
+			
+			 
+			 $('.wbinputMy').on('click',function(){
+				 
+				 var index = $(".wbinputMy").index(this);
+				 var selectno =$(".wbinputMy:eq(" + index + ")").data('wbtodono');
+				
+				 selectbtn(selectno);
+			 }); 
+			
+			
+		},error:function(data){
+			alert("통신실패");
+			wbnewtask();
+		}
+		
+	});
+	
+}
 	
 	
 	

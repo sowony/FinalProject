@@ -32,7 +32,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/themes/dark.css">
 
-
+<!-- 제이쿼리 드래그앤 드롭 -->
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 </head>
