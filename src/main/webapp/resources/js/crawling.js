@@ -95,6 +95,7 @@ function crawling(widget, btn) {
 											<p class ="wcrwlcontent">${json[i]['wcrwlcontent']}</p>
 											<p class="wcrwldate">${json[i]['wcrwldate']}		<a href = "${json[i]['wcrwllink']}" target="_blank"><img src = 'https://ssl.pstatic.net/sstatic/search/pc/img/sp_sns.png' /></a></p>
 									
+<<<<<<< HEAD
 										</div>`;
 						});
 					}
