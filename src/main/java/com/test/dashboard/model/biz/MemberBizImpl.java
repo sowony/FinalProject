@@ -28,7 +28,14 @@ public class MemberBizImpl implements MemberBiz{
 	@Override
 	public int insert(MemberDto memberDto) {
 		// TODO Auto-generated method stub
+<<<<<<< HEAD
 //		memberDto.setMabout(Util.brChange(memberDto.getMabout()));
+=======
+		
+		if(memberDto.getMabout() != null) {
+			memberDto.setMabout(Util.brChange(memberDto.getMabout()));
+		}
+>>>>>>> 9e3442acd1cc365989de2f66fb3958623e070e38
 		return memberDao.insert(memberDto);
 	}
 	
@@ -76,7 +83,9 @@ public class MemberBizImpl implements MemberBiz{
 	@Override
 	public int update(MemberDto memberDto) {
 		// TODO Auto-generated method stub
-		memberDto.setMabout(Util.brChange(memberDto.getMabout()));
+		if(memberDto.getMabout() != null) {
+			memberDto.setMabout(Util.brChange(memberDto.getMabout()));
+		}
 		return memberDao.update(memberDto);
 	}
 	
@@ -101,8 +110,9 @@ public class MemberBizImpl implements MemberBiz{
 	@Override
 	public int maboutUpdate(MemberDto memberDto) {
 		// TODO Auto-generated method stub
-		memberDto.setMabout(Util.brChange(memberDto.getMabout()));
-		System.out.println(memberDto.getMabout());
+		if(memberDto.getMabout() != null) {
+			memberDto.setMabout(Util.brChange(memberDto.getMabout()));
+		}
 		return memberDao.maboutUpdate(memberDto);
 	}
 }

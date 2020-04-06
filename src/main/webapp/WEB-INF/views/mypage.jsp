@@ -6,10 +6,15 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 
+<!--외부 라이브러리 -->
+<script type="text/javascript" src="/dashboard/resources/js/sockjs.min.js"></script>
+<script type="text/javascript" src="/dashboard/resources/js/stomp.min.js"></script>
+
 <!-- 커스텀 유틸  -->
 <link rel="stylesheet" href="./resources/css/defaultstyle.css" type="text/css"/>
+<script type="text/javascript" src="/dashboard/resources/js/xhr.js"></script>
 <script type="text/javascript" src="./resources/js/util.js"></script>
-<script type="text/javascript" src="./resources/js/xhr.js"></script>
+
 
 <!-- 페이지 js, css -->
 <link rel="stylesheet" href="./resources/css/header.css" type="text/css">
@@ -23,7 +28,7 @@
 	<script type="text/javascript" src="./resources/js/header.js"></script>
 	
 	
-	<section>
+	<section style="overflow: overlay;">
 		<article id="content">
 		</article>
 	</section>

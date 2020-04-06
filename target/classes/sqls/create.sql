@@ -477,8 +477,7 @@ CREATE TABLE wmemo
 (
     wmno           NUMBER            NOT NULL, 
     wno            NUMBER            NOT NULL, 
-    wmtitle        VARCHAR2(2000)    NOT NULL, 
-    wmcontent      CLOB              NOT NULL, 
+    wmcontent      CLOB              NULL, 
     wmwritedate    DATE              NOT NULL, 
     CONSTRAINT WMEMO_PK PRIMARY KEY (wmno)
 )
@@ -487,19 +486,6 @@ CREATE TABLE wmemo
 CREATE SEQUENCE wmemo_SEQ
 START WITH 1
 INCREMENT BY 1;
-/
-
-CREATE OR REPLACE TRIGGER wmemo_AI_TRG
-BEFORE INSERT ON wmemo 
-REFERENCING NEW AS NEW FOR EACH ROW 
-BEGIN 
-    SELECT wmemo_SEQ.NEXTVAL
-    INTO :NEW.wmno
-    FROM DUAL;
-END;
-/
-
-DROP TRIGGER wmemo_AI_TRG;
 /
 
 --DROP SEQUENCE wmemo_SEQ;
@@ -512,9 +498,6 @@ COMMENT ON COLUMN wmemo.wmno IS '메모 테이블 번호'
 /
 
 COMMENT ON COLUMN wmemo.wno IS '소속 위젯 번호'
-/
-
-COMMENT ON COLUMN wmemo.wmtitle IS '메모 제목'
 /
 
 COMMENT ON COLUMN wmemo.wmcontent IS '메모 내용'
@@ -593,6 +576,7 @@ ALTER TABLE wfile
 /
 
 
+<<<<<<< HEAD
 CREATE SEQUENCE MSGNOSEQ
 START WITH 1
 INCREMENT BY 1
@@ -699,3 +683,51 @@ ALTER TABLE msgtable
 /
 
 
+=======
+
+
+-- 위젯 채팅
+
+CREATE TABLE wchat
+(
+    wcno      NUMBER            NOT NULL, 
+    wno       NUMBER            NOT NULL, 
+    wcpath    VARCHAR2(2000)    NOT NULL, 
+    CONSTRAINT WCHAT_PK PRIMARY KEY (wcno)
+)
+/
+
+CREATE SEQUENCE wchat_SEQ
+START WITH 1
+INCREMENT BY 1;
+/
+
+
+--DROP SEQUENCE wchat_SEQ;
+/
+
+COMMENT ON TABLE wchat IS '채팅'
+/
+
+COMMENT ON COLUMN wchat.wcno IS '채팅 고유번호'
+/
+
+COMMENT ON COLUMN wchat.wno IS '소속 위젯 번호'
+/
+
+COMMENT ON COLUMN wchat.wcpath IS '채팅 로그 패스'
+/
+
+ALTER TABLE wchat
+    ADD CONSTRAINT FK_wchat_wno_widget_wno FOREIGN KEY (wno)
+        REFERENCES widget (wno)
+/
+
+ALTER TABLE wchat
+    ADD CONSTRAINT UC_wno UNIQUE (wno)
+/
+
+ALTER TABLE wchat
+    ADD CONSTRAINT UC_wcpath UNIQUE (wcpath)
+/
+>>>>>>> 9e3442acd1cc365989de2f66fb3958623e070e38

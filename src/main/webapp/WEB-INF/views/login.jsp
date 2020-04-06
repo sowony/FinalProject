@@ -13,12 +13,15 @@
 	defer></script>
 <script
 	src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript" src="/dashboard/resources/js/sockjs.min.js"></script>
+<script type="text/javascript" src="/dashboard/resources/js/stomp.min.js"></script>
+
 
 <!-- 커스텀 유틸  -->
 <link rel="stylesheet" href="./resources/css/defaultstyle.css"
 	type="text/css" />
+	<script type="text/javascript" src="/dashboard/resources/js/xhr.js"></script>
 <script type="text/javascript" src="./resources/js/util.js"></script>
-<script type="text/javascript" src="./resources/js/xhr.js"></script>
 
 <!-- 페이지 js, css -->
 <link rel="stylesheet" href="./resources/css/login.css" type="text/css" />

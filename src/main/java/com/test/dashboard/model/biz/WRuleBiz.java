@@ -16,4 +16,5 @@ public interface WRuleBiz {
 	
 	int delete(int wrno);
 	
+	int wnoDelete(int wno);
 }

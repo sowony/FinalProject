@@ -12,6 +12,25 @@
 <script type="text/javascript" src="./resources/js/test.js"></script>
 </head>
 <body>
+<input type="radio"/>
+<select>
+	<option>dd</option>
+	<option>dd</option>
+	<option>dd</option>
+	<option>dd</option>
+</select>
+<input type="file"/>
+<img src="" onclick=""/> 
+<select name="fontName">
+						<option value="Nato Sans KR">Nato Sans KR</option>
+						<option value="Nanum Gothic">나눔 고딕</option>
+						<option value="Nanum Myeongjo">나눔 명조</option>
+					</select>
+
+<div><input class="boldBtn" type="button" value="얇게"/>
+<div contenteditable="true" style="display: block; width: 500px; height: 500px; background-color : #ccc;"></div>
+</div>
+<div contenteditable="true" style="display: block; width: 500px; height: 500px; background-color : #ccc;"></div>
 
 </body>
 </html>

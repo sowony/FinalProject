@@ -1,7 +1,5 @@
 package com.test.dashboard.common.config;
 
-import java.util.Properties;
-
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.ibatis.type.JdbcType;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -16,9 +14,13 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import com.test.dashboard.common.interceptor.GradeInterceptor;
+import com.test.dashboard.model.biz.DashMemberBiz;
+import com.test.dashboard.model.biz.DashMemberBizImpl;
+import com.test.dashboard.model.biz.WRuleBiz;
+import com.test.dashboard.model.biz.WRuleBizImpl;
 
 
 
@@ -73,7 +75,6 @@ public class ApplicationContent {
 		bean.setPassword(env.getProperty("jdbc.password"));
 		return bean;
 	}
-	
 	
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////
@@ -133,6 +134,8 @@ public class ApplicationContent {
 	public DataSourceTransactionManager dataSourceTransactionManager() {
 		return new DataSourceTransactionManager(dataSource());
 	}
+	
+	
 	
 	
 }

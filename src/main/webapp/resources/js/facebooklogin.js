@@ -30,7 +30,6 @@ function facebookLoginFun(){
 				
 				let memberInfo = {
 							'mid' : data.id+'_facebook',
-							'mpw' : data.id + window.btoa(unescape(encodeURIComponent(data.name)))
 				}
 				
 				xhrLoad('post', 'login', memberInfo, (res)=>{
@@ -87,7 +86,6 @@ function facebookLoginFun(){
 		           								
 		           								memberInfo = {
 		           										'mid' : data.id+'_facebook',
-		           										'mpw' : data.id + window.btoa(unescape(encodeURIComponent(data.name))),
 		           										'mname' : data.name,
 		           										'mnick' : document.querySelector('input[name="mnick"]').value,
 		           										'memail' : document.querySelector('input[name="memail"]').value,

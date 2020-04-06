@@ -25,15 +25,18 @@ public class MainController {
 	@Autowired
 	private MemberBiz memberBiz;
 	
+	private String sort = "!@#ADFVDD";
 	
 	@ResponseBody
 	@PostMapping("login")
 	public boolean postLogin(@RequestBody MemberDto memberDto,  HttpSession session) {
 		logger.info("[ INFO ] : MainController > postLogin [path : /login]");
 		
-		int platformChk = memberDto.getMid().split("_").length;
+		String[] tmp = memberDto.getMid().split("_");
 		
-		if(platformChk > 1) memberDto.setMpw(memberDto.getMpw() + "!@#ADFVDD");
+		if(tmp.length > 1) {
+			memberDto.setMpw(Util.sE(tmp[0], sort));
+		}
 		
 		MemberDto user = memberBiz.selectByIdAndPw(memberDto.getMid(), memberDto.getMpw());
 		
@@ -63,7 +66,10 @@ public class MainController {
 	public MemberDto postSignUp(@RequestBody MemberDto memberDto, HttpSession session, HttpServletRequest req) {
 		logger.info("[ INFO ] : MainController > postSignUp [path : /signup]");
 		
-		if(!memberDto.getMplatform().equals("home")) memberDto.setMpw(memberDto.getMpw() + "!@#ADFVDD");
+		if(!memberDto.getMplatform().equals("home")) {
+			String[] tmp = memberDto.getMid().split("_");
+			memberDto.setMpw(Util.sE(tmp[0], sort));
+		}
 		
 		if((memberDto.getMplatform().equals("home") || memberDto.getMplatform().equals("facebook"))) {
 			if(memberDto.getMimgpath() != null && !memberDto.getMimgpath().equals("")) {
@@ -89,6 +95,7 @@ public class MainController {
 			logger.info("[ INFO ] : MainController > postSignUp [fail]");
 			return null;
 		}
+		
 	}
 	
 	@ResponseBody
@@ -103,7 +110,7 @@ public class MainController {
 		if(res > 0) {
 			logger.info("[ INFO ] : MainController > postMyAbout [success]");
 			
-			session.setAttribute("user", memberBiz.selectByMNo(memberDto.getMno()));
+			if(session.getAttribute("user") != null) session.setAttribute("user", memberBiz.selectByMNo(memberDto.getMno()));
 			
 			return true;
 		} else {

@@ -59,23 +59,31 @@ public class LoginInterceptor implements HandlerInterceptor{
 		else if(request.getRequestURI().endsWith("footer")) return true;
 		else if(request.getRequestURI().endsWith("header")) return true;
 		else if(request.getRequestURI().endsWith("wboard")) return true;
+		else if(request.getRequestURI().endsWith("websocket")) return true;
 		else if(request.getRequestURI().endsWith("summerwrite")) return true;
-		
-		else if(request.getRequestURI().endsWith("map")) return true;
+		else if(request.getRequestURI().endsWith("wDelete")) return true;
+		else if(request.getRequestURI().endsWith("summerupdate")) return true;
+		else if(request.getRequestURI().endsWith("summerUpdateres")) return true;
+		else if(request.getRequestURI().endsWith("wbAllList")) return true;
+		else if(request.getRequestURI().endsWith("wbMyList")) return true;
+		else if(request.getRequestURI().endsWith("wbdatesend")) return true;
 		else if(request.getRequestURI().endsWith("footer")) return true;
 		else if(request.getRequestURI().endsWith("header")) return true;
 		else if(request.getRequestURI().endsWith("wboard")) return true;
 		else if(request.getRequestURI().endsWith("wSelectOne")) return true;
-		else if(request.getRequestURI().endsWith(".js")) return true;
-		else if(request.getRequestURI().endsWith(".css")) return true;
-		else if(request.getRequestURI().endsWith(".jpg")) return true;
-		else if(request.getRequestURI().endsWith(".jpeg")) return true;
-		else if(request.getRequestURI().endsWith(".png")) return true;
-		else if(request.getRequestURI().endsWith(".gif")) return true;
-		else if(request.getRequestURI().endsWith(".svg")) return true;
 		
 		else if(request.getRequestURI().endsWith("pagechange")) return true;
 		else if(request.getRequestURI().endsWith("crwl")) return true;
+		
+		else if(request.getRequestURI().endsWith("map")) return true;
+		else if(request.getRequestURI().endsWith("search")) return true;
+		else if(request.getRequestURI().endsWith("marker")) return true;
+		else if(request.getRequestURI().endsWith("delete")) return true;
+		else if(request.getRequestURI().endsWith("update")) return true;
+		else if(request.getRequestURI().endsWith("editor")) return true;
+		
+		else if(request.getRequestURI().endsWith("null")) return false;
+		
 		else {
 			
 			if(user == null) response.sendRedirect("/dashboard/login");

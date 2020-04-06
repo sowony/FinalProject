@@ -11,6 +11,7 @@ function loginSignIn() {
 	  
   const auth = gapi.auth2.init({
 		client_id: '869095672733-06a9k0ou1vkd2lakls4ibmba3vu5psot.apps.googleusercontent.com',
+		client_secret : 'firmx8X0IVXczpi2yUTJ7MT8',
 		scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/plus.me'
   });
   
@@ -20,8 +21,7 @@ function loginSignIn() {
 	  const profile = success.getBasicProfile();
   
 	  let memberInfo = {
-			  'mid' : profile.getName()+'_google',
-			  'mpw' : window.btoa(unescape(encodeURIComponent(profile.getName())))
+			  'mid' : profile.getName()+'_google'
 	  };
 	  
 	  xhrLoad('post', 'login', memberInfo, (res)=>{
@@ -85,7 +85,6 @@ function loginSignIn() {
          								
          								memberInfo = {
          										'mid' : profile.getName()+'_google',
-         										'mpw' : window.btoa(unescape(encodeURIComponent(profile.getName()))),
          										'mname' : profile.getName(),
          										'mnick' : document.querySelector('input[name="mnick"]').value,
          										'memail' : ((profile.getEmail())? profile.getEmail() : document.querySelector('input[name="memail"]').value),

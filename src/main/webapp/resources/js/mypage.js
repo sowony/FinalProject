@@ -4,6 +4,7 @@
 
 let userInfo;
 let selectTmpMember = '';
+let client;
 
 function logout(){
 		
@@ -15,104 +16,146 @@ function logout(){
 		
 }
 
-function dashboardLoad(loc){
+function dashItemCreate(dashItem,loc){
 	
-	xhrLoad('get','mypage/dashboard', null, (res)=>{
-		
-		let dashboardList = JSON.parse(res);
-	
-		for(let dashItem of dashboardList){
-			
-			let state;
-			
-			if(dashItem.mnick === userInfo.mnick){
-				state = 'owner';
-			} else {
-				state = 'belong';
-			}
-			
-			const dashList = document.querySelector('#'+state+'_list');
-			
-			let chk = true;
-			
-			dashList.childNodes.forEach((v,k)=>{
-				
-				if(v.dataset.dno == dashItem.dno){
-					chk = false;
-					return;
-				}
-				
-			});
-			
-			if(chk){
-				const dashItemDiv = addObject(dashList, 'div', ['dashItem', '_'+state], loc, (o)=>{
-				
-					motionOnOff(o, 0.5, false, {
-						opacity : {
-							num0 : 0,
-							num1 : 1
-						},
-						property : {
-							mpp : 'margin',
-							y : { num0 : -6, num0 : 6 },
-							x : 6
-						}
-					});
-				
-					o.dataset.dno = dashItem.dno;
-				
-					o.innerHTML = `
-					<div class="d_header">
-						<p class="d_title"><span>${dashItem.dtitle}</span><span>${new Intl.DateTimeFormat('ko-KR').format(new Date(dashItem.dcreatedate))}</span></p>
-						<p class="d_nick">
-							<span style="background-image:url('${dashItem.mimgpath}');"></span><span>
-						`+
-						((state === 'owner')? `본인 소유` : `${dashItem.mnick}`)
-						+`
-							</span>
-						</p>
-					</div>
-					<div class="d_body">
-						<p class="d_desc">${brChange(dashItem.ddesc, true)}</p>
-					</div>
-					`;
-					
-					o.addEventListener('click', ()=>{
-						
-						location.href = 'board/'+o.dataset.dno;
-						
-					});
-					
-					contextMenuFun(o,{
-						'newDash' : {
-							'대시보드 추가' : ()=>{console.log('작동 테스트');}
-						},
-						'dashMenu' :{
-							'대시보드 자세히 보기' : ()=>{alert('자세히보기 함수');},
-							'대시보드 수정' : ()=>{alert('수정 함수');},
-							'대시보드 삭제' : ()=>{alert('삭제 함수')}
-						},
-						'messageMenu' : {
-							'쪽지함 보기' : ()=>{alert('쪽지함 함수');},
-							'쪽지 작성' : ()=>{alert('쪽지 작성 함수');}
-						},
-						'alramMenu' : {
-							'알람 보기' : ()=>{alert('알람 함수');}
-						},
-						'logout' : {
-							'로그아웃' : ()=>{ logout(); }
-						}
-					});
-				
-					if(!loc){
-					
-						dashList.insertBefore(o, dashList.childNodes[0]);
-					
-					}
-				});
-			}
+	let state;
+
+	if(dashItem.mnick === userInfo.mnick){
+		state = 'owner';
+	} else {
+		state = 'belong';
+	}
+
+	const dashList = document.querySelector('#'+state+'_list');
+
+	let chk = true;
+
+	dashList.childNodes.forEach((v,k)=>{
+		if(v.dataset.dno == dashItem.dno){
+			chk = false;
+			return;
 		}
-	},false);
+	});
+
+	if(chk){
+		const dashItemDiv = addObject(dashList, 'div', ['dashItem', '_'+state], loc, (o)=>{
+
+			motionOnOff(o, 0.5, false, {
+				opacity : {
+					num0 : 0,
+					num1 : 1
+				},
+				property : {
+					mpp : 'margin',
+					y : { num0 : -6, num1 : 10 },
+					x : 6
+				}
+			});
+
+			o.dataset.dno = dashItem.dno;
+
+			o.innerHTML = `
+				<div class="d_header">
+				<p class="d_title"><span>${dashItem.dtitle}</span></p>
+				<p class="d_date"><span>${new Intl.DateTimeFormat('ko-KR').format(new Date(dashItem.dcreatedate))}</span></p>
+				<p class="d_nick">
+				<span style="background-image:url('${dashItem.mimgpath}');"></span><span>
+				`+
+				((state === 'owner')? `본인 소유` : `${dashItem.mnick}`)
+				+`
+				</span>
+				</p>
+				</div>
+				<div class="d_body">
+				<p class="d_desc">${brChange(dashItem.ddesc, true)}</p>
+				</div>
+				`;
+
+			o.addEventListener('click', ()=>{
+
+				client.disconnect();
+				location.href = 'board/'+o.dataset.dno;
+
+			});
+
+			contextMenuFun(o,{
+				'newDash' : {
+					'대시보드 추가' : ()=>{ addDashBoardFun(); }
+				},
+				'dashMenu' :{
+					'대시보드 자세히 보기' : ()=>{alert('자세히보기 함수');},
+					'대시보드 수정' : ()=>{ alert('수정 함수'); },
+					'대시보드 삭제' : ()=>{ dashboardDelete(o.dataset.dno); }
+				},
+				'messageMenu' : {
+					'쪽지함 보기' : ()=>{alert('쪽지함 함수');},
+					'쪽지 작성' : ()=>{alert('쪽지 작성 함수');}
+				},
+				'alramMenu' : {
+					'알람 보기' : ()=>{alert('알람 함수');}
+				},
+				'logout' : {
+					'로그아웃' : ()=>{ logout(); }
+				}
+			});
+
+			if(!loc){
+
+				dashList.insertBefore(o, dashList.childNodes[0]);
+
+			}
+		});
+	}
+}
+
+function dashboardDelete(dno){
+	
+	const submit = addObject(null, 'button', 'grayBtn', false, (o)=>{
+		o.innerHTML = '삭제';
+		o.style.width = 'max-content';
+		o.style.marginRight = '5px';
+		o.addEventListener('click',(e)=>{
+			xhrLoad('get', 'mypage/dashboard/delete/'+dno, null, (res)=>{
+				if(res){
+					const members = JSON.parse(res);
+					members.forEach(member=>{
+						client.send('/pub/delDash',{}, JSON.stringify(member));
+						motionOnOff(o.parentNode, 0.8, false, { setting : 'offDefault' }, false, (o)=>{
+							o.remove();
+						});
+					});
+				}
+			});
+		});
+	});
+	
+	boxFun('대시보드를 삭제하시겠습니까?', false, [submit], false, 'delCheckBox', null, true);
+	
+	
+}
+
+function dashboardLoad(dno){
+	
+	if(!dno){
+		console.log(dno);
+		xhrLoad('get','mypage/dashboard', null, (res)=>{
+
+			const dashboardList = JSON.parse(res);
+
+			for(let dashItem of dashboardList){
+				dashItemCreate(dashItem,true);
+			}
+			
+		},false);
+		
+	} else {
+		xhrLoad('get', 'mypage/dashboard/'+dno, null, (res)=>{
+			
+			const dashItem = JSON.parse(res);
+			dashItemCreate(dashItem,false);
+			
+		},false);
+	}
 }
 
 
@@ -324,6 +367,15 @@ function nickSearch(btn){
 		btn.disabled = 'true';
 		
 		const mnickInput = document.querySelector('input[name=mnick]');
+		
+		if(mnickInput.value === userInfo.mnick){
+			
+			boxFun('자신이 아닌 타인을 초대해주세요.').closeDisabledDelete(btn);
+			
+			selectTmpMember = '';
+			
+			return;
+		}
 		
 		xhrLoad('get', 'nickcheck', { mnick : mnickInput.value }, (res)=>{
 			
@@ -627,10 +679,16 @@ function addDashBoardFun(){
 							};
 							
 							xhrLoad('post', 'mypage/dashboard', dashCreateInfo, (res)=>{
-								if(res === 'true'){
+								
+								if(res){
+									const jsonObject = JSON.parse(res);
+									console.log(jsonObject);
+									jsonObject.members.forEach(member=>{
+										client.send('/pub/addDash', {}, JSON.stringify(member));
+									});
 									utilBoxDelete(true);
 									boxFun('성공적으로 대시보드가 만들어졌습니다.');
-									dashboardLoad(false);
+//									dashboardLoad(jsonObject.dashBoardDto.dno);
 								}
 							});
 							
@@ -727,147 +785,166 @@ function addDashBoardFun(){
 
 
 
-
-
-
-
 window.onload = ()=>{
 	
-	userInfo = headerFun();
-	
-	backgroundMotion();
-	
-	
-	
-	// mypage 만들기
-	const content = document.querySelector('#content');
-	
-	const myBox = addObject(content, 'div', 'myPageContent', true, (o)=>{
-		motionOnOff(o, 0.8, false, { setting : 'onDefault' }, {
-			after : (o)=>{
-				o.style.top = '20%';
-				o.style.left = '50%';
-				o.style.transform = 'translateX(-50%)';
-			}
-		});
-	});
+	const sock = new SockJS('broker');
+	client = Stomp.over(sock);
+	client.connect({},()=>{
+		
+		userInfo = headerFun();
 
-	
-	const myProfileBox = addObject(myBox, 'div', 'myProfileBox', true, (o)=>{
-		
-		o.innerHTML = `
-		<div id="myProfile">
-			<div id="p_header">
-				<p id="p_mnick"><span>${userInfo.mnick}</span><span>(${userInfo.mid})</span></p>
-			</div>
-			<div id="p_body">
+		backgroundMotion();
+
+		// mypage 만들기
+		const content = document.querySelector('#content');
+
+		const myBox = addObject(content, 'div', 'myPageContent', true, (o)=>{
+			motionOnOff(o, 0.8, false, { setting : 'onDefault' }, {
+				after : (o)=>{
+					o.style.top = '20%';
+					o.style.left = '50%';
+					o.style.transform = 'translateX(-50%)';
+				}
+			});
+		});
+
+
+		const myProfileBox = addObject(myBox, 'div', 'myProfileBox', true, (o)=>{
+
+			o.innerHTML = `
+				<div id="myProfile">
+				<div id="p_header">
+				<p id="p_mnick"><span>${userInfo.mnick}</span><span>(${userInfo.midstate? userInfo.midstate : userInfo.mid})</span></p>
+				</div>
+				<div id="p_body">
 				<p id="p_mabout">${userInfo.mabout}</p>
-			</div>
-		</div>
-		`;
-		
-		const myImgBox = addObject(o, 'div', 'myImgBox', true, (o)=>{
-			o.style.backgroundImage = `url('${userInfo.mimgpath}')`;
-		});
-		
-		const mabout = document.querySelector('#p_mabout');
-		
-		mabout.addEventListener('click', ()=>{
-			
-			const p_body = document.querySelector('#p_body');
-			
-			const text = mabout.innerHTML;
-			
-			const textarea = addObject(p_body, 'textarea', 'mabout', true, (o)=>{
-				o.name = 'mabout';
-				o.value = brChange(text);
-				o.style.display = 'block';
-				o.style.width = '90%';
-				o.style.height = '70px';
-				o.style.padding = '12px';
-				mabout.style.display = 'none';
+				</div>
+				</div>
+				`;
+
+			const myImgBox = addObject(o, 'div', 'myImgBox', true, (o)=>{
+				o.style.backgroundImage = `url('${userInfo.mimgpath}')`;
 			});
-			
-			const maboutSubmitBtn = addObject(p_body, 'button', 'grayBtn', true, (o)=>{
-				o.innerHTML = '수정';
-				o.style.display = 'inline-block';
-				o.addEventListener('click', ()=>{
-					
-					xhrLoad('post', 'mabout', { mno : userInfo.mno, mabout : textarea.value }, (res)=>{
-						
-						if(res === 'true'){
-							mabout.innerHTML = brChange(textarea.value, true);
-							userInfo['mabout'] = brChange(textarea.value, true);
-							textarea.remove();
-							maboutCloseBtn.remove();
-							o.remove();
-							mabout.style.display = 'block';
-						}
+
+			const mabout = document.querySelector('#p_mabout');
+
+			mabout.addEventListener('click', ()=>{
+
+				const p_body = document.querySelector('#p_body');
+
+				const text = mabout.innerHTML;
+
+				const textarea = addObject(p_body, 'textarea', 'mabout', true, (o)=>{
+					o.name = 'mabout';
+					o.value = brChange(text);
+					o.style.display = 'block';
+					o.style.width = '90%';
+					o.style.height = '70px';
+					o.style.padding = '12px';
+					mabout.style.display = 'none';
+				});
+
+				const maboutSubmitBtn = addObject(p_body, 'button', 'grayBtn', true, (o)=>{
+					o.innerHTML = '수정';
+					o.style.display = 'inline-block';
+					o.addEventListener('click', ()=>{
+
+						xhrLoad('post', 'mabout', { mno : userInfo.mno, mabout : textarea.value }, (res)=>{
+
+							if(res === 'true'){
+								mabout.innerHTML = brChange(textarea.value, true);
+								userInfo['mabout'] = brChange(textarea.value, true);
+								textarea.remove();
+								maboutCloseBtn.remove();
+								o.remove();
+								mabout.style.display = 'block';
+							}
+						});
+
 					});
-					
 				});
-			});
-			
-			const maboutCloseBtn = addObject(p_body, 'button', 'grayBtn', true, (o)=>{
-				o.innerHTML = '취소';
-				o.style.display = 'inline-block';
-				o.style.margin = '0 5px';
-				o.addEventListener('click', ()=>{
-					textarea.remove();
-					maboutSubmitBtn.remove();
-					o.remove();
-					mabout.style.display = 'block';
+
+				const maboutCloseBtn = addObject(p_body, 'button', 'grayBtn', true, (o)=>{
+					o.innerHTML = '취소';
+					o.style.display = 'inline-block';
+					o.style.margin = '0 5px';
+					o.addEventListener('click', ()=>{
+						textarea.remove();
+						maboutSubmitBtn.remove();
+						o.remove();
+						mabout.style.display = 'block';
+					});
 				});
+
 			});
-			
+
 		});
-		
-	});
-	
-	const ownerDashBoard = addObject(myBox, 'div', 'ownerDashBoard', true, (o)=>{
-		
-		o.innerHTML = `
-			<fieldset>
+
+		const ownerDashBoard = addObject(myBox, 'div', 'ownerDashBoard', true, (o)=>{
+
+			o.innerHTML = `
+				<fieldset>
 				<legend>내가 소유한 대시보드</legend>
 				<div id="owner_list"></div>
-			</fieldset>
-			`;
-			
-		
-	});
-	
-	const belongDashBoard = addObject(myBox, 'div', 'belongDashBoard', true, (o)=>{
-		
-		o.innerHTML = `
-			<fieldset>
+				</fieldset>
+				`;
+
+
+		});
+
+		const belongDashBoard = addObject(myBox, 'div', 'belongDashBoard', true, (o)=>{
+
+			o.innerHTML = `
+				<fieldset>
 				<legend>내가 참여한 대시보드</legend>
 				<div id="belong_list"></div>
-			</fieldset>
-			`;
-		
-	});
-	
-	
-		
-	const body = document.querySelector('body');
-	contextMenuFun(body,{
-		'newDash' : {
-			'대시보드 추가' : (e)=>{
-				addDashBoardFun();
+				</fieldset>
+				`;
+
+		});
+
+
+
+		const body = document.querySelector('body');
+		contextMenuFun(body,{
+			'newDash' : {
+				'대시보드 추가' : (e)=>{
+					addDashBoardFun();
+				}
+			},
+			'messageMenu' : {
+				'쪽지함 보기' : ()=>{alert('쪽지함 함수');},
+				'쪽지 작성' : ()=>{alert('쪽지 작성 함수');}
+			},
+			'alramMenu' : {
+				'알람 보기' : ()=>{alert('알람 함수');}
+			},
+			'logout' : {
+				'로그아웃' : ()=>{ logout(); }
 			}
-		},
-		'messageMenu' : {
-			'쪽지함 보기' : ()=>{alert('쪽지함 함수');},
-			'쪽지 작성' : ()=>{alert('쪽지 작성 함수');}
-		},
-		'alramMenu' : {
-			'알람 보기' : ()=>{alert('알람 함수');}
-		},
-		'logout' : {
-			'로그아웃' : ()=>{ logout(); }
-		}
-	});
+		});
+
+		dashboardLoad();
 		
-	dashboardLoad(true);
-	
+		client.subscribe('/sub/addDash/'+userInfo.mno, (res)=>{
+			const body = JSON.parse(res.body);
+			dashboardLoad(body.dno);
+		});
+		
+		client.subscribe('/sub/delDash/'+userInfo.mno, (res)=>{
+			const body = JSON.parse(res.body);
+			
+			const dashAllItem = document.querySelectorAll('.dashItem');
+			dashAllItem.forEach(i=>{
+				if(Number(i.dataset.dno) === body.dno){
+					motionOnOff(i, 0.8, false, { setting : 'offDefault' }, false, (o)=>{
+						o.remove();
+					});
+				}
+				
+			});
+			
+		});
+		
+	});
 };

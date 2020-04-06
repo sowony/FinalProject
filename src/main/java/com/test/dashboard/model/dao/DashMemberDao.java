@@ -16,7 +16,7 @@ import com.test.dashboard.model.dto.DashMemberDto;
 public interface DashMemberDao {
 	
 	// 대쉬보드 맴버 조회
-	@Select("select d.*, m.mnick, m.mimgpath from dashmember d inner join member m on(d.mid = m.mid) where dno = #{dno}")
+	@Select("select dm.*, m.mnick, m.mimgpath, dg.* from dashmember dm inner join member m on(dm.mid = m.mid) inner join dashgrade dg on(dm.dgno = dg.dgno) where dm.dno = #{dm.dno}")
 	public List<DashMemberDto> selectList(int dno);
 	
 	// 맴버테이블 NO로 한명 조회
@@ -24,7 +24,7 @@ public interface DashMemberDao {
 	public DashMemberDto selectByNo(int dmno);
 
 	// 맴버테이벌 대쉬보드 NO와 맴버 ID로 조회
-	@Select("select * from dashmember where dmdno = #{dno} and dmmid = #{mid}")
+	@Select("select * from dashmember where dno = #{dno} and mid = #{mid}")
 	public DashMemberDto selectById(Map<String, Object> params);
 	
 	@SelectKey(statement = "select dgno from dashgrade dg where dg.dno = #{dno} and dggrade = #{dggrade} and dgalias = #{dgalias}", before = true, keyProperty = "dgno", resultType = Integer.class)

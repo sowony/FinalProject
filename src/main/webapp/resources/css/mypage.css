@@ -73,7 +73,7 @@ legend {
 
 .dashItem {
     display: inline-block;
-    width: 195px;
+    width: 192px;
     height: 145px;
     border-radius: 5px;
     box-shadow: 0 1px 2px 1px #a0a8ab;
@@ -85,31 +85,56 @@ legend {
 	background-color: #ccf2ff;
 }
 
-.dashItem._owner:hover {
+._owner:hover {
     background-color: #ccf2ff;
     box-shadow: inset 0 0 2px 4px #85dde6, 0 1px 2px 1px #a0a8ab;
+}
+
+._belong{
+	background-color: #dce9ab;
+}
+
+._belong:hover {
+    background-color: #dce9ab;
+    box-shadow: inset 0 0 2px 4px #afc36f, 0 1px 2px 1px #a0a8ab;
 }
 
 .dashItem p {
     margin: 2px 0;
 }
 
+._owner p.d_title span:nth-child(1){
+	color: #215861;	
+}
+
+._belong p.d_title span:nth-child(1){
+	color: #5a682e;	
+}
+
 p.d_title span:nth-child(1) {
     font-size: 18px;
     font-weight: 600;
     letter-spacing: 1pt;
-    color: #215861;
     word-break: break-all;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    width: 100%;
+    display: block;
 }
 
-p.d_title span:nth-last-child(1){
+._owner p.d_date {
+	color: #134a4e;
+}
+
+._belong p.d_date span {
+	color: #7b8748;
+}
+
+p.d_date span {
 	margin-left : 5px;
 	font-size: 9pt;
     font-weight: 100;
-    color: #134a4e;
 }
 
 p.d_nick {
@@ -126,16 +151,31 @@ p.d_nick {
     float: left;
 }
 
+._owner .d_nick span:nth-last-child(1) {
+	color: #134a4e;
+}
+
+._belong .d_nick span:nth-last-child(1) {
+	color: #7b8748;
+}
+
 .d_nick span:nth-last-child(1) {
     font-size: 9pt;
     font-weight: 100;
     margin-top: 0;
-    color: #134a4e;
     margin-left: 5px;
 }
 
 .d_body {
     clear: both;
+}
+
+._owner p.d_desc{
+	color: #32747f;	
+}
+
+._belong p.d_desc{
+	color: #5a682e;	
 }
 
 p.d_desc {
@@ -144,7 +184,6 @@ p.d_desc {
     height: 75px;
     line-height: 150%;
     padding-right : 15px;
-    color: #32747f;
     text-overflow: ellipsis;
     word-break: break-all;
     overflow: hidden visible;
@@ -233,7 +272,7 @@ input[name=nickSearchBtn]{
     margin-left: 4px;
     height: max-content;
     font-size: 10px;
-    width: 17px;
+    width: 13px;
     border: 1px solid #ccc;
     border-radius: 50%;
     background-color: #ccf2ff;
@@ -260,6 +299,7 @@ img.dashMemberImg {
     border-radius: 50%;
     border: 1px solid #ddd;
     width: 20px;
+    height: 20px;
     position: absolute;
     top: 3px;
 }
