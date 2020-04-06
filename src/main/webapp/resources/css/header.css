@@ -69,9 +69,8 @@ li.nickName_li {
 }
 
 .boxOpen.msgBox {
-    display: table;
     width: 70%;
-    height: 70%;
+    height: 590px !important;
     table-layout: fixed;
     min-width: 700px;
 }
@@ -82,55 +81,56 @@ li.nickName_li {
 }
 
 .dashlist {
-	display: table-cell;
-	width: 30%;
+	display: inline-block;
+	padding: 0 15px 0 0;
+	width: 20%;
 	height: 100%;
-	overflow: auto;
-	table-layout: fixed;
+	overflow: overlay;
 }
 
 .dashlist>* {
+	position: relative;
 	background-color: blanchedalmond;
 	margin: 0 5px 10px 5px;
 	border-radius: 20px;
 }
 
 .msglist {
-    display: block;
+    display: inline-block;
     background-color: aliceblue;
-    width: 97%;
+    width: 70%;
     height: 100%;
-    overflow: auto;
+    margin-left: 10px;
+    padding: 0 15px;
+    overflow: overlay;
     border-radius: 20px;
-    table-layout: fixed;
-    max-height: 370px;
 }
 
 span.sum {
 	width: 25px;
 	height: 25px;
 	background-color: red;
-	float: right;
 	border-radius: 50%;
 	color: white;
-	margin-right: 5%;
+	position: absolute;
+	right: 10px;
 }
 
 .divinner>* {
 	display: inline-block;
 	height: 30px;
+	width: 80%;
 	margin-top: 5px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	word-break: break-all;
+	white-space: nowrap;
 }
 
 .mainDiv {
-    display: table;
-    height: 75%;
+    display: block;
+    height: 450px;
     width: 100%;
-    max-width: 800px;
-    table-layout: fixed;
-    min-width: 500px;
-    min-height: 300px;
-    margin:10px;
 }
 
 .msglist>div {
@@ -241,7 +241,8 @@ input.indvopenMsgto:focus, input.indvopenDno:focus{
     height: 204px;
 }
 
-input[type="submit"], input[type="button"] {
+.msgBox input[type="submit"], .msgBox input[type="button"],
+.indvMsgBox input[type="submit"], .indvMsgBox input[type="button"] {
     width: fit-content;
     border: 0px;
     border-radius: 5px;

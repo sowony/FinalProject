@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import com.test.dashboard.model.biz.MemberBiz;
 import com.test.dashboard.model.dto.DashAddObjectDto;
 import com.test.dashboard.model.dto.DashMemberDto;
+import com.test.dashboard.model.dto.MsgDto;
 import com.test.dashboard.model.dto.WChatDto;
 import com.test.dashboard.model.dto.WidgetDto;
 
@@ -91,6 +92,15 @@ public class WebSocketController {
 		
 	}
 	
+	@MessageMapping("/wcrkeyword")
+	public void wCrKeywordMessage(Map<String, Object> params) {
+			
+		logger.info("[ INFO ] : WebSocketController > wCrKeywordMessage [keyword : " + params.get("keyword") + "]");
+			
+		template.convertAndSend("/sub/wcrkeyword/" + params.get("wno"), params);
+		
+	}
+	
 	@MessageMapping("/addDash")
 	public void dAddMessage(DashMemberDto dashMemberDto) {
 			
@@ -116,13 +126,15 @@ public class WebSocketController {
 	}
 	
 	
-	@MessageMapping("/wcrkeyword")
-	public void wCrKeywordMessage(Map<String, Object> params) {
+	
+	@MessageMapping("/messagealarm")
+	public void messageAlarmMessage(MsgDto msgDto) {
+		
+		int mno = memberBiz.selectById(msgDto.getMsgto()).getMno();
+		
+		logger.info("[ INFO ] : WebSocketController > messageAlarmMessage [msgDto : " + msgDto + "]");
 			
-		logger.info("[ INFO ] : WebSocketController > wCrKeywordMessage [keyword : " + params.get("keyword") + "]");
-			
-		template.convertAndSend("/sub/wcrkeyword/" + params.get("wno"), params);
-			
+		template.convertAndSend("/sub/messagealarm/" + mno, msgDto);
 		
 	}
 	

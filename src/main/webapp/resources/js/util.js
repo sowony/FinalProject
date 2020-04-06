@@ -1762,7 +1762,6 @@ function boxFun(text,bg, addTagObject, closeBtnDelete, boxSelector, callback, au
 		
 		if(callback){
 			
-			
 			callback(contentBox, contentBox.childNodes, boxSelector);
 		}
 		

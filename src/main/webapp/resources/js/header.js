@@ -124,32 +124,38 @@ function headerFun(){
 let dashlist;
 
 function printDashList (o){
-	var divinner = "";
+	let divinner = "";
 	
 	xhrLoad('get', 'msg/dashlist',null ,(res)=>{
 		
 		 dashlist = JSON.parse(res);
-		
+		 
 			let sum = 0;
 			
 			for (let i = 0 ; i < dashlist.length; i++){
 				sum+= dashlist[i].SUM;
 			}
-				divinner += `<div class='divinner' title='all'>
-								<span title='all' >ALL</span> 
-								<span title='all' class='sum'>${sum}</span>
-							</div>`;
-		
-			for (let i = 0 ; i < dashlist.length ; i++){
-				if (dashlist[i].SUM===0) divinner += `<div class='divinner' title='${dashlist[i].DNO}'>
-														<span title='${dashlist[i].DNO}'>${dashlist[i].DNO}</span> 
-														<span 'title='${dashlist[i].DNO}' class='hiddenspan sum'>${dashlist[i].SUM}</span>
-													</div>`;
-				else divinner += `<div class='divinner' title='${dashlist[i].DNO}'>
-									<span title='${dashlist[i].DNO}'>${dashlist[i].DNO}</span> 
-									<span title='${dashlist[i].DNO}' class='sum'>${dashlist[i].SUM}</span>
-								</div>`;
-			}
+			
+			divinner += `<div class='divinner' title='all'>
+							<span title='all' >ALL</span> 
+							<span title='all' class='sum'>${sum}</span>
+						</div>`;
+			
+			dashItems.forEach(item=>{
+				
+				let countSpan = ``;
+				
+				for (let i = 0 ; i < dashlist.length ; i++){
+					countSpan = ((dashlist[i].DNO === item.dno) ? `<span 'title='${dashlist[i].DNO}' class='${(dashlist[i].SUM===0)? hiddenspan : ''} sum'>${dashlist[i].SUM}</span>` : ``);
+				}
+				
+				divinner += `<div class='divinner' title='${item.dno}'>
+					<span title='${item.dno}'>${item.dtitle}</span>` + countSpan +
+				`</div>`;
+				
+			
+			});
+			
 	}, false);
 
 	
@@ -174,7 +180,7 @@ function invdmsg (){
 		console.log("what's this here=====>"+this);
 		var dno = this.getAttribute('title');	// divinner의 title(dno) 속성을 가져옴
 												// -> 어느 쪽지함인지 구분함
-		xhrLoad('get', 'msg/msgList',{'dno':dno}, (res)=>{
+		xhrLoad('get', 'msg/msgList',{ 'dno':dno }, (res)=>{
 			let msglist = JSON.parse(res);
 			
 			for (let i = 0 ; i<msglist.length; i++){
@@ -313,7 +319,8 @@ function writeMsg(openMsg){
 				
 			}, false);
 		}
-	}else{
+	} else {
+		
 		msgSpan.innerHTML='* 답장 하기 *';
 		msgform.innerHTML=`	 <div class='msgDiv'><span id='msgCaption'>Title:</span> <input type='text' class='indvMsgtitle' name='msgtitle'/></div>
 			  <div class='msgDiv'><span id='msgCaption'>Dashboard:</span><input readonly class='indvopenDno' name='dno' value='${openMsg.dno}'/></div>
@@ -323,7 +330,7 @@ function writeMsg(openMsg){
 			  <input type='hidden' class='indvopenMsgfrom'  name='msgfrom'/ value='${userInfo.mid}'/>
 			  <input type='hidden' class='indvopenMsgDate' name='msgdate' value="${year}년${month}월${day}일 ${hours}시${minutes}분"/>
 			 </form>
-			  <input type='button' value='send' onclick=sendForm();></input>`;
+			  <input type='button' value='send' onclick=sendForm(this);></input>`;
 	}
 	
 	const writeBox = boxFun(null, false, [msgSpan,msgform], false,'writeBox',(o)=>{
@@ -333,7 +340,7 @@ function writeMsg(openMsg){
 	
 }
 
-function sendForm(){
+function sendForm(that){
 	
 	var msgForm = document.querySelector('#msgForm');
 	console.log('msgForm==>'+msgForm.msgto);
@@ -341,24 +348,30 @@ function sendForm(){
 	var dto = {}
 	
 	for(let i = 0 ; i <msgForm.length; i++){
+		
 		dto[msgForm[i].name]=msgForm[i].value;
+		
 	}
 
-	if (msgForm['msgto'].value==='') alert('수신자를 선택해주세요 ')
-	else { 
-		JSON.stringify(dto);
+	if (msgForm['msgto'].value===''){ 
 		
-		xhrLoad('post', 'msg/write',dto,(res)=>{
-			console.log(res);
-			if (res === '1'){
+		boxFun('수신자를 선택해주세요 ').closeDisabledDelete(that);
+		
+	} else { 
+		
+		xhrLoad('post', 'msg/write', dto, (res)=>{
+			
+			if (res){
+				
 				document.getElementsByClassName('writeBox')[0].remove();
+				
 				const confirmBox = boxFun('쪽지를 성공적으로 발송했습니다. ', false,null, false, 'confirmBox',()=>{
-					
+					client.send('/pub/messagealarm')
 				},true);
 
 			}
 		
-	}, false);
+		}, false);
 	}
 }
 

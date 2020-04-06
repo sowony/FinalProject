@@ -5,6 +5,8 @@
 let userInfo;
 let selectTmpMember = '';
 let client;
+let dashItems = [];
+
 
 function logout(){
 		
@@ -137,12 +139,14 @@ function dashboardDelete(dno){
 function dashboardLoad(dno){
 	
 	if(!dno){
-		console.log(dno);
 		xhrLoad('get','mypage/dashboard', null, (res)=>{
 
 			const dashboardList = JSON.parse(res);
 
 			for(let dashItem of dashboardList){
+				
+				dashItems.push(dashItem);
+				
 				dashItemCreate(dashItem,true);
 			}
 			
@@ -152,10 +156,15 @@ function dashboardLoad(dno){
 		xhrLoad('get', 'mypage/dashboard/'+dno, null, (res)=>{
 			
 			const dashItem = JSON.parse(res);
+			
+			dashItems.push(dashItem);
+			
 			dashItemCreate(dashItem,false);
 			
 		},false);
 	}
+	
+	console.log(dashItems);
 }
 
 
@@ -164,6 +173,7 @@ function addMemberBtnAdd(){
 	if(!document.querySelector('.addMemberBtn')){
 		
 		const dashRuleDiv = document.querySelector('.dashRuleList').parentNode;
+		
 		const addMemberBtn = addObject(dashRuleDiv, 'input', ['addMemberBtn', 'grayBtn'], true, (o)=>{
 			o.type = 'button';
 			o.value = '추가';
@@ -926,9 +936,11 @@ window.onload = ()=>{
 
 		dashboardLoad();
 		
-		client.subscribe('/sub/message/'+userInfo.mno, (res)=>{
+		client.subscribe('/sub/messagealarm/'+userInfo.mno, (res)=>{
 			
 			const body = JSON.parse(res.body);
+			
+			console.log(body);
 			
 			const div = document.getElementById('utilDiv');
 			
@@ -949,9 +961,10 @@ window.onload = ()=>{
 			const body = JSON.parse(res.body);
 			
 			const dashAllItem = document.querySelectorAll('.dashItem');
-			dashAllItem.forEach(i=>{
-				if(Number(i.dataset.dno) === body.dno){
-					motionOnOff(i, 0.8, false, { setting : 'offDefault' }, false, (o)=>{
+			dashAllItem.forEach((item,i)=>{
+				if(Number(item.dataset.dno) === body.dno){
+					dashItems.splice(i,1);
+					motionOnOff(item, 0.8, false, { setting : 'offDefault' }, false, (o)=>{
 						o.remove();
 					});
 				}

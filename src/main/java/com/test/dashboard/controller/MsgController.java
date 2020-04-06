@@ -34,10 +34,11 @@ public class MsgController {
 	
 	
 	@GetMapping("/dashlist")
-	public List<Map<Object, Object>> getDashList(String mid, HttpSession session) {
-		logger.info("getDashList===>mid: "+mid);
+	public List<Map<Object, Object>> getDashList(HttpSession session) {
 		
 		MemberDto user = (MemberDto)session.getAttribute("user");
+		
+		logger.info("getDashList===>mid: "+user.getMid());
 		
 		List<Map<Object, Object>> dto = msgbiz.selectAll(user.getMid());
 		
@@ -71,10 +72,14 @@ public class MsgController {
 	}
 	
 	@PostMapping("/write")
-	public int sendMsg(@RequestBody MsgDto dto) {
+	public MsgDto sendMsg(@RequestBody MsgDto dto) {
 		logger.info("sendMsgdd===>"+dto);
-		int result = msgbiz.sendMsg(dto); 
-		return result;
+		int result = msgbiz.sendMsg(dto);
+		if(result > 0) {
+			return dto;
+		} else {
+			return null;
+		}
 	}
 	
 	@GetMapping("/getDashMember")
