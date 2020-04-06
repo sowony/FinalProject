@@ -19,7 +19,7 @@ public class WboardDto {
 	private String wbcontent ;
 	private String wfno_list;//파일 테이블 번호
 	private String wbstartdate;
-	private Date wbenddate ;
+	private String wbenddate ;
 	private String wbcolor ;//할일게시판 색상
 	
 
