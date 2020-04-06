@@ -19,16 +19,14 @@ var ps = new kakao.maps.services.Places();
 var infowindow = new kakao.maps.InfoWindow({zIndex:1});
 
 // 키워드로 장소를 검색합니다
-//searchPlaces();
+// searchPlaces();
 
-var body = document.body;
-
-//키워드 검색을 요청하는 함수입니다
+// 키워드 검색을 요청하는 함수입니다
 function searchPlaces() {
 
 	console.log('여기까지 들어오나??');
 
-	//var keyword = document.getElementById('keyword').value;
+	// var keyword = document.getElementById('keyword').value;
 	var keyword = _menu.querySelector('#keyword').value;
 	
 	console.log(keyword);
@@ -68,8 +66,10 @@ function placesSearchCB(data, status, pagination) {
 // 검색 결과 목록
 function displayPlaces(places) {
 
-    var listEl = document.getElementById('placesList'), 
-    menuEl = document.getElementById('menu_wrap'),
+    //var listEl = document.getElementById('placesList'), 
+    var listEl = document.querySelector('#placesList'),
+    menuEl = document.querySelector('#menu_wrap'),
+    //fragment = document.createDocumentFragment(), 
     fragment = document.createDocumentFragment(), 
     bounds = new kakao.maps.LatLngBounds(), 
     listStr = '';
@@ -106,6 +106,40 @@ function displayPlaces(places) {
 // 검색결과 항목을 Element로 반환하는 함수입니다
 function getListItem(index, places) {
 	
+//	var el = document.createElement('li'),
+//    itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
+//                '<div class="info">' +
+//                '   <h5 class="name">' + places.place_name + '</h5>';
+//
+//    if (places.road_address_name) {
+//        itemStr += '    <span class="addr">' + places.road_address_name + '</span>' +
+//                    '   <span class="jibun gray">' +  places.address_name  + '</span>';
+//    } else {
+//        itemStr += '    <span>' +  places.address_name  + '</span>'; 
+//    }
+//                 
+//      itemStr += '  <span class="tel">' + places.phone  + '</span>' +
+//                '</div>';           
+//
+//    el.innerHTML = itemStr;
+//    el.className = 'item';
+//
+//    var placePosition = new kakao.maps.LatLng(places.y, places.x);
+//    // click시 마커 추가
+//    el.addEventListener('click',function(){
+//    	
+//        let wmapkeyword = document.getElementsByClassName("name")[index].innerText;
+//        let wmapaddr = document.getElementsByClassName("addr")[index].innerText;
+//        let wmapjibun = document.getElementsByClassName("jibun gray")[index].innerText;
+//        let wmaplat = placePosition.getLat().toString();
+//        let wmaplng = placePosition.getLng().toString();  
+//       
+//
+//        addMemo(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplng);
+//		
+//    });
+//    
+//    return el;
 	var el = document.createElement('li'),
     itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
                 '<div class="info">' +
@@ -127,10 +161,9 @@ function getListItem(index, places) {
     var placePosition = new kakao.maps.LatLng(places.y, places.x);
     // click시 마커 추가
     el.addEventListener('click',function(){
-    	
-        let wmapkeyword = document.getElementsByClassName("name")[index].innerText;
-        let wmapaddr = document.getElementsByClassName("addr")[index].innerText;
-        let wmapjibun = document.getElementsByClassName("jibun gray")[index].innerText;
+        let wmapkeyword = _menu.querySelectorAll('.name')[index].innerText;
+        let wmapaddr = _menu.querySelectorAll('.addr')[index].innerText;
+        let wmapjibun = _menu.querySelectorAll('.jibun')[index].innerText;
         let wmaplat = placePosition.getLat().toString();
         let wmaplng = placePosition.getLng().toString();  
        
@@ -152,16 +185,16 @@ function addMemo(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplng){
 
     	o.innerHTML = '확인';
     	o.addEventListener('click', (o)=>{
-    		
+
     		let wmapmemo = document.querySelector('.memo').value;
     		let boxOpen = document.querySelector('.memopopup');
-//    		console.log(wmapmemo);
-//    		console.log(document.querySelector('.memopopup'));
+// console.log(wmapmemo);
+// console.log(document.querySelector('.memopopup'));
             
-//    		motionOnOff(boxOpen, 1, true, { setting : 'onDefault' }, null, (o)=>{
-//    			o.remove();
+// motionOnOff(boxOpen, 1, true, { setting : 'onDefault' }, null, (o)=>{
+// o.remove();
 //    			
-//    		});
+// });
     		boxOpen.remove();
     		
     		var markerPosition  = new kakao.maps.LatLng(wmaplat, wmaplng); 
@@ -191,12 +224,14 @@ function removeMarker(fakeMarker,marker, markerDiv){
 	fakeMarker.remove();
 	markerDiv.remove();
 	marker.setMap(null);
-	//location.reload();
+	// location.reload();
 }
+
 
 
 // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
 function displayPagination(pagination) {
+
     var paginationEl = document.getElementById('pagination'),
         fragment = document.createDocumentFragment(),
         i; 
@@ -242,7 +277,7 @@ function removeAllChildNods(el) {
     }
 }
 
-//오른쪽클릭시 창 생성
+// 오른쪽클릭시 창 생성
 function clickMenu(marker, mapno, mapmemo, realMarker, markerDiv){
 	
 	contextMenuFun(marker,{
@@ -282,7 +317,7 @@ function clickMenu(marker, mapno, mapmemo, realMarker, markerDiv){
 		},
 		'update' : {
 			'메모 수정' : function(){
-				//var newMemo = prompt("메모 수정 : ", mapmemo.memo);
+				// var newMemo = prompt("메모 수정 : ", mapmemo.memo);
 				let textarea = addObject(null, 'textarea', 'updateMemo', false, (o)=>{
 					o.innerHTML = mapmemo.memo;
 				});
@@ -302,36 +337,85 @@ function clickMenu(marker, mapno, mapmemo, realMarker, markerDiv){
 						
 						$.ajax({
 							url: 'update',
-							//accept: 'application/json',
+							// accept: 'application/json',
 							method: 'post',
-							//contentType: 'application/json; charset=utf-8;',
+							// contentType: 'application/json; charset=utf-8;',
 							async: false,
 							data: dd,
 							success: function(res){
 								if(res) {
 									
-									$.ajax({
-										url: 'marker',
-										accept: 'application/json',
-										method: 'post',
-										contentType: 'application/json; charset=utf-8;',
-										async: false,
-										data: JSON.stringify(),
-										success: function(data){
-											data.forEach(function(item){
-												removeMarker(marker, realMarker, markerDiv);
-											});
-										},
-										error: function(){
-											boxFun('마커 생성 실패', true, null, false, 'markerError2', null, true);
-										},
-										complete: function(){
-											//openMarker();
-											alert('살려줘!!!');
-										}
-									});
+//									$.ajax({
+//										url: 'marker',
+//										accept: 'application/json',
+//										method: 'post',
+//										contentType: 'application/json; charset=utf-8;',
+//										async: false,
+//										data: JSON.stringify(),
+//										success: function(data){
+//											data.forEach(function(item){
+//												
+//												let markerPositionAjax  = new kakao.maps.LatLng(item.wmaplat, item.wmaplng); 
+//
+//												let markerAjax = addMarker(markerPositionAjax);
+////												var markerAjax = new kakao.maps.Marker({
+////													position: markerPositionAjax
+////												});
+//												let divAjax = markerAjax.pd.parentNode;
+//												let qsAjax = divAjax.querySelector('img');
+//												let chkAjax = addObject(divAjax, 'div', 'map_test', true, (o)=>{
+//													o.style.position = 'absolute';
+//													o.style.width = qsAjax.style.width;
+//													o.style.height = qsAjax.style.height;
+//												});
+//												// console.log("item.wmapno : " + item.wmapno);
+//												let mapno = {temp:item.wmapno};
+//												let mapmemo = {memo: item.wmapmemo}
+//												
+//												markerAjax.remove();
+//												
+////												
+////												clickMenu(chkAjax, mapno, mapmemo, markerAjax, divAjax);
+////												
+////												chkAjax.onmouseover =  function () {
+////									                displayInfowindow(markerAjax, item.wmapkeyword, item.wmapaddr, item.wmapjibun, item.wmapmemo);
+////									            };
+////
+////									            chkAjax.onmouseout =  function () {
+////									                infowindow.close();
+////									            };
+////												removeMarker(marker, realMarker, markerDiv);
+////												
+////												clickMenu(realMarker, item.wmapkeyword, item.wmapaddr, item.wmapjibun, item.wmapmemo);
+////												
+////												chkAjax.onmouseover =  function () {
+////									                displayInfowindow(marker, item.wmapkeyword, item.wmapaddr, item.wmapjibun, item.wmapmemo);
+////									            };
+////
+////									            chkAjax.onmouseout =  function () {
+////									                infowindow.close();
+////									            };
+////												infowindow();
+//												
+//												//removeMarker(marker, realMarker, markerDiv);
+//											});
+//										},
+//										error: function(){
+//											boxFun('마커 생성 실패', true, null, false, 'markerError2', null, true);
+//										},
+//										complete: function(){
+//											 //removeMarker();
+////											removeMarker(marker, realMarker, markerDiv);
+////											openMarker();
+//											//alert('살려줘!!!');
+//										}
+//									});
+//									
 									
-									boxFun('수정 완료', true, null, false, 'updateSucc', null, true);
+									boxFun('수정 완료', true, null, false, 'updateSucc', (o)=>{
+										openMarker();
+									}, true);
+									
 								} else {
 									boxFun('수정 실패', true, null, false, 'updateFail', null, true);
 								}
@@ -374,7 +458,7 @@ function saveData(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplng, wmapmemo, 
 						
 			if(res){
 				boxFun('저장!', true, null, false, 'savedPopup', (o)=>{
-					//openMarker();
+					// openMarker();
 				}, true);
 				
 			} else {
@@ -388,7 +472,7 @@ function saveData(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplng, wmapmemo, 
 }
 
 
-//window.onload = openMarker;
+// window.onload = openMarker;
 openMarker();
 
 function openMarker(){
@@ -416,10 +500,10 @@ function openMarker(){
 					o.style.height = qsAjax.style.height;
 				});
 				
-				
-				//console.log("item.wmapno : " + item.wmapno);
+				// console.log("item.wmapno : " + item.wmapno);
 				let mapno = {temp:item.wmapno};
 				let mapmemo = {memo: item.wmapmemo}
+				
 				
 				clickMenu(chkAjax, mapno, mapmemo, markerAjax, divAjax);
 				
@@ -431,7 +515,8 @@ function openMarker(){
 	                infowindow.close();
 	            };
 	            
-	            //console.dir(markerAjax);
+
+	            // console.dir(markerAjax);
 				
 	            console.log(item.wmapkeyword);
 	            console.log(item.wmaplat);
@@ -442,7 +527,8 @@ function openMarker(){
 			boxFun('마커 생성 실패', true, null, false, 'markerError', null, true);
 		},
 		complete: function(){
-			document.getElementById('testbtn').addEventListener('click',function(){
+			_menu.querySelector('#testbtn').addEventListener('click',function(){
+				console.log('click');
 				searchPlaces();
 			});
 		}

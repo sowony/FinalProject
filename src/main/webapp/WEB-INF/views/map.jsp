@@ -32,7 +32,7 @@
 				<div id="searchBar">
 					<form onsubmit="searchPlaces(); return false;">
 						<input type="text" value="" id="keyword" size="15" placeholder="키워드를 입력해주세요">
-						<button id="testbtn" type="submit">검색하기</button>
+						<input type="button" id="testbtn" value="검색하기">
 					</form>
 				</div>
 			</div>

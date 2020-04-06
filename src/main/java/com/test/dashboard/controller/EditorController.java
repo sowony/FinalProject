@@ -15,21 +15,21 @@ public class EditorController {
 	private Logger logger = LoggerFactory.getLogger(EditorController.class);
 	
 	
-	@GetMapping("editor")
+	@GetMapping("weditor")
 	public String getEditor() {
 		logger.info("editor 오픈");
 		
-		return "editor";
+		return "weditor";
 	}
 	
-	@PostMapping("run")
-	@ResponseBody
-	public String runEditor(@RequestBody WEditorDto dto) {
-		
-		
-		
-		
-		return "";
-	}
+//	@PostMapping("run")
+//	@ResponseBody
+//	public String runEditor(@RequestBody WEditorDto dto) {
+//		
+//		
+//		
+//		
+//		return "editorResult";
+//	}
 
 }
