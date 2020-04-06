@@ -115,4 +115,15 @@ public class WebSocketController {
 		
 	}
 	
+	
+	@MessageMapping("/wcrkeyword")
+	public void wCrKeywordMessage(Map<String, Object> params) {
+			
+		logger.info("[ INFO ] : WebSocketController > wCrKeywordMessage [keyword : " + params.get("keyword") + "]");
+			
+		template.convertAndSend("/sub/wcrkeyword/" + params.get("wno"), params);
+			
+		
+	}
+	
 }

@@ -12,8 +12,8 @@
 <link rel="stylesheet" href="./resources/css/crawling.css"
 	type="text/css" />
 <body>
-	<div class="search" id="search">
-		<input type="text" id="keyword" />
+	<div class="search">
+		<input type="text" class="keyword" />
 		<img src="./resources/images/crwl_2.png" onclick="crawling()"/>
 		<img src="./resources/images/crwl_1.png" onclick="crawling()"/>
 	</div>

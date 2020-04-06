@@ -31,6 +31,7 @@ public class GradeInterceptor extends HandlerInterceptorAdapter {
 	@Autowired
 	private DashMemberBiz dashMemberBiz;
 	
+	@SuppressWarnings("null")
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
@@ -46,10 +47,9 @@ public class GradeInterceptor extends HandlerInterceptorAdapter {
 			
 			logger.info("[ Interceptor ] Permission Check");
 			
-			String requestBody = ((String) request.getAttribute("requestBody")).trim();
-			
-			if(!requestBody.equals("") || requestBody != null) {
+			if(request.getAttribute("requestBody") != null) {
 				
+				String requestBody = ((String) request.getAttribute("requestBody"));
 				Gson gs = new Gson();
 				JsonElement je = gs.fromJson(requestBody, JsonElement.class);
 				JsonObject jo = je.getAsJsonObject();

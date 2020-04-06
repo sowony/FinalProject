@@ -19,10 +19,12 @@
 <!-- 페이지 js, css -->
 <link rel="stylesheet" href="/dashboard/resources/css/header.css" type="text/css">
 <link rel="stylesheet" href="/dashboard/resources/css/board.css" type="text/css">
+<link rel="stylesheet" href="/dashboard/resources/css/crawling.css" type="text/css">
 <link rel="stylesheet" href="/dashboard/resources/css/wmemoAndwchat.css" type="text/css">
 
 <script type="text/javascript" src="/dashboard/resources/js/board.js"></script>
 
+<script type="text/javascript" src="/dashboard/resources/js/crawling.js"></script>
 <script type="text/javascript" src="/dashboard/resources/js/wmemo.js"></script>
 <script type="text/javascript" src="/dashboard/resources/js/wchat.js"></script>
 

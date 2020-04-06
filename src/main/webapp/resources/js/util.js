@@ -638,6 +638,11 @@ function widgetGradeCheck(widget){
 		
 		targets.push(widget.querySelector('.wmContent'));
 		targets.push(widget.querySelector('.wmSetting'));
+		
+	} else if (wcategory === 'sns'){
+		
+		targets.push(widget.querySelector('.wcrSearch'));
+	
 	}
 	
 	targets.forEach(t=>{
@@ -1008,6 +1013,8 @@ function widgetFun(setting){
 			wmemoBox(widget);
 		} else if(wcategory === 'chat'){
 			wchatBox(widget);
+		} else if(wcategory === 'sns'){
+			wcralingBox(widget);
 		}
 		
 		

@@ -347,6 +347,7 @@ function widgetAddAndModify(){
 					<select name="wcategory" class="wcategory">
 						<option name="MEMO" value="MEMO">메모</option>
 						<option name="CHAT" value="CHAT">채팅</option>
+						<option name="SNS" value="SNS">SNS</option>
 					</select>
 				</div>
 				`) +`

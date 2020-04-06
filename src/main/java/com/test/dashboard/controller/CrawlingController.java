@@ -1,6 +1,5 @@
 package com.test.dashboard.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -22,7 +21,7 @@ public class CrawlingController {
 	@ResponseBody
 	@RequestMapping("/crwl")
 	public List<CrawlingDto> crwl (@RequestBody @RequestParam(value="keyword", required = false, defaultValue = "null") String keyword) {
-		System.out.println("========================================>>>>>>>>"+keyword);
+		logger.info("========================================>>>>>>>>"+keyword);
 		crawling crwl = new crawling();
 		if (keyword != null) {
 			return crwl.crwlparser(keyword); 
