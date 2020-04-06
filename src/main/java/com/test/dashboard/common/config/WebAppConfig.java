@@ -12,6 +12,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
+import com.test.dashboard.common.filter.HttpRequestWrapperFilter;
 import com.test.dashboard.common.filter.LogFilter;
 
 // Web.xml 파일 Class화
@@ -34,7 +35,6 @@ public class WebAppConfig implements WebApplicationInitializer {
 		</context-param>
 		 */
 		AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext();
-		
 		// 전역 컨테이너 설정을 저장해놓은 클래스를 컨테이너 객체에 등록
 		applicationContext.register(ApplicationContent.class);		
 		// 객체 생성 끝
@@ -87,8 +87,13 @@ public class WebAppConfig implements WebApplicationInitializer {
 		
 		
 		FilterRegistration.Dynamic logFilter = servletContext.addFilter("logFilter", new LogFilter());
-		logFilter.addMappingForServletNames(null, true, "/*");
+		logFilter.addMappingForUrlPatterns(null, true, "/*");
 		
+		FilterRegistration.Dynamic httpRequestWrapperFilter = servletContext.addFilter("httpRequestWrapperFilter", new HttpRequestWrapperFilter());
+		httpRequestWrapperFilter.addMappingForUrlPatterns(null, true, "/dashboard/board/*");
+
 	}
+	
+	
 	
 }

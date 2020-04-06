@@ -19,5 +19,7 @@ public interface DashBoardBiz {
 	
 	public int update(DashBoardDto dto);
 	
+	public int updateDel(int dno);
+	
 	public int delete(int dno);
 }

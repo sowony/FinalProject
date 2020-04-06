@@ -1,24 +1,41 @@
 /**
  * http://usejsdoc.org/
  */
+
+
 function xhrLoad(method, url, reqeustObjet,callBack, async){
     const xhr = new XMLHttpRequest();
     
     if(method === 'get'){
     	
     	let params = '';
+    	
     	if(reqeustObjet){
     		Object.keys(reqeustObjet).forEach((k)=>{
     			params += k +"=" + reqeustObjet[k] + "&";
     		});
     	}
+    	
     	if(async !== null){
+    		console.log(1);
     		xhr.open(method, url + "?"+params, async);
-    	} else xhr.open(method, url + "?"+params);
+    		
+    	} else {
+    		console.log(2);
+    		xhr.open(method, url + "?"+params);
+    		
+    	}
+    	
     } else {
+    	
     	if(async !== null){
+    		console.log(3);
     		xhr.open(method, url, async);
-    	} else xhr.open(method, url);
+    	} else {
+    		console.log(4);
+    		xhr.open(method, url);
+    	}
+    
     }
     
     if(callBack){
@@ -36,10 +53,15 @@ function xhrLoad(method, url, reqeustObjet,callBack, async){
     //xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     //xhr.setRequestHeader('X-HTTP-Method-Override', method);
     if(method !== 'get'){
-    	if(reqeustObjet) xhr.send(JSON.stringify(reqeustObjet));
-    	else xhr.send();
-    } else xhr.send();
-    
+    	if(reqeustObjet) { 
+    		xhr.send(JSON.stringify(reqeustObjet)); 
+    	}
+    	else { 
+    		xhr.send(); 
+    	}
+    } else { 
+    	xhr.send(); 
+    }
   
     
 }

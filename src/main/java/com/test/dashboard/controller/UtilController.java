@@ -191,4 +191,9 @@ public class UtilController {
 		
 	}
 	
+	@GetMapping("notpermission")
+	public String notPermission() {
+		return null;
+	}
+	
 }

@@ -12,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import com.test.dashboard.common.interceptor.GradeInterceptor;
 import com.test.dashboard.common.interceptor.LoginInterceptor;
 
 @Configuration
@@ -50,6 +51,10 @@ public class DashBoardDispatcherServlet implements WebMvcConfigurer {
 		return bean;
 	}
 	
+	@Bean
+	public GradeInterceptor beanGradeInterceptor() {
+		return new GradeInterceptor();
+	}
 	
 	/*
 	<interceptors>
@@ -62,7 +67,8 @@ public class DashBoardDispatcherServlet implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		// TODO Auto-generated method stub
-		registry.addInterceptor(new LoginInterceptor());
+		registry.addInterceptor(new LoginInterceptor()).excludePathPatterns("/resources/**");
+		registry.addInterceptor(beanGradeInterceptor()).addPathPatterns("/widget/**");
 		
 	}
 

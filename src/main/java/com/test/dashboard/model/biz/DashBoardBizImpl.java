@@ -50,6 +50,12 @@ public class DashBoardBizImpl implements DashBoardBiz{
 	}
 	
 	@Override
+	public int updateDel(int dno) {
+		// TODO Auto-generated method stub
+		return dashBoardDao.updateDel(dno);
+	}
+	
+	@Override
 	public DashBoardDto selectOne(int dno) {
 		// TODO Auto-generated method stub
 		return dashBoardDao.selectOne(dno);

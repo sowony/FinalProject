@@ -9,9 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.test.dashboard.model.biz.DashBoardBiz;
@@ -50,8 +52,28 @@ public class MyPageController {
 		
 	}
 	
+	@GetMapping("/dashboard/{dno}")
+	public DashBoardDto getDashBoardOne(@PathVariable int dno) {
+		logger.info("[ INFO ] : MyPageController > getDashBoardOne [path : /mypage/dashboard/"+ dno +"]");
+		
+		return dashBoardBiz.selectOne(dno);
+	}
+	
+	@GetMapping("/dashboard/delete/{dno}")
+	public List<DashMemberDto> getDashBoardDel(@PathVariable int dno) {
+		logger.info("[ INFO ] : MyPageController > getDashBoardDel [path : /mypage/dashboard/delete/"+ dno +"]");
+		
+		int res = dashBoardBiz.updateDel(dno);
+		
+		if( res > 0) {
+			return dashMemberBiz.selectList(dno);
+		} else {
+			return null;
+		}
+	}
+	
 	@PostMapping("/dashboard")
-	public boolean postDashBoard(@RequestBody DashAddObjectDto dashAddObjectDto, HttpSession session) throws SQLException {
+	public DashAddObjectDto postDashBoard(@RequestBody DashAddObjectDto dashAddObjectDto, HttpSession session) throws SQLException {
 		
 		logger.info("[ INFO ] : MyPageController > postDashBoard [path : /mypage/dashboard]");
 		
@@ -69,6 +91,8 @@ public class MyPageController {
 		
 		int res = dashBoardBiz.insert(dashBoardDto);
 		
+		dashAddObjectDto.setDashBoardDto(dashBoardDto);
+		
 		int dno;
 		
 		if(res == 1) {
@@ -79,7 +103,7 @@ public class MyPageController {
 		
 		} else {
 			
-			return false;
+			return null;
 		
 		}
 		
@@ -108,9 +132,9 @@ public class MyPageController {
 		
 		if(res == 1) {
 			logger.info("[ INFO ] DashBoard Create");
-			return true;
+			return dashAddObjectDto;
 		} else {
-			return false;
+			return null;
 		}
 
 	}

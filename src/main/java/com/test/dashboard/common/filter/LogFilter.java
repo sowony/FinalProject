@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oracle.net.aso.l;
-
 public class LogFilter implements Filter{
 
 	
@@ -36,6 +34,7 @@ public class LogFilter implements Filter{
 		logger.info("[Filter] ServletContextRealPath : " + request.getServletContext().getRealPath("/"));
 		logger.info("[Filter] URI : " + req.getRequestURI());
 		logger.info("[Filter] URL : " + req.getRequestURL());
+		chain.doFilter(request, response);
 	}
 	
 	@Override
