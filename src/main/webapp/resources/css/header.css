@@ -52,7 +52,6 @@ li.nickName_li {
 }
 
 ._dashItem a {
-<<<<<<< HEAD
 	position: relative;
 	bottom: 2px;
 }
@@ -251,13 +250,13 @@ input[type="submit"], input[type="button"] {
     display: block;
     padding: 5px;
     margin: auto;
+	margin-top: 10px;
 }
 
 .msgDiv {
     background-color: lavender;
     border-radius: 10px;
     padding: 0px 15px;
-=======
     position: absolute;
     top: 3px;
     right: 1px;
@@ -306,5 +305,4 @@ span.dashboardCloseBtn {
     box-shadow: 1px 1px 1px 0px #0277BD;
     color: #fff;
     font-size: 8pt;
->>>>>>> 9e3442acd1cc365989de2f66fb3958623e070e38
 }

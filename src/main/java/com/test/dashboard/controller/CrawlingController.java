@@ -21,11 +21,8 @@ public class CrawlingController {
 	@ResponseBody
 	@RequestMapping("/crwl")
 	public List<CrawlingDto> crwl (@RequestBody @RequestParam(value="keyword", required = false, defaultValue = "null") String keyword) {
-<<<<<<< HEAD
 	
-=======
 		logger.info("========================================>>>>>>>>"+keyword);
->>>>>>> 9e3442acd1cc365989de2f66fb3958623e070e38
 		crawling crwl = new crawling();
 		if (keyword != null) {
 			return crwl.crwlparser(keyword); 

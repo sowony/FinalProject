@@ -17,7 +17,7 @@
 
 
 <!-- 페이지 js, css -->
-<link rel="stylesheet" href="./resources/css/header.css" type="text/css">
+<link rel="stylesheet" href="./resources/css/header.css?ver=1" type="text/css">
 <link rel="stylesheet" href="./resources/css/mypage.css" type="text/css">
 <script type="text/javascript" src="./resources/js/mypage.js"></script>
 
@@ -25,7 +25,7 @@
 <body>
 
 	<jsp:include page="header.jsp"></jsp:include>
-	<script type="text/javascript" src="./resources/js/header.js"></script>
+	<script type="text/javascript" src="./resources/js/header.js?ver=1"></script>
 	
 	
 	<section style="overflow: overlay;">
