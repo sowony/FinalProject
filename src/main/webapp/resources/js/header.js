@@ -112,10 +112,6 @@ function headerFun(){
 	
 	console.log(userInfo);
 	
-<<<<<<< HEAD
-=======
-	// 변경
->>>>>>> 9e3442acd1cc365989de2f66fb3958623e070e38
 	if(userInfo.mplatform !== 'home'){
 		userInfo.midstate = userInfo.mplatform + '에서 연동 중...';
 	}
@@ -126,10 +122,12 @@ function headerFun(){
 
 
 let dashlist;
+
 function printDashList (o){
 	var divinner = "";
 	
 	xhrLoad('get', 'msg/dashlist',{'mid':`${userInfo.mid}`},(res)=>{
+		
 		 dashlist = JSON.parse(res);
 		
 			let sum = 0;

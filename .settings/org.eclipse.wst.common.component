@@ -1,71 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-                    	
+            	
     
     
-    
-    
-<<<<<<< HEAD
-    <wb-module deploy-name="Final-1.0.0-BUILD-SNAPSHOT">
-                                                
-        
-        
-=======
     <wb-module deploy-name="dashboard-1.0.0-BUILD-SNAPSHOT">
                                 
->>>>>>> 9e3442acd1cc365989de2f66fb3958623e070e38
         
         
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
-                                        		
-        
-        
+                        		
         
         
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
-                                        		
-        
-        
+                        		
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-                                        		
-        
-        
+                        		
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-                                
-        
-        
+                
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/.apt_generated"/>
-                        
-        
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/target/generated-sources/annotations"/>
-<<<<<<< HEAD
-                                        		
-        
-        
-        
-        
-        <property name="java-output-path" value="target/classes"/>
-        <property name="context-root" value="dashboard"/>
-                                        	
-    
-    
-=======
                         		
         
         
         <property name="java-output-path" value="target/classes"/>
         <property name="context-root" value="dashboard"/>
                         	
->>>>>>> 9e3442acd1cc365989de2f66fb3958623e070e38
     
     
     </wb-module>
-                    
-
-
+            
 
 
 </project-modules>

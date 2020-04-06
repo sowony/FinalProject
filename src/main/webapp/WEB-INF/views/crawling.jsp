@@ -12,13 +12,8 @@
 <link rel="stylesheet" href="./resources/css/crawling.css?ver=1"
 	type="text/css" />
 <body>
-<<<<<<< HEAD
-	<div class="search" id="search">
-		<input type="text" id="keyword" onkeyup="enterKey()"/>
-=======
 	<div class="search">
 		<input type="text" class="keyword" />
->>>>>>> 9e3442acd1cc365989de2f66fb3958623e070e38
 		<img src="./resources/images/crwl_2.png" onclick="crawling()"/>
 		<img src="./resources/images/crwl_1.png" onclick="crawling()"/>
 	</div>

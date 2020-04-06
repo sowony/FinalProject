@@ -1,13 +1,4 @@
-<<<<<<< HEAD
-function enterKey(){
-	if(window.event.keyCode == 13){
-		crawling();
-	}
-}
 
-function crawling() {
-	var container = document.querySelector(".container");
-=======
 function wcralingBox(widget){
 	
 	const widgetContent = widget.querySelector('.widgetContent');
@@ -48,7 +39,6 @@ function wcralingBox(widget){
 	});
 	
 }
->>>>>>> 9e3442acd1cc365989de2f66fb3958623e070e38
 
 function crawling(widget, btn) {
 	
@@ -105,12 +95,7 @@ function crawling(widget, btn) {
 											<p class ="wcrwlcontent">${json[i]['wcrwlcontent']}</p>
 											<p class="wcrwldate">${json[i]['wcrwldate']}		<a href = "${json[i]['wcrwllink']}" target="_blank"><img src = 'https://ssl.pstatic.net/sstatic/search/pc/img/sp_sns.png' /></a></p>
 									
-										</div>
-<<<<<<< HEAD
-								`;						
-=======
-								`;
->>>>>>> 9e3442acd1cc365989de2f66fb3958623e070e38
+										</div>`;
 						});
 					}
 

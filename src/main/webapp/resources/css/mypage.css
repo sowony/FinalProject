@@ -303,3 +303,11 @@ img.dashMemberImg {
     position: absolute;
     top: 3px;
 }
+
+.msgAlarm {
+	position: fixed;
+	background-color: #fff;
+	z-index: 9999;
+	width: 500px;
+	height: 350px;
+}

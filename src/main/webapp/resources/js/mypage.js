@@ -926,6 +926,20 @@ window.onload = ()=>{
 
 		dashboardLoad();
 		
+		client.subscribe('/sub/message/'+userInfo.mno, (res)=>{
+			
+			const body = JSON.parse(res.body);
+			
+			const div = document.getElementById('utilDiv');
+			
+			const msgAlarm = addObject(div, 'div', 'msgAlarm', true, (o)=>{
+				o.innerHTML = `
+				
+				`;
+			});
+			
+		});
+		
 		client.subscribe('/sub/addDash/'+userInfo.mno, (res)=>{
 			const body = JSON.parse(res.body);
 			dashboardLoad(body.dno);
