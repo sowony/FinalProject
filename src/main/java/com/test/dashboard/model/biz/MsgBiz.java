@@ -25,5 +25,4 @@ public interface MsgBiz {
 	// 메세지 보내기 
 	public int sendMsg(MsgDto dto);
 	
-	public List<String> getDashMember(String dno);
 }

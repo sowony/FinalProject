@@ -63,11 +63,4 @@ public class MsgBizImpl implements MsgBiz {
 		return msgdao.sendMsg(params);
 	}
 
-	@Override
-	public List<String> getDashMember(String dno) {
-		// TODO Auto-generated method stub
-		return msgdao.getDashMember(dno);
-	}
-
-
 }

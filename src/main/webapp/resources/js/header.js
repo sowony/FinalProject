@@ -126,7 +126,7 @@ let dashlist;
 function printDashList (o){
 	var divinner = "";
 	
-	xhrLoad('get', 'msg/dashlist',{'mid':`${userInfo.mid}`},(res)=>{
+	xhrLoad('get', 'msg/dashlist',null ,(res)=>{
 		
 		 dashlist = JSON.parse(res);
 		
@@ -164,6 +164,7 @@ function printDashList (o){
 }
 
 function invdmsg (){
+	
 	var o = this.parentElement.parentElement.children[1];
 	
 		while (o.firstChild) {
@@ -173,13 +174,15 @@ function invdmsg (){
 		console.log("what's this here=====>"+this);
 		var dno = this.getAttribute('title');	// divinner의 title(dno) 속성을 가져옴
 												// -> 어느 쪽지함인지 구분함
-		xhrLoad('get', 'msg/msgList',{'mid':`${userInfo.mid}`,'dno':dno}, (res)=>{
+		xhrLoad('get', 'msg/msgList',{'dno':dno}, (res)=>{
 			let msglist = JSON.parse(res);
-
 			
 			for (let i = 0 ; i<msglist.length; i++){
+				
 				var listdiv = document.createElement("div");
+				
 				listdiv.setAttribute("class","msg");
+				
 				listdiv.innerHTML=`<a class='msgtitle'>${msglist[i].msgtitle}</a>
 								<span class='msgfrom'>${msglist[i].msgfrom}</span>
 								<span class='msgdate'>${msglist[i].msgdate}</span>
@@ -187,7 +190,11 @@ function invdmsg (){
 								<input type='hidden' id='msgopened' value='${msglist[i].msgopened}'/>`;
 				
 				if (msglist[i].msgopened==='0'){
-					listdiv.setAttribute("class","opened");}	
+					
+					listdiv.setAttribute("class","opened");
+				
+				}
+				
 				o.appendChild(listdiv);
 				
 				// 개별 쪽지
@@ -211,6 +218,7 @@ function openMsgFunc(e){
 	// 메세지 내용 가져오기
 	
 	xhrLoad('get', 'msg/openMsg',{'msgno': msgno},(res)=>{
+		
 		let openMsg;
 		openMsg = JSON.parse(res);
 		
@@ -248,9 +256,11 @@ function openMsgFunc(e){
 
 // 쪽지 쓰기 박스
 function writeMsg(openMsg){
-//	console.log('openMsg====>'+openMsg.dno);
+	
 	const msgSpan = document.createElement('span');
-	msgSpan.setAttribute('class','msgSpan')
+	
+	msgSpan.setAttribute('class','msgSpan');
+	
 	msgSpan.innerHTML='* 쪽지 쓰기 *';
 	
 	let date = new Date();
@@ -262,6 +272,7 @@ function writeMsg(openMsg){
 	let seconds = date.getSeconds();
 	
 	const msgform = document.createElement('form');
+	
 	msgform.setAttribute('id','msgForm');
 	
 	if (!openMsg){
@@ -276,16 +287,28 @@ function writeMsg(openMsg){
 						 </form>
 						  <input type='button' value='send' onclick=sendForm();></input>`;
 		var options = `<option value=''>---</option>`;
+		
 		for (let i = 0 ; i < dashlist.length; i++){
+			
 		options+=`<option value='${dashlist[i].DNO}'>${dashlist[i].DNO}</option>`}
+		
 		msgform.querySelector('.indvopenDno').innerHTML=options;
+		
 		msgform.querySelector('.indvopenDno').onchange = (e)=>{
-			xhrLoad('get', 'msg/getDashMember',{'dno': e.target.value},(res)=>{
+			
+			xhrLoad('get', 'msg/getDashMember',{ 'dno': e.target.value },(res)=>{
+				
 				openMsg = JSON.parse(res);
+				
 				options='';
+				
 				for(let i = 0 ; i < openMsg.length ; i++){
-					options+=`<option value='${openMsg[i]}'>${openMsg[i]}</option>`
+					
+					if(openMsg[i].mnick !== userInfo.mnick){
+						options+=`<option value='${openMsg[i].mnick}'>${openMsg[i].mnick}</option>`
+					}
 				}
+				
 				msgform.querySelector('.indvopenMsgto').innerHTML=options;
 				
 			}, false);

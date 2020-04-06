@@ -35,6 +35,4 @@ public interface MsgDao {
 	@Insert("INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL, #{msgfrom}, #{msgto}, #{msgdate}, 1, #{dno}, #{msgcontent}, #{msgtitle})")
 	public int sendMsg(Map<Object, Object> params);
 	
-	@Select("SELECT MID FROM DASHMEMBER WHERE DNO=${dno}")
-	public List<String> getDashMember(String dno);
 }
