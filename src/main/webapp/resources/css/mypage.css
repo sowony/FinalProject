@@ -73,7 +73,7 @@ legend {
 
 .dashItem {
     display: inline-block;
-    width: 194px;
+    width: 192px;
     height: 145px;
     border-radius: 5px;
     box-shadow: 0 1px 2px 1px #a0a8ab;
@@ -119,6 +119,8 @@ p.d_title span:nth-child(1) {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    width: 100%;
+    display: block;
 }
 
 ._owner p.d_date {
@@ -270,7 +272,7 @@ input[name=nickSearchBtn]{
     margin-left: 4px;
     height: max-content;
     font-size: 10px;
-    width: 17px;
+    width: 13px;
     border: 1px solid #ccc;
     border-radius: 50%;
     background-color: #ccf2ff;

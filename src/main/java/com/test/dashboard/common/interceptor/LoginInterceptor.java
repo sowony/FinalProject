@@ -59,19 +59,13 @@ public class LoginInterceptor implements HandlerInterceptor{
 		else if(request.getRequestURI().endsWith("footer")) return true;
 		else if(request.getRequestURI().endsWith("header")) return true;
 		else if(request.getRequestURI().endsWith("wboard")) return true;
+		else if(request.getRequestURI().endsWith("websocket")) return true;
 		else if(request.getRequestURI().endsWith("summerwrite")) return true;
 		
 		else if(request.getRequestURI().endsWith("footer")) return true;
 		else if(request.getRequestURI().endsWith("header")) return true;
 		else if(request.getRequestURI().endsWith("wboard")) return true;
 		else if(request.getRequestURI().endsWith("wSelectOne")) return true;
-		else if(request.getRequestURI().endsWith(".js")) return true;
-		else if(request.getRequestURI().endsWith(".css")) return true;
-		else if(request.getRequestURI().endsWith(".jpg")) return true;
-		else if(request.getRequestURI().endsWith(".jpeg")) return true;
-		else if(request.getRequestURI().endsWith(".png")) return true;
-		else if(request.getRequestURI().endsWith(".gif")) return true;
-		else if(request.getRequestURI().endsWith(".svg")) return true;
 		
 		else if(request.getRequestURI().endsWith("pagechange")) return true;
 		else if(request.getRequestURI().endsWith("crwl")) return true;
@@ -83,6 +77,7 @@ public class LoginInterceptor implements HandlerInterceptor{
 		else if(request.getRequestURI().endsWith("update")) return true;
 		else if(request.getRequestURI().endsWith("editor")) return true;
 		
+		else if(request.getRequestURI().endsWith("null")) return false;
 		
 		else {
 			

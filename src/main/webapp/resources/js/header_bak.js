@@ -2,10 +2,9 @@
  * http://usejsdoc.org/
  */
 
-// 추가
+
 
 function headerFun(){
-
 	
 	let userInfo;
 	
@@ -40,13 +39,10 @@ function headerFun(){
 		
 	}, false);
 	
-	console.log(userInfo);
-	
-	// 변경
 	if(userInfo.mplatform !== 'home'){
 		userInfo.midstate = userInfo.mplatform + '에서 연동 중...';
 	}
-	//
+	
 	return userInfo;
 };
 

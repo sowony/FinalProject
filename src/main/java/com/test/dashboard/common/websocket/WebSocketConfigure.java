@@ -9,19 +9,19 @@ import org.springframework.web.socket.config.annotation.WebSocketTransportRegist
 
 @Configuration
 @EnableWebSocketMessageBroker
-public class WChatWebSocket implements WebSocketMessageBrokerConfigurer{
+public class WebSocketConfigure implements WebSocketMessageBrokerConfigurer{
 
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
 		// TODO configureMessageBroker method active
-		registry.enableSimpleBroker("/wchat_sub");
-		registry.setApplicationDestinationPrefixes("/wchat_pub");
+		registry.enableSimpleBroker("/sub");
+		registry.setApplicationDestinationPrefixes("/pub");
 	}
 	
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		// TODO endpoint method active
-		registry.addEndpoint("/wchatbroker").setAllowedOrigins("*").withSockJS();
+		registry.addEndpoint("/broker").setAllowedOrigins("*").withSockJS();
 	}
 	
 	@Override

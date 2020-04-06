@@ -1,6 +1,7 @@
 package com.test.dashboard.model.biz;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,11 @@ public class DashGradeBizImpl implements DashGradeBiz{
 	public List<DashGradeDto> selectList(int dno) {
 		// TODO Auto-generated method stub
 		return dashGradeDao.selectList(dno);
+	}
+	
+	@Override
+	public DashGradeDto selectOne(Map<String, Object> params) {
+		return dashGradeDao.selectOne(params);
 	}
 	
 	@Override

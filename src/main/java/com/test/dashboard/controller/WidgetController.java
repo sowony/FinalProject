@@ -99,7 +99,7 @@ public class WidgetController {
 	}
 	
 	@PostMapping("/insert")
-	public int postInsertWidget(@RequestBody WidgetDto widgetDto, HttpSession session) {
+	public WidgetDto postInsertWidget(@RequestBody WidgetDto widgetDto, HttpSession session) {
 		
 		logger.info("[ INFO ] : WidgetController > postInsertWidget [path : /widget/insert]");
 		
@@ -123,9 +123,9 @@ public class WidgetController {
 		int res = widgetBiz.insert(widgetDto);
 		
 		if(res > 0) {
-			return widgetDto.getWno();
+			return widgetDto;
 		} else {
-			return 0;
+			return null;
 		}
 		
 	}
@@ -211,17 +211,19 @@ public class WidgetController {
 	@PostMapping("/wchat")
 	public WChatDto postInsertWChat(@RequestBody WChatDto wChatDto, HttpServletRequest req, HttpSession session) {
 		
-		int res;
+		int res = 0;
 		
 		int wno = wChatDto.getWno();
+		
+		
 		String savePath = req.getServletContext().getRealPath("/");
 		String viewPath = req.getServletContext().getContextPath();
 		
 		if(wChatDto.getWcpath() == null || wChatDto.getWcpath().equals("")) {
-			
+				
 			wChatDto.setWcpath(Util.chatLogFile(wno, savePath, viewPath));
 			res = wChatBiz.insert(wChatDto);
-			
+				
 		} else {
 			
 			String message = wChatDto.getMsg();
@@ -236,27 +238,28 @@ public class WidgetController {
 			while(li.hasNext()) {
 				
 				Element el = li.next();
-				
+			
 				String chk = el.className();
-				
+			
 				if(!chk.equals("pC")) {
 					String img = el.attr("src");
 				
 					String filePath = Util.base64ToImgDecoder(img, req.getServletContext().getRealPath("/"), ((MemberDto)session.getAttribute("user")).getMid() ,req.getServletContext().getContextPath());
 				
 					el.attr("src", filePath);
-				
+			
 					el.addClass("pC");
 				}
-				
+			
 			}
 			
 			message = doc.toString().replaceAll("(\r\n|\r|\n|\n\r)", " ");
 			Util.chatLogFile(wno, savePath, viewPath, wChatDto.getWcpath() ,mnick, message);
-			
+		
 			res = 1;
-			
+		
 		}
+			
 		
 		logger.info("[ INFO ] : WidgetController > postInsertWChat [wChatDto : " + wChatDto +"]");
 		

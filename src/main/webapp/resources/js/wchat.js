@@ -9,7 +9,7 @@ function wchatBox(widget){
 	let oldChatLogs;
 	let oldChatObject = [];
 	
-	if(!widget.info.preivew){
+	if(!widget.info.preview){
 		xhrLoad('get', 'widget/wchat/'+ widget.info.wno, null, (res)=>{
 			
 			if(res){
@@ -34,6 +34,7 @@ function wchatBox(widget){
 			}
 			
 		});
+		
 		oldChatLogs.splice(0,2);
 		oldChatLogs.splice(oldChatLogs.length-1,1);
 		oldChatLogs.forEach(line=>{
@@ -53,8 +54,6 @@ function wchatBox(widget){
 	
 	const wchatDiv = addObject(widgetContent, 'div', 'wchatDiv', true, (o)=>{
 		
-	
-		
 		o.innerHTML = `
 		<div class="wrChatLog"></div>
 		<div class="wrSetting">
@@ -70,7 +69,8 @@ function wchatBox(widget){
 		<div class="pop"></div>
 		`;
 		
-		if(!widget.info.preivew){
+		if(!widget.info.preview){
+			
 			
 			const wrContent = o.querySelector('.wrContent');
 			const wrChatLog = o.querySelector('.wrChatLog');
@@ -102,10 +102,14 @@ function wchatBox(widget){
 					});
 				});
 				
+				wrChatLog.scroll({
+					behavior: 'smooth',
+		            left: 0,
+		            top : messageBox.offsetTop 
+		        });
+			
+			
 			}
-			
-			
-			
 			if(oldChatObject){
 				oldChatObject.forEach(log=>{
 					msgBoxLoad(log);
@@ -115,16 +119,11 @@ function wchatBox(widget){
 			
 			
 			// 소켓 연결
-			
-			const sock = new SockJS('wchatbroker');
-			const client = Stomp.over(sock);
-			
-			client.connect({}, ()=>{
-				client.subscribe('/wchat_sub/room/'+widget.info.wno, (res) =>{
-					const msg = JSON.parse(res.body);
-					msgBoxLoad(msg);
-				});
+			widget.websocket.chatClient = client.subscribe('/sub/wchat/'+widget.info.wno,(res)=>{
+				const msg = JSON.parse(res.body);
+				msgBoxLoad(msg);
 			});
+			
 			
 			
 			o.addEventListener('mousemove',(e)=>{
@@ -267,7 +266,7 @@ function wchatBox(widget){
 
 					file.addEventListener('change',()=>{
 						let reader = new FileReader();
-
+						
 						if(file.files){
 							reader.addEventListener('load',(e)=>{
 
@@ -354,6 +353,7 @@ function wchatBox(widget){
 			messageSubmitBtn.addEventListener('click',(e)=>{
 				
 				if(wrContent.innerHTML){
+					
 					const msgObject = {
 							mnick : userInfo.mnick,
 							msg : wrContent.innerHTML.replace(/\n/g, "").replace(/\r/g, ""),
@@ -364,9 +364,11 @@ function wchatBox(widget){
 					xhrLoad('post', 'widget/wchat', msgObject, (res)=>{
 						
 						if(res){
-							client.send('/wchat_pub/chat/send', {}, JSON.stringify(msgObject));
+							client.send('/pub/wchat', {}, JSON.stringify(msgObject));
 							
 							wrContent.innerHTML = '';
+						} else {
+							boxFun('잘못된 접근입니다.');
 						}
 						
 					});
@@ -378,4 +380,5 @@ function wchatBox(widget){
 		}
 		
 	});
+	
 };
