@@ -33,4 +33,9 @@ public class MsgDto {
 
 	    // 쪽지 제목 
 	    private String msgtitle;
+
+	    // join용
+	    private String msgtonick;
+	    
+	    private String msgfromnick;
 }

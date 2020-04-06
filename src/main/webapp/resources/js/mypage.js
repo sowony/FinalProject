@@ -5,7 +5,6 @@
 let userInfo;
 let selectTmpMember = '';
 let client;
-let dashItems = [];
 
 
 function logout(){
@@ -145,7 +144,6 @@ function dashboardLoad(dno){
 
 			for(let dashItem of dashboardList){
 				
-				dashItems.push(dashItem);
 				
 				dashItemCreate(dashItem,true);
 			}
@@ -157,7 +155,6 @@ function dashboardLoad(dno){
 			
 			const dashItem = JSON.parse(res);
 			
-			dashItems.push(dashItem);
 			
 			dashItemCreate(dashItem,false);
 			
@@ -936,26 +933,12 @@ window.onload = ()=>{
 
 		dashboardLoad();
 		
-		client.subscribe('/sub/messagealarm/'+userInfo.mno, (res)=>{
-			
-			const body = JSON.parse(res.body);
-			
-			console.log(body);
-			
-			const div = document.getElementById('utilDiv');
-			
-			const msgAlarm = addObject(div, 'div', 'msgAlarm', true, (o)=>{
-				o.innerHTML = `
-				
-				`;
-			});
-			
-		});
 		
 		client.subscribe('/sub/addDash/'+userInfo.mno, (res)=>{
 			const body = JSON.parse(res.body);
 			dashboardLoad(body.dno);
 		});
+		
 		
 		client.subscribe('/sub/delDash/'+userInfo.mno, (res)=>{
 			const body = JSON.parse(res.body);
@@ -963,7 +946,6 @@ window.onload = ()=>{
 			const dashAllItem = document.querySelectorAll('.dashItem');
 			dashAllItem.forEach((item,i)=>{
 				if(Number(item.dataset.dno) === body.dno){
-					dashItems.splice(i,1);
 					motionOnOff(item, 0.8, false, { setting : 'offDefault' }, false, (o)=>{
 						o.remove();
 					});
