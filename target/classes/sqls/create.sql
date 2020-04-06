@@ -223,13 +223,15 @@ ALTER TABLE DashGrade
 /
 
 -- 대시 맴버
-
+drop table dashmember
+delete dashmember
+select * from dashmember where dno='2'
 CREATE TABLE DashMember
 (
     dmno    NUMBER            NOT NULL, 
     dno     NUMBER            NOT NULL, 
     mid     VARCHAR2(2000)    NOT NULL, 
-    dgno    NUMBER            NOT NULL, 
+    dgno    NUMBER            NOT NULL,
     CONSTRAINT DASHMEMBER_PK PRIMARY KEY (dmno)
 )
 /
@@ -596,13 +598,14 @@ START WITH 1
 INCREMENT BY 1
 ;
 DROP TABLE MSGTABLE;
+drop sequence MSGNOSEQ;
 --쪽지 
 CREATE TABLE MSGTABLE(
 		MSGNO 		NUMBER 			NOT NULL,
 		MSGFROM 	VARCHAR2(100) 	NOT NULL,
 		MSGTO 		VARCHAR2(200) 	NOT NULL,
 		MSGDATE 	VARCHAR2(200) 	NOT NULL,
-		MSGOPENED 	VARCHAR2(2) 	NOT NULL,
+		MSGOPENED 	number		 	NOT NULL,
 		DNO			NUMBER			NOT NULL,
 		MSGCONTENT 	VARCHAR2(2000) 	NOT NULL,
 		MSGTITLE 	VARCHAR2(500) 	NOT NULL,
@@ -611,28 +614,36 @@ CREATE TABLE MSGTABLE(
 );
 SELECT * from MSGTABLE ;
 DELETE MSGTABLE;
-INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'N',1,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
-INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'Y',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
-INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'Y',3,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
-INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'N',1,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
-INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'Y',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
-INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'N',3,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
-INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'N',1,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
-INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'Y',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
-INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'N',3,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
-INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'N',1,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
-INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'N',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
-INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 'N',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
 
-INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin02','jiaemin01', '2020/03/26', 'N',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
-INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin02','jiaemin01', '2020/03/26', 'N',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
-INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin02','jiaemin01', '2020/03/26', 'N',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
-INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin02','jiaemin01', '2020/03/26', 'N',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
-INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin02','jiaemin01', '2020/03/26', 'N',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
-INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin02','jiaemin01', '2020/03/26', 'N',2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 0,1,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 1,2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 0,3,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 1,1,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 0,2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 1,3,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 0,1,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 0,2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 0,3,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 0,1,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 0,2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 1,2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 1,2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin01','jiaemin02', '2020/03/26', 1,2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
 
-SELECT dno, count(msgtitle) from (select * from msgtable where msgto='jiaemin02' AND msgopened ='N')  GROUP BY dno; 
-SELECT * from (select * from msgtable where msgto='jiaemin02')  where dno='3'; 
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin02','jiaemin01', '2020/03/26', 0,2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin02','jiaemin01', '2020/03/26', 1,2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin02','jiaemin01', '2020/03/26', 0,2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin02','jiaemin01', '2020/03/26', 1,2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin02','jiaemin01', '2020/03/26', 1,2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL,'jiaemin02','jiaemin01', '2020/03/26', 0,2,'쪽지 테스트 입니다. ','쪽지 제목 입니다. ');
+
+SELECT dno, sum(msgopened) 
+from (select dno, msgopened from msgtable where msgto='jiaemin02' ) 
+group by dno; 
+
+
+SELECT * from (select * from msgtable where msgto='jiaemin02')  where dno='3';
+UPDATE msgtable set msgopened ='Y' where msgno='17';
 
 CREATE OR REPLACE TRIGGER msgtable_AI_TRG
 BEFORE INSERT ON msgtable 

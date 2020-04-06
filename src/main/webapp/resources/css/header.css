@@ -56,27 +56,54 @@ li.nickName_li {
 	bottom: 2px;
 }
 
+.reply {
+    background-color: cornflowerblue;
+    width: fit-content;
+    position: sticky;
+    left: 144%;
+    padding: 7px;
+    color: white;
+    border: 1px solid lightgrey;
+    border-radius: 20px;
+    font-size: 10pt;
+}
+
+.boxOpen.msgBox {
+    display: table;
+    width: 70%;
+    height: 70%;
+    table-layout: fixed;
+    min-width: 700px;
+}
+
+.boxOpen.indvMsgBox{
+    min-width: 700px;
+	height:65%;
+}
+
 .dashlist {
 	display: table-cell;
 	width: 30%;
 	height: 100%;
 	overflow: auto;
-	
+	table-layout: fixed;
 }
 
 .dashlist>* {
-    background-color: blanchedalmond;
-    margin: 0 5px 10px 5px;
-    border-radius: 20px;
+	background-color: blanchedalmond;
+	margin: 0 5px 10px 5px;
+	border-radius: 20px;
 }
 
 .msglist {
-	display: table-cell;
+    display: block;
     background-color: aliceblue;
-    width: 70%;
+    width: 97%;
     height: 100%;
     overflow: auto;
     border-radius: 20px;
+    table-layout: fixed;
+    max-height: 370px;
 }
 
 span.sum {
@@ -91,34 +118,142 @@ span.sum {
 
 .divinner>* {
 	display: inline-block;
-    height: 30px;
-    margin-top: 5px;
-}
-.mainDiv{
-	display: table;
-	height: 90%;
-	width: 100%;
-	table-layout: fixed;
-	min-width:500px;
+	height: 30px;
+	margin-top: 5px;
 }
 
-
-.msglist>div {background-color: white;border-radius: 50px;margin: 8px;}
-
-.notopened>* {
-    color: gray;
+.mainDiv {
+    display: table;
+    height: 75%;
+    width: 100%;
+    max-width: 800px;
+    table-layout: fixed;
+    min-width: 500px;
+    min-height: 300px;
+    margin:10px;
 }
 
+.msglist>div {
+	background-color: white;
+	border-radius: 50px;
+	margin: 8px;
+}
+
+.opened>* {
+	color: gray;
+}
 
 
 .msg {
-    border: 1px solid gray;
+	border: 1px solid gray;
 }
 
-.msgfrom {
-    font-size: x-small;
+.msgfrom{
+	font-size: x-small;
+}
+.msgdate{
+	font-size: x-small;
 }
 
-.msglist>div>*{
-    margin:5px;
+.msglist>div>* {
+	margin: 5px;
+}
+
+.openMsgcontent {
+	height: 200px;
+	background-color: lavender;
+	border-radius: 20px;
+	padding: 20px;
+	border: 1px solid lightgrey;
+}
+
+.openMsgtitle {
+	background-color: lavender;
+	border-radius: 20px;
+	padding: 5px 20px;
+}
+
+.openMsgDiv>* {
+	text-align: left;
+	margin: 10px 20px;
+	border-radius: 20px;
+	font-size: small;
+}
+
+.openMsgfrom {
+	padding: 5px 20px;
+	background-color: lightgray;
+}
+
+.openMsgdate {
+	background-color: lightgrey;
+	padding: 5px 20px;
+}
+
+.openMsgDiv span:nth-child(1) {
+	background-color: beige;
+	width: fit-content;
+	padding: 5px 20px;
+	font-size: larger;
+}
+
+.boxOpen.writeBox {
+    min-width: 700px;
+    height: 66%;
+}
+	
+span.msgSpan {
+    background-color: beige;
+    border-radius: 20px;
+    margin-bottom: 15px;
+    display: inline-block;
+}
+
+span#msgCaption {
+    float: left;
+    font-size: smaller;
+    line-height: 35px;
+}
+.msgCaption {
+    display: block;
+    margin: 10px;
+}
+
+input.indvMsgtitle {
+    padding-left: 5px;
+    width: -webkit-fill-available;
+    box-shadow: none;
+    background-color: transparent;
+}
+
+input.indvopenMsgto, input.indvopenDno{
+    background-color: transparent;
+    border: none;
+}
+input.indvopenMsgto:focus, input.indvopenDno:focus{
+	outline:none;
+}
+
+.indvopenMsgcontent {
+    display: inline-block;
+    margin-top: 21px;
+    width: 93%;
+    height: 204px;
+}
+
+input[type="submit"], input[type="button"] {
+    width: fit-content;
+    border: 0px;
+    border-radius: 5px;
+    background-color: darkslateblue;
+    color: white;
+    display: block;
+    padding: 5px;
+    margin: auto;
+}
+
+.msgDiv {
+    background-color: lavender;
+    border-radius: 10px;
+    padding: 0px 15px;
 }
