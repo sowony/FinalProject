@@ -14,21 +14,6 @@ function imageView(img){
 	
 	const viewImg = img.cloneNode(true);
 	
-	function plus(e){
-			
-		console.log(e.offsetX, e.offsetY);
-			
-		
-			
-	}
-	
-	function minus(e){
-		console.log(e.offsetX, e.offsetY);
-		e.target.style.transform = 'scale(1.0)';
-		viewImg.addEventListener('click',plus);
-		
-	}
-	
 	viewImg.addEventListener('mouseover',(e)=>{
 		if(e.ctrlKey){
 			viewImg.style.cursor = 'zoom-out';
@@ -107,7 +92,16 @@ function setSaveTime(widget){
 	const wmContent = widget.querySelector('.wmContent');
 	const wmMsg = widget.querySelector('span.wmMsg'); 
 	
-	if(wmContent['saveTimeoutCheckId']) window.clearTimeout(wmContent['saveTimeoutCheckId']);
+	if(wmContent['saveTimeoutCheckId']) {
+		
+		client.send('/pub/wmemo', {}, JSON.stringify({
+			wno : widget.info.wno,
+			mid: userInfo.mid,
+			status : 'writing'
+		}));
+		
+		window.clearTimeout(wmContent['saveTimeoutCheckId']);
+	}
 	
 	wmContent['saveTimeoutCheckId'] = window.setTimeout(()=>{
 		
@@ -130,6 +124,15 @@ function setSaveTime(widget){
 						o.innerHTML = '';
 					});
 				},2000);
+				
+				client.send('/pub/wmemo', {}, JSON.stringify({
+					wmcontent : wmContent.innerHTML,
+					wno : widget.info.wno,
+					mid: userInfo.mid,
+					status : 'complete'
+				}));
+			} else {
+				boxFun('잘못된 접근입니다.');
 			}
 			
 		});
@@ -157,9 +160,6 @@ function imageScaleBoxFun(targetImage, area, widget){
 		targetImage.style.border = '1px dashed #888';
 		
 		const menu = addObject(area, 'div', 'imageScaleBox', true, (o)=>{
-				
-			o.style.top = e.offsetY+e.target.offsetTop + 5 + 'px';
-			o.style.left = e.offsetX+e.target.offsetLeft + 5 + 'px';
 			
 			o.innerHTML = `
 			<p>OriginWidgth : ${targetImage.naturalWidth}</p>
@@ -224,6 +224,20 @@ function imageScaleBoxFun(targetImage, area, widget){
 			});
 			
 		});
+		
+		let top = e.offsetY + e.target.offsetTop + 5;
+		let left = e.offsetX + e.target.offsetLeft + 5;
+		
+		if(area.offsetWidth < left + menu.offsetWidth ){
+			left = left - menu.offsetWidth;
+		}
+		
+		if(area.offsetHeight < top + menu.offsetHeigth ){
+			top = top - menu.offsetHeight;
+		}
+		
+		menu.style.top = top + 5 + 24 + 'px';
+		menu.style.left = left + 5 + 'px';
 		
 	});
 }
@@ -297,8 +311,8 @@ function mouseEventFun(target, clickArea, mouseArea){
 	let originX, originY;
 	let mouseX, mouseY;
 	
-	
 	const widgetHeader = clickArea.parentNode.parentNode.querySelector('.widgetHeader');
+
 	
 	function mousemove(e){
 		
@@ -307,7 +321,15 @@ function mouseEventFun(target, clickArea, mouseArea){
 		
 		target.style.top = originY - (mouseY - e.pageY) + 'px';
 		target.style.left = originX - (mouseX - e.pageX) + 'px';
+		
+		target.info.wtop = target.style.top.split('px')[0];
+		target.info.wleft = target.style.left.split('px')[0];
+		
+		const { wno, wtop, wleft } = target.info;
+		
+		client.send('/pub/wloc',{}, JSON.stringify({ wno, mid : userInfo.mid, wtop, wleft }));
 	
+		
 	}
 	
 	function mousedown(e){
@@ -386,6 +408,7 @@ function scaleEventFun(target, settingArea, mouseArea){
 	
 	let state;
 	
+	
 	function mousemoveDown(e){
 		
 		width = target.offsetWidth;
@@ -424,6 +447,15 @@ function scaleEventFun(target, settingArea, mouseArea){
 			target.style.width = (e.pageX + mouseArea.scrollLeft - originX) + 'px';
 			
 		}
+		
+		target.info.wtop = target.style.top.split('px')[0];
+		target.info.wleft = target.style.left.split('px')[0];
+		target.info.wwidth = target.style.width.split('px')[0];
+		target.info.wheight = target.style.height.split('px')[0];
+		
+		const { wno, wwidth, wheight, wtop, wleft } = target.info;
+		
+		client.send('/pub/wscale',{}, JSON.stringify({ wno, mid : userInfo.mid,  wwidth, wheight, wtop, wleft }));
 		
 	}
 	
@@ -551,7 +583,125 @@ function scaleEventFun(target, settingArea, mouseArea){
 	settingArea.addEventListener('mousedown', mousedown);
 }
 
+function widgetGradeCheck(widget){
+	
+	const owner = widget.info.mid;
+	const wcategory = widget.info.wcategory.toLowerCase();
+	const rules = widget.info.rules;
+	const dggrade = userInfo.dashgrade.dggrade;
+	const targetId = userInfo.mid;
+	
+	let wrrwd;
+	
+	if(owner !== targetId){
+		
+		let individualCheck = false;
+		let groupCheck = false;
+		
+		rules.forEach(rule=>{
 
+			if(rule.mid === targetId){
+				wrrwd = rule.wrrwd;
+				individualCheck = true;
+				return;
+			}
+			
+
+		});
+		
+		if(!individualCheck){
+			rules.forEach(rule=>{
+
+				if(rule.wrmin <= dggrade && rule.wrmax >= dggrade){
+					wrrwd = rule.wrrwd;
+					groupCheck = true;
+					return;
+				}
+
+			});
+		}
+
+	}
+	
+	let targets = [];
+	let classLists = [];
+	
+	if(wcategory === 'chat'){
+		
+		const wrContent = widget.querySelector('.wrContent');
+		const wrSetting = widget.querySelector('.wrSetting');
+		
+		targets.push(wrContent.parentNode);
+		targets.push(wrSetting);
+		
+	} else if (wcategory === 'memo'){
+		
+		targets.push(widget.querySelector('.wmContent'));
+		targets.push(widget.querySelector('.wmSetting'));
+		
+	} else if (wcategory === 'sns'){
+		
+		targets.push(widget.querySelector('.wcrSearch'));
+	
+	}
+	
+	targets.forEach(t=>{
+		classLists.push(t.classList);
+	});
+	
+	if(wrrwd === 4) {
+		
+		classLists.forEach(c=>{
+			c.add('eventDisabled');
+		});
+		
+	} else {
+		
+		classLists.forEach(c=>{
+			if(c.contains('eventDisabled')){
+				c.remove('eventDisabled');
+			}
+		});
+	}
+	
+}
+
+function widgetUpdate(widget){
+	
+	widget.style.width = widget.info.wwidth +'px';
+	widget.style.height = widget.info.wheight +'px';
+	
+	if(widget.info.wtop) widget.style.top = widget.info.wtop + 'px';
+	if(widget.info.wleft) widget.style.left = widget.info.wleft + 'px';
+	
+	if(!widget.info.wtitlecolor){
+		widget.info.wtitlecolor = 'rgb(65, 198, 241)';
+	}
+	
+	if(!widget.info.wcontentcolor){
+		widget.info.wcontentcolor = 'rgb(255, 255, 255)';
+	}
+	
+	const wtitlefontcolor = fontColorCheck(widget.info.wtitlecolor);
+	const wcontentfontcolor = fontColorCheck(widget.info.wcontentcolor);
+	
+	widget.querySelector('.widgetContent').style.color = wcontentfontcolor;
+	widget.style.backgroundColor = widget.info.wcontentcolor;
+	
+	const widgetHeader = widget.querySelector('.widgetHeader');
+	
+	widgetHeader.style.color = wtitlefontcolor;
+	widgetHeader.style.backgroundColor = widget.info.wtitlecolor;
+	
+	const wcategorySpan = widgetHeader.querySelector('span:nth-child(1)');
+	
+	wcategorySpan.innerHTML = widget.info.wcategory;
+	
+	const wtitleSpan = widgetHeader.querySelector('span:nth-child(2)');
+	
+	wtitleSpan.innerHTML = widget.info.wtitle;
+	
+}
 
 function widgetFun(setting){
 	
@@ -593,48 +743,154 @@ function widgetFun(setting){
 		
 	});
 	
+	widget['info'] = setting;
+	
 	const widgetMoveArea = widget.querySelector('.widgetMoveArea');
 	const widgetHeaderArea = widget.querySelector('.widgetHeaderArea');
 	
+	if(!setting.preview){
+		// 웹 소켓 오픈
+		console.log('웹 소켓 연결');
+		const scaleClient = client.subscribe('/sub/wscale/'+widget.info.wno, (res)=>{
+
+			const scaleInfo = JSON.parse(res.body);
+
+			if(scaleInfo.mid !== userInfo.mid){
+
+				widget.info.wwidth = scaleInfo.wwidth;
+				widget.info.wheight = scaleInfo.wheight;
+				widget.style.width = scaleInfo.wwidth + 'px';
+				widget.style.height = scaleInfo.wheight + 'px';
+
+				widget.info.wtop = scaleInfo.wtop;
+				widget.info.wleft = scaleInfo.wleft;
+				widget.style.top = scaleInfo.wtop + 'px';
+				widget.style.left = scaleInfo.wleft + 'px';
+
+			}
+		},{});
+
+		const moveClient = client.subscribe('/sub/wloc/'+widget.info.wno, (res)=>{
+
+			const scaleInfo = JSON.parse(res.body);
+
+			if(scaleInfo.mid !== userInfo.mid){
+
+				widget.info.wtop = scaleInfo.wtop;
+				widget.info.wleft = scaleInfo.wleft;
+				widget.style.top = scaleInfo.wtop + 'px';
+				widget.style.left = scaleInfo.wleft + 'px';
+
+			}
+		},{});
+
+		const upClient = client.subscribe('/sub/wup/' + widget.info.wno, (res)=>{
+
+			const upInfo = JSON.parse(res.body);
+
+			widgets.forEach((w,i)=>{
+
+				if(w.info.wno === upInfo.wno){
+
+					let individualCheck = false;
+					let groupCheck = false;
+
+					upInfo.rules.forEach(rule =>{
+
+						if(rule.mid === userInfo.mid){
+							individualCheck = true;
+							return;
+						}
+
+					});
+
+					if(!individualCheck){
+						const dggrade = userInfo.dashgrade.dggrade;
+						upInfo.rules.forEach(rule =>{
+
+							if(rule.wrmin <= dggrade && rule.wrmax >= dggrade){
+								groupCheck = true;
+								return;
+							}
+
+						});
+					}
+
+					if(!individualCheck && !groupCheck){
+						w.style.transitionDuration = '1s';
+						motionOnOff(w, 0.8, false, { onOff : 'off' }, false, (o)=>{
+							w.websocket.close();
+							widgets.splice(i,1);
+							o.remove();
+						});
+					} else {
+
+
+						w.info = upInfo;
+						w.style.transitionDuration = '1s';
+						widgetUpdate(w);
+						widgetSettingFun(null, w);
+						widgetGradeCheck(w);
+						w.style.transitionDuration = '';
+
+					}
+
+					return;
+				}
+			});
+
+
+		},{});
+
+		const delClient = client.subscribe('/sub/wdel/'+widget.info.wno , (res)=>{
+
+			const delInfo = JSON.parse(res.body);
+
+			widgets.forEach((w,i)=>{
+
+				if(w.info.wno === delInfo.wno){
+
+					w.style.transitionDuration = '1s';
+					motionOnOff(w, 0.8, false, { onOff : 'off' }, false, (o)=>{
+						w.websocket.close();
+						widgets.splice(i,1);
+						o.remove();
+					});
+
+					return;
+				}
+			});
+		},{});
+
+		widget['websocket'] = {
+				upClient, delClient, moveClient, scaleClient,
+				close : ()=>{
+					widget.websocket.upClient.unsubscribe();
+					widget.websocket.delClient.unsubscribe();
+					widget.websocket.moveClient.unsubscribe();
+					widget.websocket.scaleClient.unsubscribe();
+					widget.websocket[widget.info.wcategory.toLowerCase() + 'Client'].unsubscribe();
+				}
+		}
+	}
 	widget['update'] = ()=>{
 		
 		xhrLoad('post','widget/update', widget.info, (res)=>{
 			
 			if(res){
 				
-				widget.style.width = widget.info.wwidth +'px';
-				widget.style.height = widget.info.wheight +'px';
+				const updateRes = JSON.parse(res);
 				
-				if(widget.info.wtop) widget.style.top = widget.info.wtop + 'px';
-				if(widget.info.wleft) widget.style.left = widget.info.wleft + 'px';
+				Object.assign(widget.info, updateRes);
 				
-				if(!widget.info.wtitlecolor){
-					widget.info.wtitlecolor = 'rgb(65, 198, 241)';
-				}
+				client.send('/pub/wup', {}, JSON.stringify(widget.info));
 				
-				if(!widget.info.wcontentcolor){
-					widget.info.wcontentcolor = 'rgb(255, 255, 255)';
-				}
+				const { wno, dno, rules } = widget.info;
 				
-				const wtitlefontcolor = fontColorCheck(widget.info.wtitlecolor);
-				const wcontentfontcolor = fontColorCheck(widget.info.wcontentcolor);
+				client.send('/pub/wadd', {}, JSON.stringify({ wno, dno, rules }));
 				
-				widget.querySelector('.widgetContent').style.color = wcontentfontcolor;
-				widget.style.backgroundColor = widget.info.wcontentcolor;
-				
-				const widgetHeader = widget.querySelector('.widgetHeader');
-				
-				widgetHeader.style.color = wtitlefontcolor;
-				widgetHeader.style.backgroundColor = widget.info.wtitlecolor;
-				
-				const wcategorySpan = widgetHeader.querySelector('span:nth-child(1)');
-				
-				wcategorySpan.innerHTML = widget.info.wcategory;
-				
-				const wtitleSpan = widgetHeader.querySelector('span:nth-child(2)');
-				
-				wtitleSpan.innerHTML = widget.info.wtitle;
-				
+			} else {
+				boxFun('잘못된 접근입니다.');
 			}
 			
 		});
@@ -721,19 +977,11 @@ function widgetFun(setting){
 						xhrLoad('get', 'widget/updatewdel/'+widget.info.wno, null, (res)=>{
 							if(res === 'true'){
 								
+								client.send('/pub/wdel', {}, JSON.stringify({wno : widget.info.wno}));
+								
 								const widgetDelRes = document.querySelector('.widgetDelRes');
 								motionOnOff(widgetDelRes, 0.8, false, { setting : 'offDefault' }, false, (o)=>{
 									
-									motionOnOff(widget, 0.8, false, { onOff : 'off' }, false, (o)=>{
-										
-										widgets.forEach((w,i)=>{
-											if(w === widget){
-												widgets.splice(i,1);
-												return;
-											}
-										});
-										o.remove();
-									});
 									o.remove();
 									
 									boxFun('삭제에 성공하였습니다.', false, null,false, null, false, true);
@@ -765,6 +1013,8 @@ function widgetFun(setting){
 			wmemoBox(widget);
 		} else if(wcategory === 'chat'){
 			wchatBox(widget);
+		} else if(wcategory === 'sns'){
+			wcralingBox(widget);
 		}
 		
 		
@@ -1511,7 +1761,6 @@ function boxFun(text,bg, addTagObject, closeBtnDelete, boxSelector, callback, au
 		middlePositionFun(boxOpen);
 		
 		if(callback){
-			
 			
 			callback(contentBox, contentBox.childNodes, boxSelector);
 		}

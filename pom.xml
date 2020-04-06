@@ -4,8 +4,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.test</groupId>
-	<artifactId>Final</artifactId>
-	<name>DashBoardTest</name>
+	<artifactId>dashboard</artifactId>
+	<name>dashboard</name>
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
@@ -13,6 +13,10 @@
 		<org.springframework-version>5.2.3.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<org.slf4j-version>1.6.6</org.slf4j-version>
+		
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
 	</properties>
 
 	<repositories>
@@ -21,7 +25,7 @@
 			<url>http://www.datanucleus.org/downloads/maven2/</url>
 		</repository>
 	</repositories>
-
+	
 	<dependencies>
 		<!-- Spring -->
 		<dependency>
@@ -254,6 +258,14 @@
 			<version>5.52.0</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+		<dependency>
+   			<groupId>com.google.code.gson</groupId>
+    		<artifactId>gson</artifactId>
+   			<version>2.8.6</version>
+		</dependency>
+		
+	
 	</dependencies>
 	<build>
 		<plugins>

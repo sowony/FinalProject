@@ -50,6 +50,7 @@ public class WidgetBizImpl implements WidgetBiz{
 				}
 				
 			}
+			widgetDto.setRules(wRuleBiz.selectList(widgetDto.getWno()));
 			
 		}
 		

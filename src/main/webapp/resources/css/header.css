@@ -1,59 +1,263 @@
 @charset "UTF-8";
 
 header {
-    display: block;
-    width: 100%;
-    height: max-content;
-    position: fixed;
-    z-index: 4;
+	display: block;
+	width: 100%;
+	height: max-content;
+	position: fixed;
+	z-index: 4;
 }
 
 ._header {
-    display: block;
-    width: 100%;
-    height: max-content;
-    background-color: #37c6f4;
-    float: left;
+	display: block;
+	width: 100%;
+	height: max-content;
+	background-color: #37c6f4;
+	float: left;
 }
 
 li {
-    display: block;
-    padding: 5px 12px;
-    list-style: none;
-    font-size: 12pt;
-    font-weight: 600;
-    letter-spacing: 1pt;
-    float: left;
-    color: #FFF;
+	display: block;
+	padding: 5px 12px;
+	list-style: none;
+	font-size: 12pt;
+	font-weight: 600;
+	letter-spacing: 1pt;
+	float: left;
+	color: #FFF;
 }
 
 li.title_li a {
-    font-size: 12pt;
-    font-weight: 600;
-    letter-spacing: 1pt;
-    float: left;
-    color: #FFF;
+	font-size: 12pt;
+	font-weight: 600;
+	letter-spacing: 1pt;
+	float: left;
+	color: #FFF;
 }
 
 li.profile_li {
-    padding: 2px;
-    float: right;
+	padding: 2px;
+	float: right;
 }
 
 li.nickName_li {
-    float: right;
+	float: right;
 }
 
-.header_profile_img{
-	
+.header_profile_img {
 	background-size: 100%;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-	
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
 }
 
 ._dashItem a {
+	position: relative;
+	bottom: 2px;
+}
+
+.reply {
+    background-color: cornflowerblue;
+    width: fit-content;
+    position: sticky;
+    left: 144%;
+    padding: 7px;
+    color: white;
+    border: 1px solid lightgrey;
+    border-radius: 20px;
+    font-size: 10pt;
+}
+
+.boxOpen.msgBox {
+    width: 70%;
+    height: 590px !important;
+    table-layout: fixed;
+    min-width: 700px;
+}
+
+.boxOpen.indvMsgBox{
+    min-width: 700px;
+	height:65%;
+}
+
+.dashlist {
+	display: inline-block;
+	padding: 0 15px 0 0;
+	width: 20%;
+	height: 100%;
+	overflow: overlay;
+}
+
+.dashlist>* {
+	position: relative;
+	background-color: blanchedalmond;
+	margin: 0 5px 10px 5px;
+	border-radius: 20px;
+}
+
+.msglist {
+    display: inline-block;
+    background-color: aliceblue;
+    width: 70%;
+    height: 100%;
+    margin-left: 10px;
+    padding: 0 15px;
+    overflow: overlay;
+    border-radius: 20px;
+}
+
+span.sum {
+	width: 25px;
+	height: 25px;
+	background-color: red;
+	border-radius: 50%;
+	color: white;
+	position: absolute;
+	right: 10px;
+}
+
+.divinner>* {
+	display: inline-block;
+	height: 30px;
+	width: 80%;
+	margin-top: 5px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	word-break: break-all;
+	white-space: nowrap;
+}
+
+.mainDiv {
+    display: block;
+    height: 450px;
+    width: 100%;
+}
+
+.msglist>div {
+	background-color: white;
+	border-radius: 50px;
+	margin: 8px;
+}
+
+.opened>* {
+	color: gray;
+}
+
+
+.msg {
+	border: 1px solid gray;
+}
+
+.msgfrom{
+	font-size: x-small;
+}
+.msgdate{
+	font-size: x-small;
+}
+
+.msglist>div>* {
+	margin: 5px;
+}
+
+.openMsgcontent {
+	height: 200px;
+	background-color: lavender;
+	border-radius: 20px;
+	padding: 20px;
+	border: 1px solid lightgrey;
+}
+
+.openMsgtitle {
+	background-color: lavender;
+	border-radius: 20px;
+	padding: 5px 20px;
+}
+
+.openMsgDiv>* {
+	text-align: left;
+	margin: 10px 20px;
+	border-radius: 20px;
+	font-size: small;
+}
+
+.openMsgfrom {
+	padding: 5px 20px;
+	background-color: lightgray;
+}
+
+.openMsgdate {
+	background-color: lightgrey;
+	padding: 5px 20px;
+}
+
+.openMsgDiv span:nth-child(1) {
+	background-color: beige;
+	width: fit-content;
+	padding: 5px 20px;
+	font-size: larger;
+}
+
+.boxOpen.writeBox {
+    min-width: 700px;
+    height: 66%;
+}
+	
+span.msgSpan {
+    background-color: beige;
+    border-radius: 20px;
+    margin-bottom: 15px;
+    display: inline-block;
+}
+
+span#msgCaption {
+    float: left;
+    font-size: smaller;
+    line-height: 35px;
+}
+.msgCaption {
+    display: block;
+    margin: 10px;
+}
+
+input.indvMsgtitle {
+    padding-left: 5px;
+    width: -webkit-fill-available;
+    box-shadow: none;
+    background-color: transparent;
+}
+
+input.indvopenMsgto, input.indvopenDno{
+    background-color: transparent;
+    border: none;
+}
+input.indvopenMsgto:focus, input.indvopenDno:focus{
+	outline:none;
+}
+
+.indvopenMsgcontent {
+    display: inline-block;
+    margin-top: 21px;
+    width: 93%;
+    height: 204px;
+}
+
+.msgBox input[type="submit"], .msgBox input[type="button"],
+.indvMsgBox input[type="submit"], .indvMsgBox input[type="button"] {
+    width: fit-content;
+    border: 0px;
+    border-radius: 5px;
+    background-color: darkslateblue;
+    color: white;
+    display: block;
+    padding: 5px;
+    margin: auto;
+	margin-top: 10px;
+}
+
+.msgDiv {
+    background-color: lavender;
+    border-radius: 10px;
+    padding: 0px 15px;
     position: absolute;
     top: 3px;
     right: 1px;

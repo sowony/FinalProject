@@ -62,4 +62,6 @@ public class WidgetDto {
     
     private WMemoDto wmemo;
     
+    private WChatDto wchat;
+    
 }

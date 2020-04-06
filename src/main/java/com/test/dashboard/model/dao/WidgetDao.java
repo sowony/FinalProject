@@ -29,7 +29,7 @@ public interface WidgetDao {
 	@Insert("insert into widget values(#{wno}, #{dno}, #{wcategory}, #{wtitle}, #{mid}, #{wleft}, #{wtop}, #{wwidth}, #{wheight}, #{wzindex}, #{wcontentcolor}, #{wtitlecolor}, #{wposition}, sysdate, 'N')")
 	public int insert(WidgetDto widgetDto);
 	
-	@Update("update widget set wtitle=#{wtitle}, wleft=#{wleft}, wtop=#{wtop}, wwidth=#{wwidth}, wzindex=#{wzindex}, wcontentcolor=#{wcontentcolor}, wtitlecolor=#{wtitlecolor}, wposition=#{wposition} where wno=#{wno}")
+	@Update("update widget set wtitle=#{wtitle}, wleft=#{wleft}, wtop=#{wtop}, wwidth=#{wwidth}, wcategory=#{wcategory}, wzindex=#{wzindex}, wcontentcolor=#{wcontentcolor}, wtitlecolor=#{wtitlecolor}, wposition=#{wposition} where wno=#{wno}")
 	public int update(WidgetDto widgetDto);
 	
 	@Update("update widget set wdel='Y' where wno = #{wno}")

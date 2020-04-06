@@ -340,13 +340,17 @@ function widgetAddAndModify(){
 					<p>위젯 이름</p>
 					<input type="text" name="wtitle" value="${paramWidget? paramWidget.info.wtitle : '제목입니다.'}"/>
 				</div>
+				`+ ((paramWidget)? `<input type="hidden" class="wcategory" name="wcategory" value="${paramWidget.info.wcategory}"/>` : 
+				`
 				<div>
 					<p>위젯 종류</p>
-					<select name="wcategory">
+					<select name="wcategory" class="wcategory">
 						<option name="MEMO" value="MEMO">메모</option>
 						<option name="CHAT" value="CHAT">채팅</option>
+						<option name="SNS" value="SNS">SNS</option>
 					</select>
 				</div>
+				`) +`
 				<div>
 					<p>위젯 가로</p>
 					<input type="number" name="wwidth" value="${paramWidget? paramWidget.info.wwidth : 180}" placeholder="가로"/>
@@ -420,17 +424,12 @@ function widgetAddAndModify(){
 		
 		
 		const wtitle = o.querySelector('input[name=wtitle]');
-		const wcategory = o.querySelector('select[name=wcategory]');
+		const wcategory = o.querySelector('.wcategory');
 		const wwidth = o.querySelector('input[name=wwidth]');
 		const wheight = o.querySelector('input[name=wheight]');
 		const wzindex = document.querySelector('#widgetArea').childNodes.length + 1 ;
 		const wtitlecolor = o.querySelectorAll('.colorPickerBtn')[0];
 		const wcontentcolor = o.querySelectorAll('.colorPickerBtn')[1];
-		
-		if(paramWidget){
-			let wcategory = paramWidget.info.wcategory
-			o.querySelector('option[name='+ wcategory +']').setAttribute('selected', 'true');
-		}
 		
 		widget = widgetFun({
 			'wtitle' : wtitle.value,
@@ -440,12 +439,13 @@ function widgetAddAndModify(){
 			wzindex,
 			'wtitlecolor' : wtitlecolor.style.backgroundColor,
 			'wcontentcolor' : wcontentcolor.style.backgroundColor,
-			'wposition' : 'absolute'
+			'wposition' : 'absolute',
+			'preview' : true
 		});
 		
 		widget['info'] = {
 			'wcategory' : wcategory.value,
-			'preivew' : true
+			'preview' : true
 		};
 		
 		if(paramWidget){
@@ -839,7 +839,7 @@ function widgetAddAndModify(){
 		o.addEventListener('click', (e)=>{
 			
 			const wtitle = widgetSetting.querySelector('input[name=wtitle]').value;
-			const wcategory = widgetSetting.querySelector('select[name=wcategory]').value;
+			const wcategory = widgetSetting.querySelector('.wcategory').value;
 			const wwidth = widgetSetting.querySelector('input[name=wwidth]').value;
 			const wheight = widgetSetting.querySelector('input[name=wheight]').value;
 			const wzindex = document.querySelector('#widgetArea').childNodes.length + 1 ;
@@ -864,7 +864,9 @@ function widgetAddAndModify(){
 			
 			const widgetAddBox = e.target.parentNode;
 			
+			
 			if(paramWidget){
+				
 				
 				paramWidget.info.wtitle = wtitle;
 				paramWidget.info.wcategory = wcategory;
@@ -875,7 +877,6 @@ function widgetAddAndModify(){
 				paramWidget.info.rules = rules;
 				
 				paramWidget.update();
-				paramWidget.cateFun();
 				
 				motionOnOff(widgetAddBox, 0.8, false, { setting : 'offDefault' }, null, (o)=>{
 					o.remove();
@@ -936,22 +937,22 @@ function widgetAddAndModify(){
 
 							widget.remove();
 
-							xhrLoad('get', 'widget/'+res, null, (res)=>{
+							const setting = JSON.parse(res);
 
-								const setting = JSON.parse(res);
+							console.log(setting);
+							
+							const w = widgetSettingFun(setting);
 
-								console.log(setting);
-
-								const w = widgetSettingFun(setting);
-
-								widgetArea.appendChild(w);
-
-								w.mouseEventFun();
-								w.scaleEventFun();
-								w.contextMenuAddFun();
-								w.cateFun();
-
-							});
+							widgetArea.appendChild(w);
+							
+							w.mouseEventFun();
+							w.scaleEventFun();
+							w.contextMenuAddFun();
+							w.cateFun();
+							
+							const { wno, dno, rules } = w.info;
+							
+							client.send('/pub/wadd', {}, JSON.stringify({ wno, dno, rules }));
 
 						});
 

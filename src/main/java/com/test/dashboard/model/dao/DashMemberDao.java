@@ -24,7 +24,7 @@ public interface DashMemberDao {
 	public DashMemberDto selectByNo(int dmno);
 
 	// 맴버테이벌 대쉬보드 NO와 맴버 ID로 조회
-	@Select("select * from dashmember where dmdno = #{dno} and dmmid = #{mid}")
+	@Select("select * from dashmember where dno = #{dno} and mid = #{mid}")
 	public DashMemberDto selectById(Map<String, Object> params);
 	
 	@SelectKey(statement = "select dgno from dashgrade dg where dg.dno = #{dno} and dggrade = #{dggrade} and dgalias = #{dgalias}", before = true, keyProperty = "dgno", resultType = Integer.class)

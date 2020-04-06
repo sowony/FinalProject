@@ -8,6 +8,7 @@ import lombok.Data;
 public class DashAddObjectDto {
 
 	String dtitle, ddesc;
+	DashBoardDto  dashBoardDto;
 	DashMemberDto downer;
 	List<DashMemberDto> members;
 	DashGradeDto[] rules;

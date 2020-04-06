@@ -37,6 +37,7 @@ input {
 
 }
 
+/*
 <!--드래그 방지 
 
    -ms-user-select: none; 
@@ -45,11 +46,15 @@ input {
    -webkit-user-select: none;
    user-select: none;
 
+wbinnerbox
+width: max-content;
 -->
+*/
 
-.innerBox{
-	width: max-content;
+.writeContent{
+	width: max-content; 	
 }
+
 
 input.wtxt {
     width: 220px !important;
@@ -64,11 +69,18 @@ input.wdate {
     resize: none;
 }
 
-textarea.wcontent {
+div.wcontent {
     width: 96.5%;
     height: 200px;
     resize: none;
     white-space: pre-wrap;
+    text-align:left;
+    box-shadow: 0 0 0 1000px #eee inset, 0 0 4px #989898;
+    border: 0;
+    background-color: #eee;
+    border-radius: 5px;
+    -webkit-text-fill-color: #3d3d3d;
+    padding-left: 15px;
 }
  .writeContent p input {
     display: inline-block !important;
@@ -79,5 +91,110 @@ textarea.wcontent {
     display: inline-block;
     min-width: 55px;
     text-align: left;
+   
+}
+.writeContent{
+	width: 376px;
+	
+}
+
+#wbdelete{
+	width: 30px;	
+}
+
+#wupic{
+	width: 282px !important; 
+}
+#wutitle{
+	width: 282px !important;
+}
+.winsertbtn{
+	margin-top: 10px;
+}
+.winsertbtn{
+	margin-top: 10px;
+}
+#wbhibtn{
+	margin-top: 10px;
+}
+.wdate span{
+	min-width: 50px;
+}
+
+#summernotediv{
+	text-align: left;
+}
+
+#wbstartdate{
+	width: 125px !important;
+	text-align: center;
+}
+#wbenddate{
+	width: 125px !important;
+	text-align: center;
+}
+ .wbtadd{
+    width: 15px !important;
+    height: 15px !important;
+    font-family: serif;
+    margin-left: 13px;
+    margin-top: -2px;
+    background: powderblue;
+    text-align: center;
+    cursor: pointer;
+    padding-top: 0px;
+    padding-bottom: 14px;
+    border-radius: 75px !important;
+    font-size: 18pt;
+    box-sizing: content-box;
+}
+.cpwtasklist{
+	display: inline-flex;
+}
+
+.wblistdiv {
+	display: block;
+	width: max-content;
+	height: max-content;
+	border: 0;
+	box-shadow: none;
+}
+
+
+/*<!-- 글쓰기  -->*/
+
+.wblistdiv{
+	width: 350px;
+}
+
+#wbstartdate1{
+	height:15px;
+	width: 90px !important;
+    text-align: center;
+    margin-left: 10px;	
+}
+#wbenddate1{
+	height:15px;
+	width: 90px !important;
+    text-align: center;
+    margin-left: 10px;
+}
+
+#calconf{
+	width: 42px !important;
+    margin-left: 10px;
+}
+
+.sptag{
+	display: inline-flex;
+}
+
+#btnsc{
+	display: inline-flex;
+}
+
+#wbsend{
+	width: 85px !important;
+   
 }
 

@@ -17,6 +17,7 @@ CREATE TABLE member
     CONSTRAINT MEMBER_PK PRIMARY KEY (mno)
 )
 /
+select * from member;
 
 CREATE SEQUENCE member_SEQ
 START WITH 1
@@ -42,8 +43,8 @@ DROP TRIGGER member_AI_TRG;
 COMMENT ON TABLE member IS '회원 테이블'
 /
 
-COMMENT ON COLUMN member.mno IS '회원 정보'
 /
+COMMENT ON COLUMN member.mno IS '회원 정보'
 
 COMMENT ON COLUMN member.mid IS '회원 아이디'
 /
@@ -222,13 +223,15 @@ ALTER TABLE DashGrade
 /
 
 -- 대시 맴버
-
+drop table dashmember
+delete dashmember
+select * from dashmember where dno='2'
 CREATE TABLE DashMember
 (
     dmno    NUMBER            NOT NULL, 
     dno     NUMBER            NOT NULL, 
     mid     VARCHAR2(2000)    NOT NULL, 
-    dgno    NUMBER            NOT NULL, 
+    dgno    NUMBER            NOT NULL,
     CONSTRAINT DASHMEMBER_PK PRIMARY KEY (dmno)
 )
 /
@@ -570,6 +573,82 @@ COMMENT ON COLUMN wfile.wfext IS '파일첨부확장자'
 ALTER TABLE wfile
     ADD CONSTRAINT FK_wfile_wno_widget_wno FOREIGN KEY (wno)
         REFERENCES widget (wno) on delete cascade
+/
+
+
+--쪽지 
+
+CREATE SEQUENCE MSGNOSEQ
+START WITH 1
+INCREMENT BY 1
+;
+--DROP TABLE MSGTABLE;
+--drop sequence MSGNOSEQ;
+
+CREATE TABLE MSGTABLE(
+		MSGNO 		NUMBER 			NOT NULL,
+		MSGFROM 	VARCHAR2(100) 	NOT NULL,
+		MSGTO 		VARCHAR2(200) 	NOT NULL,
+		MSGDATE 	VARCHAR2(200) 	NOT NULL,
+		MSGOPENED 	NUMBER		 	NOT NULL,
+		DNO NUMBER NOT NULL,
+		MSGCONTENT 	VARCHAR2(2000) 	NOT NULL,
+		MSGTITLE 	VARCHAR2(500) 	NOT NULL,
+	    CONSTRAINT MSGTABLE_PK PRIMARY KEY (msgno)
+);
+/
+--
+--CREATE OR REPLACE TRIGGER msgtable_AI_TRG
+--BEFORE INSERT ON msgtable 
+--REFERENCING NEW AS NEW FOR EACH ROW 
+--BEGIN 
+--    SELECT msgtable_SEQ.NEXTVAL
+--    INTO :NEW.msgno
+--    FROM DUAL;
+--END;
+--/
+
+--DROP TRIGGER msgtable_AI_TRG;
+--/
+
+--DROP SEQUENCE msgtable_SEQ;
+--/
+
+COMMENT ON TABLE msgtable IS '쪽지'
+/
+
+COMMENT ON COLUMN msgtable.msgno IS '쪽지 고유번호'
+/
+
+COMMENT ON COLUMN msgtable.msgfrom IS '쪽지 발송인'
+/
+
+COMMENT ON COLUMN msgtable.msgto IS '쪽지 수신인'
+/
+
+COMMENT ON COLUMN msgtable.msgdate IS '쪽지 보낸 날짜'
+/
+
+COMMENT ON COLUMN msgtable.msgopened IS '쪽지 개봉 여부(y/n)'
+/
+
+COMMENT ON COLUMN msgtable.dno IS '대쉬보드 테이블 번호'
+/
+
+COMMENT ON COLUMN msgtable.msgcontent IS '쪽지 내용'
+/
+
+COMMENT ON COLUMN msgtable.msgtitle IS '쪽지 제목'
+/
+
+ALTER TABLE msgtable
+    ADD CONSTRAINT FK_msgtable_msgfrom_member_mid FOREIGN KEY (msgfrom)
+        REFERENCES member (mid)
+/
+
+ALTER TABLE msgtable
+    ADD CONSTRAINT FK_msgtable_msgto_member_mid FOREIGN KEY (msgto)
+        REFERENCES member (mid)
 /
 
 

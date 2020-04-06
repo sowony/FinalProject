@@ -4,10 +4,18 @@
 
 let widgets = []
 
-function widgetSettingFun(widgetSetting){
+function widgetWebSocketClose(widgets){
+	widgets.forEach(widget=>{
+		widget.websocket.close();
+	});
+}
+
+function widgetSettingFun(widgetSetting, updateTarget){
 	
-	const widget = widgetFun(widgetSetting);
-	widget['info'] = widgetSetting;
+	let widget
+	if(!updateTarget) widget = widgetFun(widgetSetting);
+	else widget = updateTarget;
+	
 	
 	const dashmember = dashboardInfo.dashmember;
 	const dashgrade = dashboardInfo.dashgrade;
@@ -31,6 +39,7 @@ function widgetSettingFun(widgetSetting){
 			});
 			
 		} else {
+			
 			dashgrade.forEach(grade=>{
 				
 				if(grade.dggrade === rule.wrmax) {
@@ -47,6 +56,11 @@ function widgetSettingFun(widgetSetting){
 		}
 		
 	});
+	
+	if(!updateTarget) widgets.push(widget);
+	
+	console.dir(widget);
+	
 	return widget;
 }
 
@@ -77,17 +91,15 @@ function widgetload(){
 					widgetArea.appendChild(o);
 				}
 			}, (o)=>{
-				o.style.transitionDuration = '0s';
+				o.style.transitionDuration = '';
 			});
 			
 			widget.mouseEventFun();
 			widget.scaleEventFun();
 			widget.contextMenuAddFun();
 			widget.cateFun();
-			
-			widgets.push(widget);
+			widgetGradeCheck(widget);
 		}
 	});
 	
-	console.log(widgets);
 }
