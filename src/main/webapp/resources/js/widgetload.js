@@ -57,7 +57,9 @@ function widgetSettingFun(widgetSetting, updateTarget){
 		
 	});
 	
-	if(!updateTarget) widgets.push(widget);
+	if(!updateTarget) {
+		widgets.push(widget);
+	}
 	
 	console.dir(widget);
 	

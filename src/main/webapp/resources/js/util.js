@@ -293,21 +293,19 @@ function arrSort(arr){
 	let returnArr = [];
 	
 	for(let i = 0 ; i < len ; i++ ){
-		returnArr.push('');
+		returnArr.push(0);
 	}
 	
 	arr.forEach(val=>{
-		arr.forEach((checkVal,i)=>{
-			if(val > checkVal){
+		chkNum = 0;
+		arr.forEach((checkVal)=>{
+			if(Number(val) > Number(checkVal)){
 				chkNum++;
 			}
-			if(i === len-1){
-				returnArr[chkNum] = val;
-				chkNum = 0;
-			}
 		});
+		returnArr[chkNum] = val;
 	});
-	
+	console.log(returnArr);
 	return returnArr;
 }
 
@@ -649,6 +647,10 @@ function widgetGradeCheck(widget){
 		
 		targets.push(widget.querySelector('.wcrSearch'));
 	
+	} else if (wcategory === 'plan'){
+		
+		targets.push(widget.querySelector('.wbtadd'));
+		
 	}
 	
 	targets.forEach(t=>{
@@ -793,7 +795,8 @@ function widgetFun(setting){
 		const upClient = client.subscribe('/sub/wup/' + widget.info.wno, (res)=>{
 
 			const upInfo = JSON.parse(res.body);
-
+			const widgets = document.querySelectorAll('.widget');
+			
 			widgets.forEach((w,i)=>{
 
 				if(w.info.wno === upInfo.wno){
@@ -826,19 +829,16 @@ function widgetFun(setting){
 						w.style.transitionDuration = '1s';
 						motionOnOff(w, 0.8, false, { onOff : 'off' }, false, (o)=>{
 							w.websocket.close();
-							widgets.splice(i,1);
+//							widgets.splice(i,1);
 							o.remove();
 						});
 					} else {
-
-
 						w.info = upInfo;
 						w.style.transitionDuration = '1s';
 						widgetUpdate(w);
 						widgetSettingFun(null, w);
 						widgetGradeCheck(w);
 						w.style.transitionDuration = '';
-
 					}
 
 					return;
@@ -851,7 +851,8 @@ function widgetFun(setting){
 		const delClient = client.subscribe('/sub/wdel/'+widget.info.wno , (res)=>{
 
 			const delInfo = JSON.parse(res.body);
-
+			const widgets = document.querySelectorAll('.widget');
+			
 			widgets.forEach((w,i)=>{
 
 				if(w.info.wno === delInfo.wno){
@@ -859,7 +860,7 @@ function widgetFun(setting){
 					w.style.transitionDuration = '1s';
 					motionOnOff(w, 0.8, false, { onOff : 'off' }, false, (o)=>{
 						w.websocket.close();
-						widgets.splice(i,1);
+//						widgets.splice(i,1);
 						o.remove();
 					});
 
@@ -871,11 +872,17 @@ function widgetFun(setting){
 		widget['websocket'] = {
 				upClient, delClient, moveClient, scaleClient,
 				close : ()=>{
-					widget.websocket.upClient.unsubscribe();
-					widget.websocket.delClient.unsubscribe();
-					widget.websocket.moveClient.unsubscribe();
-					widget.websocket.scaleClient.unsubscribe();
-					widget.websocket[widget.info.wcategory.toLowerCase() + 'Client'].unsubscribe();
+//					widget.websocket.upClient.unsubscribe();
+//					widget.websocket.delClient.unsubscribe();
+//					widget.websocket.moveClient.unsubscribe();
+//					widget.websocket.scaleClient.unsubscribe();
+//					widget.websocket[widget.info.wcategory.toLowerCase() + 'Client'].unsubscribe();
+					const clientKeys = Object.keys(widget.websocket);
+					for(k of clientKeys){
+						if(k !== 'close'){
+							widget.websocket[k].unsubscribe();
+						}
+					}
 				}
 		}
 	}
@@ -941,16 +948,6 @@ function widgetFun(setting){
 						
 						widgetZMove(widget, 'down', 'max');
 					}
-				},
-				'dashboardInfo' : {
-					'대시보드 자세히 보기' : ()=>{}
-				},
-				'letter' : {
-					'쪽지함 보기' : ()=>{},
-					'쪽지 작성' : ()=>{}
-				},
-				'alram' : {
-					'말람함 보기' : ()=>{}
 				},
 				'myInfo' : {
 					'내 정보 보기' : ()=>{},
@@ -1259,7 +1256,7 @@ function fontColorCheck(rgb){
 	let fontColor = '';
 	
 	if((R < 125 && G < 125) || (G < 125 && B < 125) || (R < 125 && B < 125)){
-		fontColor = '#fff';
+		fontColor = '#ffffff';
 	} else {
 		fontColor = '#3d3d3d';
 	}
@@ -1281,14 +1278,16 @@ function randomColor(){
 }
 
 function brChange(val, chk){
-	if(chk){
-		let res = '';
-		res = val.split('\n').join('<br>');
-		return res;
-	} else {
-		let res = '';
-		res = val.split('<br>').join('\r\n');
-		return res;	
+	if(val){
+		if(chk){
+			let res = '';
+			res = val.split('\n').join('<br>');
+			return res;
+		} else {
+			let res = '';
+			res = val.split('<br>').join('\r\n');
+			return res;	
+		}
 	}
 }
 
@@ -1721,7 +1720,7 @@ function boxFun(text,bg, addTagObject, closeBtnDelete, boxSelector, callback, au
 			
 			contentBox['closeDisabledDelete'] = (callObject)=>{
 				
-				if(callObject.tagName === 'A'){
+				if(callObject.tagName === 'A' || callObject.tagName === 'IMG'){
 					if(callObject.getAttribute('style')) callObject.setAttribute('style', callObject.getAttribute('style') + 'pointer-events: none;');
 					else callObject.setAttribute('style', 'pointer-events: none;');
 				} else {
@@ -1729,7 +1728,7 @@ function boxFun(text,bg, addTagObject, closeBtnDelete, boxSelector, callback, au
 				}
 				
 				closeBtn.addEventListener('click', (e)=>{
-					if(callObject.tagName === 'A'){
+					if(callObject.tagName === 'A' || callObject.tagName === 'IMG'){
 						
 						let styleArray = callObject.getAttribute('style').split(';');
 						styleArray.splice(styleArray.length-2, 1);
@@ -1744,7 +1743,7 @@ function boxFun(text,bg, addTagObject, closeBtnDelete, boxSelector, callback, au
 		
 		contentBox['removeDisabledDelete'] = (callObject)=>{
 			console.log(callObject);
-			if(callObject.tagName === 'A'){
+			if(callObject.tagName === 'A' || callObject.tagName === 'IMG'){
 				
 				let styleArray = callObject.getAttribute('style').split(';');
 				styleArray.splice(styleArray.length-2, 1);

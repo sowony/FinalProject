@@ -61,11 +61,15 @@ public class WboardBizImpl implements WboardBiz{
 		return wboardDao.conUpdate(wboardDto);
 	}
 	
+	@Override
+	public int stateUpdate(WboardDto wboardDto) {
+		// TODO Auto-generated method stub
+		return wboardDao.stateUpdate(wboardDto);
+	}
+	
 	//게시물 작성 
 	@Override
 	public int wbinsert(WboardDto dto) {
-		
-
 		return wboardDao.wbinsert(dto);
 	}
 

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -61,7 +62,7 @@ public class WboardController {
 		public List<WboardDto> boardListAll(@ModelAttribute("wno") int wno){
 			
 			List<WboardDto> list = biz.boardListAll(wno);
-
+			
 			return list;
 			
 		}
@@ -77,57 +78,57 @@ public class WboardController {
 			//System.out.println(mid+"와"+ wno+"는 여기 내글목록 보기에서 송출된 것" );
 			List<WboardDto> list = biz.boardMyList(dto);
 			
-			System.out.println(list);
-			
 			return list;
 		}
 		
 		
-		@RequestMapping(value = "/wSelectOne", method = RequestMethod.POST)
 		@ResponseBody
-		//post방식으로 데이터를 주고 받을 경우 @ModelAttribute("받아오는 값 이름") 디비에서 이용되는 값이름  ,를 사용해서 이름을 맞춰주어야 에러가 안뜬다  
-		public WboardDto selectOne(@ModelAttribute("selectno") int wbtodono) {
+		@GetMapping("/wSelectOne")
+		public WboardDto wSelectOne(WboardDto wboardDto) {
 			
 			//글 상세보기 
 			//wwdto.getWbtodono()
 			
-			WboardDto dto = biz.wSelectOne(wbtodono);
+			WboardDto dto = biz.wSelectOne(wboardDto.getWbtodono());
 			
 			DashMemberDto memberInfo = dashMemberBiz.selectById(dto.getDno(), dto.getMid());
 			
-			logger.info(memberInfo + "");
-			
 			dto.setMnick(memberInfo.getMnick());
-			dto.setDmcolor(memberInfo.getDmcolor());
 			
 			return dto;
 		
 		}
 		
 		
-		@RequestMapping(value="/wDelete", method= RequestMethod.POST)
 		@ResponseBody
-		public boolean wDelete(@ModelAttribute("selectno") int wbtodono) {
+		@GetMapping("/wbdelete")
+		public WboardDto wDelete(WboardDto wboardDto) {
 			
-			int res = biz.wDelete(wbtodono);
+			int res = biz.wDelete(wboardDto.getWbtodono());
 			
 			if(res > 0) {
-				return true;
+				return wboardDto;
 			}else {
-				return false;
+				return null;
 			}
 			
 		}
 		
-		
-		/*
-		@GetMapping("/summerwrite")
-		public String boardWrite() {
-		  return "summerboardwrite";
+		@ResponseBody
+		@PostMapping("/wbstatechange")
+		public WboardDto wbStateChange(@RequestBody WboardDto wboardDto) {
+			
+			int res = biz.stateUpdate(wboardDto);
+			
+			logger.info("[ "+res+" ]"+wboardDto);
+			
+			if(res > 0) {
+				return wboardDto;
+			} else {
+				return null;
+			}
 		}
-		*/
 		
-		//@PostMapping("/summerwrite")
 		@RequestMapping(value = "/summerwrite",method = RequestMethod.POST)
 		@ResponseBody
 		public WboardDto wbinsert(WboardDto dto, HttpSession session) {
@@ -135,6 +136,7 @@ public class WboardController {
 			
 			MemberDto user = (MemberDto) session.getAttribute("user");
 			dto.setMid(user.getMid());
+			dto.setMnick(user.getMnick());
 			
 			logger.info("wbinsert >> [ wBoardDto : " + dto + " ]");
 			
@@ -142,6 +144,7 @@ public class WboardController {
 			
 			if(res > 0) {
 				logger.info("wbinsert >> [ success ]");
+				
 				return dto;
 				
 			}else {
@@ -250,8 +253,6 @@ public class WboardController {
 			
 			//String mid, int yyyymm 형태의 wbstartdate, int wno 3가지의 값이 일치하는 것 의 달력 ㄱㄱ 
 			List<WboardDto> list = biz.wbdatesend(dto);
-			System.err.println("어디까지 들어오는지 보기 위해서 여기느 달력 날짜 보내기 "+dto.getWno()+dto.getMid()+dto.getWbstartdate());
-			System.out.println(list);
 			return list;
 		}
 		

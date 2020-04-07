@@ -110,6 +110,43 @@ public class WebSocketController {
 		
 	}
 	
+	@MessageMapping("/wbtitleup")
+	public void wbTitleUpMessage(WboardDto wboardDto) {
+			
+		logger.info("[ INFO ] : WebSocketController > wbTitleUpMessage [wboardDto : " + wboardDto + "]");
+			
+		template.convertAndSend("/sub/wbtitleup/" + wboardDto.getWno(), wboardDto);
+		
+	}
+	
+	@MessageMapping("/wbdateup")
+	public void wbDateUpMessage(WboardDto wboardDto) {
+			
+		logger.info("[ INFO ] : WebSocketController > wbDateUpMessage [wboardDto : " + wboardDto + "]");
+			
+		template.convertAndSend("/sub/wbdateup/" + wboardDto.getWno(), wboardDto);
+		
+	}
+	
+	@MessageMapping("/wbcontentup")
+	public void wbContentUpMessage(WboardDto wboardDto) {
+			
+		logger.info("[ INFO ] : WebSocketController > wbContentUpMessage [wboardDto : " + wboardDto + "]");
+			
+		template.convertAndSend("/sub/wbcontentup/" + wboardDto.getWno(), wboardDto);
+		
+	}
+	
+	@MessageMapping("/wbdelete")
+	public void wbDeleteMessage(WboardDto wboardDto) {
+			
+		logger.info("[ INFO ] : WebSocketController > wbDeleteMessage [wboardDto : " + wboardDto + "]");
+			
+		template.convertAndSend("/sub/wbdelete/" + wboardDto.getWno(), wboardDto);
+		
+	}
+	
+	
 	@MessageMapping("/addDash")
 	public void dAddMessage(DashMemberDto dashMemberDto) {
 			

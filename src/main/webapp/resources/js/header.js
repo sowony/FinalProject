@@ -39,7 +39,7 @@ function headerFun(){
 		
 		
 		const profile_li = addObject(header_ul, 'li', 'profile_li', true, (o)=>{
-			o.innerHTML = `<div class="header_profile_img"style="background-image : url('${userInfo.mimgpath}');"></div>`
+			o.innerHTML = `<div class="header_profile_img"><img src="${userInfo.mimgpath}" onerror="this.src='https://img.icons8.com/ultraviolet/100/000000/user.png';"/></div>`
 		});
 		
 		const letter_li = addObject(header_ul, 'li', 'letter_li', true, (o)=>{
