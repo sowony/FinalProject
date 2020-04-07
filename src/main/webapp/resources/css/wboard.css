@@ -11,19 +11,31 @@
 
 .wtasklist {
     width: 22%;
-    height: 245px;
+    height: 93%;
     margin: 0.5%;
     padding: 1%;
     box-shadow: 0px 1px 2px 1px #aaa;
     float: left;
     overflow: hidden visible;
 }
+
+.wtasklist p{
+	height: 36px;
+	pointer-events:none;
+}
+
+input.wbinput, input.wbinputMy {
+    width: 84% !important;
+    padding: 4% !important;
+    margin: 4% !important;
+}
+
 .wboardcon input[type="text"],
 .wblistobj input[type="text"],
 .writeContent input[type="text"],
 .wucontents input[type="text"] {
 	display: block;
-    width: 290px !important;
+    width: 290px;
     padding: 7px;
     margin: 10px 5px;
     font-size: 9pt;
@@ -35,19 +47,6 @@
     word-break: break-all;
 }
 
-/*
-<!--드래그 방지 
-
-   -ms-user-select: none; 
-   -moz-user-select: -moz-none;
-   -khtml-user-select: none;
-   -webkit-user-select: none;
-   user-select: none;
-
-wbinnerbox
-width: max-content;
--->
-*/
 
 .writeContent{
 	width: max-content; 	
@@ -80,20 +79,52 @@ div.wcontent {
     -webkit-text-fill-color: #3d3d3d;
     padding-left: 15px;
 }
-.writeContent p input {
-    display: inline-block !important;
-    margin-left: 5px;
+
+
+.writeContent {
+    width: 350px;
+    height: max-content;
+    text-align: initial;
+    padding: 5px;
 }
 
-.writeContent p span {
+span.colName {
+    width: 75px;
     display: inline-block;
-    min-width: 55px;
-    text-align: left;
-   
+    vertical-align: middle;
+    font-weight: 600;
+    letter-spacing: 1pt;
 }
-.writeContent{
-	width: 376px;
-	
+
+.colName + span {
+	vertical-align: middle;
+}
+
+.wbdateP span {
+	vertical-align: middle;
+}
+
+.writeContent p {
+    height: 25px;
+    margin: 5px 0;
+}
+
+.wbcontentDiv {
+    min-height: 350px;
+    padding: 5px;
+}
+
+span.modifyBtn {
+    padding: 0px 4px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+
+.writeContent p {
+    height: 28px;
+    margin: 5px 0;
 }
 
 #wbdelete{
@@ -144,10 +175,12 @@ div.wcontent {
     cursor: pointer;
     padding-top: 0px;
     padding-left: 5px;
-    padding-bottom: 13px;
+    padding-right: 6px;
+    padding-bottom: 11px;
     border-radius: 75px !important;
     font-size: 18pt;
     box-sizing: content-box;
+    float: right;
 }
 
 .cpwtasklist{

@@ -10,6 +10,12 @@ const backgroundDiv = addObject(null,'div',null,false,(t)=>{
 });
 
 
+function hyphenDateFormat(date){
+	const dateArray = date.split('-');
+	const dateType = new Date(`${dateArray[1]}/${dateArray[2]}/${dateArray[0]}`);
+	return dateType
+}
+
 function imageView(img){
 	
 	const viewImg = img.cloneNode(true);

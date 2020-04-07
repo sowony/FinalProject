@@ -42,6 +42,25 @@ public class WboardBizImpl implements WboardBiz{
 		return wboardDao.wSelectOne(wbtodono);
 	}
 
+	
+	@Override
+	public int dateUpdate(WboardDto wboardDto) {
+		// TODO Auto-generated method stub
+		return wboardDao.dateUpdate(wboardDto);
+	}
+	
+	@Override
+	public int titleUpdate(WboardDto wboardDto) {
+		// TODO Auto-generated method stub
+		return wboardDao.titleUpdate(wboardDto);
+	}
+	
+	@Override
+	public int conUpdate(WboardDto wboardDto) {
+		// TODO Auto-generated method stub
+		return wboardDao.conUpdate(wboardDto);
+	}
+	
 	//게시물 작성 
 	@Override
 	public int wbinsert(WboardDto dto) {
@@ -71,6 +90,8 @@ public class WboardBizImpl implements WboardBiz{
 		return wboardDao.summerUpdate(dto);
 	}
 
+	
+	
 	//내게시글보기 
 	@Override
 	public List<WboardDto> boardMyList(WboardDto dto) {

@@ -12,10 +12,10 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import com.test.dashboard.model.biz.MemberBiz;
-import com.test.dashboard.model.dto.DashAddObjectDto;
 import com.test.dashboard.model.dto.DashMemberDto;
 import com.test.dashboard.model.dto.MsgDto;
 import com.test.dashboard.model.dto.WChatDto;
+import com.test.dashboard.model.dto.WboardDto;
 import com.test.dashboard.model.dto.WidgetDto;
 
 @Controller
@@ -98,6 +98,15 @@ public class WebSocketController {
 		logger.info("[ INFO ] : WebSocketController > wCrKeywordMessage [keyword : " + params.get("keyword") + "]");
 			
 		template.convertAndSend("/sub/wcrkeyword/" + params.get("wno"), params);
+		
+	}
+	
+	@MessageMapping("/wplan")
+	public void wPlanMessage(WboardDto wboardDto) {
+			
+		logger.info("[ INFO ] : WebSocketController > wPlanMessage [wboardDto : " + wboardDto + "]");
+			
+		template.convertAndSend("/sub/wplan/" + wboardDto.getWno(), wboardDto);
 		
 	}
 	

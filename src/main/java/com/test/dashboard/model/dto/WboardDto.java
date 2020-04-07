@@ -26,5 +26,7 @@ public class WboardDto {
 	// join 용
 	
 	private String mnick;
+	
+	private String dmcolor;
 
 }

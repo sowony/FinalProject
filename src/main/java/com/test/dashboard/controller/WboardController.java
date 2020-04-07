@@ -12,12 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.test.dashboard.model.biz.DashGradeBiz;
+import com.test.dashboard.model.biz.DashMemberBiz;
 import com.test.dashboard.model.biz.MemberBiz;
 import com.test.dashboard.model.biz.WboardBiz;
+import com.test.dashboard.model.dto.DashGradeDto;
+import com.test.dashboard.model.dto.DashMemberDto;
 import com.test.dashboard.model.dto.MemberDto;
 import com.test.dashboard.model.dto.WboardDto;
 
@@ -31,6 +37,9 @@ public class WboardController {
 		
 		@Autowired
 		private MemberBiz memberBiz;
+		
+		@Autowired
+		private DashMemberBiz dashMemberBiz;
 		
 		//성공시 삭제할 것 - 필요없음.. 페이지 전환 없음 
 		@RequestMapping("/wboard")
@@ -77,30 +86,21 @@ public class WboardController {
 		@RequestMapping(value = "/wSelectOne", method = RequestMethod.POST)
 		@ResponseBody
 		//post방식으로 데이터를 주고 받을 경우 @ModelAttribute("받아오는 값 이름") 디비에서 이용되는 값이름  ,를 사용해서 이름을 맞춰주어야 에러가 안뜬다  
-		public Map<String, Object> selectOne(@ModelAttribute("selectno") int wbtodono) {
+		public WboardDto selectOne(@ModelAttribute("selectno") int wbtodono) {
 			
 			//글 상세보기 
 			//wwdto.getWbtodono()
 			
 			WboardDto dto = biz.wSelectOne(wbtodono);
-			//System.out.println("디티오 ㅂ부ㅜㄴ"+dto.getMid()+dto.getWbtitle()+dto.getWbstartdate());
 			
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("wbtodono",dto.getWbtodono());
-			map.put("wno",dto.getWno());
-			map.put("dno",dto.getDno());
-			map.put("dgno",dto.getDgno());
-			map.put("mid",dto.getMid());
-			map.put("wbtodo",dto.getWbtodo());
-			map.put("wbtitle",dto.getWbtitle());
-			map.put("wbcontent",dto.getWbcontent());
-			map.put("wfno_list", dto.getWfno_list());
-			map.put("wbstartdate", dto.getWbstartdate());
-			map.put("wbenddate", dto.getWbenddate());
-			map.put("wbcolor", dto.getWbcolor());
-		    
-
-			return map;
+			DashMemberDto memberInfo = dashMemberBiz.selectById(dto.getDno(), dto.getMid());
+			
+			logger.info(memberInfo + "");
+			
+			dto.setMnick(memberInfo.getMnick());
+			dto.setDmcolor(memberInfo.getDmcolor());
+			
+			return dto;
 		
 		}
 		
@@ -130,7 +130,7 @@ public class WboardController {
 		//@PostMapping("/summerwrite")
 		@RequestMapping(value = "/summerwrite",method = RequestMethod.POST)
 		@ResponseBody
-		public boolean wbinsert(WboardDto dto, HttpSession session) {
+		public WboardDto wbinsert(WboardDto dto, HttpSession session) {
 			//System.out.println(dto.getWbstartdate()+"그리고"+dto.getWbenddate());
 			
 			MemberDto user = (MemberDto) session.getAttribute("user");
@@ -142,17 +142,58 @@ public class WboardController {
 			
 			if(res > 0) {
 				logger.info("wbinsert >> [ success ]");
-				return true;
+				return dto;
 				
 			}else {
 				logger.info("wbinsert >> [ fail ]");
-				return false;
+				return null;
 			}
 			
 		
 		}
 		
 
+		@ResponseBody
+		@PostMapping("/dateupdate")
+		public WboardDto postDateUpdate(@RequestBody WboardDto wboardDto) {
+			
+			int res = biz.dateUpdate(wboardDto);
+			
+			if(res > 0) {
+				return wboardDto;
+			} else {
+				return null;
+			}
+			
+		}
+		
+		@ResponseBody
+		@PostMapping("/titleupdate")
+		public WboardDto postTitleUpdate(@RequestBody WboardDto wboardDto) {
+			
+			int res = biz.titleUpdate(wboardDto);
+			
+			if(res > 0) {
+				return wboardDto;
+			} else {
+				return null;
+			}
+			
+		}
+		
+		@ResponseBody
+		@PostMapping("/conupdate")
+		public WboardDto postConUpdate(@RequestBody WboardDto wboardDto) {
+			
+			int res = biz.conUpdate(wboardDto);
+			
+			if(res > 0) {
+				return wboardDto;
+			} else {
+				return null;
+			}
+			
+		}
 		
 		
 		//게시글 수정 폼으로 보내기 
