@@ -4,20 +4,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.test.dashboard.model.biz.MemberBiz;
 import com.test.dashboard.model.biz.WboardBiz;
+import com.test.dashboard.model.dto.MemberDto;
 import com.test.dashboard.model.dto.WboardDto;
 
 @Controller
@@ -27,6 +28,9 @@ public class WboardController {
 		
 		@Autowired
 		private WboardBiz biz;
+		
+		@Autowired
+		private MemberBiz memberBiz;
 		
 		//성공시 삭제할 것 - 필요없음.. 페이지 전환 없음 
 		@RequestMapping("/wboard")
@@ -56,8 +60,10 @@ public class WboardController {
 		//내글목록 보기 
 		@RequestMapping(value= "/wbMyList", method = RequestMethod.POST)
 		@ResponseBody
-		public List<WboardDto> boardMyList(WboardDto dto){
+		public List<WboardDto> boardMyList(WboardDto dto, HttpSession session){
 			
+			MemberDto user = (MemberDto) session.getAttribute("user");
+			dto.setMid(user.getMid());
 			
 			//System.out.println(mid+"와"+ wno+"는 여기 내글목록 보기에서 송출된 것" );
 			List<WboardDto> list = biz.boardMyList(dto);
@@ -72,7 +78,6 @@ public class WboardController {
 		@ResponseBody
 		//post방식으로 데이터를 주고 받을 경우 @ModelAttribute("받아오는 값 이름") 디비에서 이용되는 값이름  ,를 사용해서 이름을 맞춰주어야 에러가 안뜬다  
 		public Map<String, Object> selectOne(@ModelAttribute("selectno") int wbtodono) {
-			//System.out.println("으아아앙ㄱ " + wbtodono);
 			
 			//글 상세보기 
 			//wwdto.getWbtodono()
@@ -125,17 +130,22 @@ public class WboardController {
 		//@PostMapping("/summerwrite")
 		@RequestMapping(value = "/summerwrite",method = RequestMethod.POST)
 		@ResponseBody
-		public boolean wbinsert(WboardDto dto) {
+		public boolean wbinsert(WboardDto dto, HttpSession session) {
 			//System.out.println(dto.getWbstartdate()+"그리고"+dto.getWbenddate());
 			
+			MemberDto user = (MemberDto) session.getAttribute("user");
+			dto.setMid(user.getMid());
+			
+			logger.info("wbinsert >> [ wBoardDto : " + dto + " ]");
+			
 			int	res = biz.wbinsert(dto);
+			
 			if(res > 0) {
-				System.out.println("저장완료");
-				
+				logger.info("wbinsert >> [ success ]");
 				return true;
 				
 			}else {
-				System.out.println("저장안됨");
+				logger.info("wbinsert >> [ fail ]");
 				return false;
 			}
 			

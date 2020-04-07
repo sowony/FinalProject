@@ -1015,6 +1015,8 @@ function widgetFun(setting){
 			wchatBox(widget);
 		} else if(wcategory === 'sns'){
 			wcralingBox(widget);
+		} else if(wcategory === 'plan'){
+			wblist(widget);
 		}
 		
 		

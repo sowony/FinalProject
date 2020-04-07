@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
@@ -14,11 +15,11 @@ import com.test.dashboard.model.dto.WboardDto;
 public interface WboardDao {
 
 	//전체 목록 조회 , id는 떠다닌는 애를 잡아다가 넣자  dgno???넣었었음
-	@Select("select * from wboard where wno = #{wno}")
+	@Select("select * from wboard inner join member on ( wboard.mid = member.mid )where wno = #{wno}")
 	public List<WboardDto> boardListAll(int wno);
 	
 	//내글 목록 조회 
-	@Select("select * from wboard where mid = #{mid} and wno = #{wno}")
+	@Select("select * from wboard w inner join member m on (w.mid = m.mid) where w.mid = #{mid} and w.wno = #{wno}")
 	public List<WboardDto> boardMyList(WboardDto dto);
 	
 	//연습용 
@@ -31,9 +32,9 @@ public interface WboardDao {
 	public WboardDto wSelectOne(int wbtodono);
 	
 	//써머노트  -게시글 작성 
+	@SelectKey(statement = "SELECT wboard_seq.nextval FROM DUAL", keyProperty = "wbtodono",resultType = Integer.class, before = true)
 	@Insert("INSERT INTO wboard (wbtodono, mid, wbtitle, wbcontent,wno,dno, dgno, wbstartdate, wbenddate)"+
-			"VALUES (wboard_seq.NEXTVAL, #{mid}, #{wbtitle}, #{wbcontent},1,1,2,TO_DATE(#{wbstartdate},'YYYYMMDD')  ,TO_DATE(#{wbenddate},'YYYYMMDD'))")
-	//@SelectKey(statement = "SELECT SUMMERBOARD_SEQ.NEXTVAL FROM DUAL", keyProperty = "SUMMERBOARD_SEQ",resultType = Integer.class, before = true)
+			"VALUES (#{wbtodono}, #{mid}, #{wbtitle}, #{wbcontent},1,1,2,TO_DATE(#{wbstartdate},'YYYYMMDD')  ,TO_DATE(#{wbenddate},'YYYYMMDD'))")
 	public int wbinsert(WboardDto dto);
 	
 	
