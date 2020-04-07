@@ -11,13 +11,13 @@ import com.test.dashboard.model.dto.WEditorDto;
 @Repository
 public interface WEditorDao {
 	
-	@Select("SELECT WENO, WNO, WDITOR FROM WEDITOR WHERE WENO=#{weno}")
+	@Select("SELECT WENO, WNO, WEDITOR FROM WEDITOR WHERE WENO=#{weno}")
 	public WEditorDto select(int weno);
 	
 	@Update("UPDATE WEDITOR SET WECONTENT=#{wecontent} WHERE WENO=#{weno}")
 	public int update(WEditorDto dto);
 	
-	@Insert("INSERT INTO WEDITOR VALUES(WMEDITOR_SEQ.NEXTVAL, 1, #{wecontent})")
+	@Insert("INSERT INTO WEDITOR VALUES(WEDITOR_SEQ.NEXTVAL, 1, #{wecontent})")
 	public int insert(WEditorDto dto);
 	
 	@Delete("DELETE FROM WEDITOR WHERE WENO=#{weno}")

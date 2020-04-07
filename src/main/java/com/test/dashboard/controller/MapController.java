@@ -36,13 +36,8 @@ public class MapController {
 		return "map";
 	}
 	
-	@GetMapping("search")
-	public String getSearch() {
-		logger.info("[ INFO ] : 검색 들어옴");
-		return "map";
-	}
 
-	@PostMapping("map")
+	@PostMapping("addLocation")
 	@ResponseBody
 	public boolean addLocation(@RequestBody WMapDto wMapDto) {
 
@@ -52,7 +47,6 @@ public class MapController {
 		boolean boolRes = false;
 		
 		Boolean[] exist = new Boolean[list.size()];
-//		logger.info("배열 생성 사이즈는 : " + exist.length);
 		for(int i = 0; i < list.size(); i++) {
 			
 			
@@ -76,16 +70,16 @@ public class MapController {
 	
 	@PostMapping("update")
 	@ResponseBody
-	public boolean updateMemo(WMapDto wMapDto) {
+	public WMapDto updateMemo(WMapDto wMapDto) {
 		
 		logger.info(wMapDto.getWmapmemo());
 		
 		int res = wMapBiz.update(wMapDto);
-		
+		WMapDto updateRes = wMapBiz.select(wMapDto.getWmapno());
 		if(res > 0) {
-			return true;
+			return updateRes;
 		} else {
-			return false;
+			return null;
 		}
 		
 	}

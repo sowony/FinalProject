@@ -76,11 +76,12 @@ public class LoginInterceptor implements HandlerInterceptor{
 		else if(request.getRequestURI().endsWith("crwl")) return true;
 		
 		else if(request.getRequestURI().endsWith("map")) return true;
-		else if(request.getRequestURI().endsWith("search")) return true;
+		else if(request.getRequestURI().endsWith("addLocation")) return true;
 		else if(request.getRequestURI().endsWith("marker")) return true;
 		else if(request.getRequestURI().endsWith("delete")) return true;
 		else if(request.getRequestURI().endsWith("update")) return true;
 		else if(request.getRequestURI().endsWith("weditor")) return true;
+		else if(request.getRequestURI().endsWith("insertEditor")) return true;
 		
 		else if(request.getRequestURI().endsWith("null")) return false;
 		

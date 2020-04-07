@@ -1,5 +1,54 @@
 
-function startMap(_map,_menu){
+const mapBody = document.querySelector('body');
+
+function start(){
+	const mapBtn = addObject(mapBody, 'button', 'mapWno', true,(o)=>{
+		o.innerHTML = '지도';
+		o.addEventListener('click', ()=>{
+//			$.ajax({
+//				url: 'map',
+//				data:'',
+//			});
+			createTags();
+			o.remove();
+		});
+	});
+}
+
+start();
+//createTags();
+
+function createTags(){
+	const _map_wrap = addObject(mapBody, 'div', 'map_wrap', true, (o)=>{
+		o.innerHTML = `<div id="mapHeader">
+			MAP : 장소 추가
+		</div>
+		<div id="map"
+			style="width: 100%; height: 100%; position: relative; overflow: hidden;"></div>
+
+		<div id="menu_wrap" class="bg_white">
+			<div class="option">
+				<div id="searchBar">
+					<form onsubmit="searchPlaces(); return false;">
+						<input type="text" value="" id="keyword" size="15" placeholder="키워드를 입력해주세요">
+						<input type="button" id="testbtn" value="검색하기">
+					</form>
+				</div>
+			</div>
+			<hr>
+			<ul id="placesList"></ul>
+			<div id="pagination"></div>
+			</div>`
+	});
+	
+	// boxFun('지도', true, [map_wrap], false, 'createMap', null, true);
+	
+	const _map = document.getElementById('map');
+	const menu = document.getElementById('menu_wrap');
+	startMap(map, menu, _map_wrap);
+}
+
+function startMap(_map,_menu, _map_wrap){
 // 마커를 담을 배열입니다
 var markers = [];
 
@@ -20,6 +69,9 @@ var infowindow = new kakao.maps.InfoWindow({zIndex:1});
 
 // 키워드로 장소를 검색합니다
 // searchPlaces();
+
+openMarker();
+
 
 // 키워드 검색을 요청하는 함수입니다
 function searchPlaces() {
@@ -263,11 +315,11 @@ function displayPagination(pagination) {
 
 // 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수입니다
 // 인포윈도우에 장소명을 표시합니다
-function displayInfowindow(marker, title, addr, jibun, memo) {
-    var content = '<div style="padding:5px;z-index:1;"><p>' + title + '</p><p>' + addr + '</p><p>' + jibun + '</p><p>' + memo + '</p></div>';
-
+function displayInfowindow(marker, title, addr, jibun, memo, wmapno, modify) {
+    var content = '<div class="markerMemo" data-wmapno="'+ wmapno +'"style="padding:5px;z-index:1;"><p>' + title + '</p><p>' + addr + '</p><p>' + jibun + '</p><p>' + memo + '</p></div>';
+    console.log(marker);
     infowindow.setContent(content);
-    infowindow.open(map, marker);
+    if(!modify) infowindow.open(map, marker);
 }
 
  // 검색결과 목록의 자식 Element를 제거하는 함수입니다
@@ -278,7 +330,7 @@ function removeAllChildNods(el) {
 }
 
 // 오른쪽클릭시 창 생성
-function clickMenu(marker, mapno, mapmemo, realMarker, markerDiv){
+function clickMenu(marker, realMarker, markerDiv){
 	
 	contextMenuFun(marker,{
 		'delete' : {
@@ -295,7 +347,9 @@ function clickMenu(marker, mapno, mapmemo, realMarker, markerDiv){
 							method: 'post',
 							contentType: 'application/json; charset=utf-8;',
 							async: false,
-							data: JSON.stringify(mapno),
+							data: JSON.stringify({
+								temp : marker.wmap.wmapno
+							}),
 							success: function(res){
 								if(res){
 									removeMarker(marker, realMarker, markerDiv);
@@ -317,9 +371,9 @@ function clickMenu(marker, mapno, mapmemo, realMarker, markerDiv){
 		},
 		'update' : {
 			'메모 수정' : function(){
-				// var newMemo = prompt("메모 수정 : ", mapmemo.memo);
 				let textarea = addObject(null, 'textarea', 'updateMemo', false, (o)=>{
-					o.innerHTML = mapmemo.memo;
+					console.dir(marker);
+					o.innerHTML = brChange(marker.wmap.wmapmemo);
 				});
 				
 				let updateBtn = addObject(null, 'button', 'grayBtn', false, (o)=>{
@@ -331,90 +385,34 @@ function clickMenu(marker, mapno, mapmemo, realMarker, markerDiv){
 						boxOpen.remove();
 						var dd = {
 								wmapmemo: newMemo,
-								wmapno: mapno.temp
+								wmapno: marker.wmap.wmapno
 						}
-						console.log(dd);
 						
 						$.ajax({
 							url: 'update',
-							// accept: 'application/json',
 							method: 'post',
-							// contentType: 'application/json; charset=utf-8;',
 							async: false,
 							data: dd,
 							success: function(res){
 								if(res) {
-									
-//									$.ajax({
-//										url: 'marker',
-//										accept: 'application/json',
-//										method: 'post',
-//										contentType: 'application/json; charset=utf-8;',
-//										async: false,
-//										data: JSON.stringify(),
-//										success: function(data){
-//											data.forEach(function(item){
-//												
-//												let markerPositionAjax  = new kakao.maps.LatLng(item.wmaplat, item.wmaplng); 
-//
-//												let markerAjax = addMarker(markerPositionAjax);
-////												var markerAjax = new kakao.maps.Marker({
-////													position: markerPositionAjax
-////												});
-//												let divAjax = markerAjax.pd.parentNode;
-//												let qsAjax = divAjax.querySelector('img');
-//												let chkAjax = addObject(divAjax, 'div', 'map_test', true, (o)=>{
-//													o.style.position = 'absolute';
-//													o.style.width = qsAjax.style.width;
-//													o.style.height = qsAjax.style.height;
-//												});
-//												// console.log("item.wmapno : " + item.wmapno);
-//												let mapno = {temp:item.wmapno};
-//												let mapmemo = {memo: item.wmapmemo}
-//												
-//												markerAjax.remove();
-//												
-////												
-////												clickMenu(chkAjax, mapno, mapmemo, markerAjax, divAjax);
-////												
-////												chkAjax.onmouseover =  function () {
-////									                displayInfowindow(markerAjax, item.wmapkeyword, item.wmapaddr, item.wmapjibun, item.wmapmemo);
-////									            };
-////
-////									            chkAjax.onmouseout =  function () {
-////									                infowindow.close();
-////									            };
-////												removeMarker(marker, realMarker, markerDiv);
-////												
-////												clickMenu(realMarker, item.wmapkeyword, item.wmapaddr, item.wmapjibun, item.wmapmemo);
-////												
-////												chkAjax.onmouseover =  function () {
-////									                displayInfowindow(marker, item.wmapkeyword, item.wmapaddr, item.wmapjibun, item.wmapmemo);
-////									            };
-////
-////									            chkAjax.onmouseout =  function () {
-////									                infowindow.close();
-////									            };
-////												infowindow();
-//												
-//												//removeMarker(marker, realMarker, markerDiv);
-//											});
-//										},
-//										error: function(){
-//											boxFun('마커 생성 실패', true, null, false, 'markerError2', null, true);
-//										},
-//										complete: function(){
-//											 //removeMarker();
-////											removeMarker(marker, realMarker, markerDiv);
-////											openMarker();
-//											//alert('살려줘!!!');
-//										}
+									boxFun('수정 완료', true, null, false, 'updateSucc', null, true);
+									//$(_map_wrap).remove();
+									//console.log("remove()!!");
+									//createTags();
+									//$('.map_test').remove();
+									//removeMarker(marker, realMarker, markerDiv);
+//									createTags();
+////									$(_map_wrap).remove();
+//									$(mapBody).load('map', null, function(){
+//										$(_map_wrap).remove();
+//										createTags();
 //									});
-//									
+									marker.wmap = res;
 									
-									boxFun('수정 완료', true, null, false, 'updateSucc', (o)=>{
-										openMarker();
-									}, true);
+									markerDiv.onmouseover = function(){
+										displayInfowindow(realMarker, res.wmapkeyword, res.wmapaddr, res.wmapjibun, res.wmapmemo, res.wmapno, true)
+										
+									}
 									
 								} else {
 									boxFun('수정 실패', true, null, false, 'updateFail', null, true);
@@ -448,7 +446,7 @@ function saveData(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplng, wmapmemo, 
 		};
 	
 	$.ajax({
-		url: 'map',
+		url: 'addLocation',
 		accept : 'application/json',
 		method: 'post',
 		contentType : 'application/json; charset=utf-8;',
@@ -458,6 +456,7 @@ function saveData(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplng, wmapmemo, 
 						
 			if(res){
 				boxFun('저장!', true, null, false, 'savedPopup', (o)=>{
+					
 					// openMarker();
 				}, true);
 				
@@ -471,12 +470,10 @@ function saveData(wmapkeyword, wmapaddr, wmapjibun, wmaplat, wmaplng, wmapmemo, 
 	});	
 }
 
-
-// window.onload = openMarker;
-openMarker();
+//openMarker();
 
 function openMarker(){
-	
+
 	$.ajax({
 		url: 'marker',
 		accept: 'application/json',
@@ -498,6 +495,7 @@ function openMarker(){
 					o.style.position = 'absolute';
 					o.style.width = qsAjax.style.width;
 					o.style.height = qsAjax.style.height;
+					o.wmap = item;
 				});
 				
 				// console.log("item.wmapno : " + item.wmapno);
@@ -505,22 +503,16 @@ function openMarker(){
 				let mapmemo = {memo: item.wmapmemo}
 				
 				
-				clickMenu(chkAjax, mapno, mapmemo, markerAjax, divAjax);
+				clickMenu(chkAjax, markerAjax, divAjax);
 				
 				chkAjax.onmouseover =  function () {
-	                displayInfowindow(markerAjax, item.wmapkeyword, item.wmapaddr, item.wmapjibun, item.wmapmemo);
+	                displayInfowindow(markerAjax, item.wmapkeyword, item.wmapaddr, item.wmapjibun, item.wmapmemo, item.wmapno);
 	            };
 
 	            chkAjax.onmouseout =  function () {
 	                infowindow.close();
 	            };
-	            
-
-	            // console.dir(markerAjax);
-				
-	            console.log(item.wmapkeyword);
-	            console.log(item.wmaplat);
-	            console.log(item.wmaplng);
+	           
 			});
 		},
 		error: function(){
@@ -528,10 +520,10 @@ function openMarker(){
 		},
 		complete: function(){
 			_menu.querySelector('#testbtn').addEventListener('click',function(){
-				console.log('click');
 				searchPlaces();
 			});
 		}
 	});
 }
+
 }

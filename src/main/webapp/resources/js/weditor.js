@@ -1,71 +1,37 @@
-//
-//window.onload = widget;
-//
-//
-//function widget(){
-//	const body  = document.querySelector('body');
-//	
-//	addObject(body, 'button', 'wno', true, (o)=>{
-//		o.innerHTML = 'WNO';
-//		o.addEventListener('click', (o)=>{
-//			start();
-//		});
-//	});
-//}
-//
-//function start(){
-//	
-//	const body  = document.querySelector('body');
-//	
-//	//코드작성툴 생성
-//	addObject(body, 'textarea', 'editorArea', true, (o)=>{
-////		o.innerHTML = `<!DOCTYPE html>
-////<html>
-////<head>
-////<title>Insert title here</title>
-////</head>
-////<body>
-////<h1>hello</h1>
-////
-////</body>
-////</html>`;
-//		
-//		var val = document.querySelector('.editorArea');
-//		
-//		var editor = CodeMirror.fromTextArea(val, {
-//			mode: "xml",
-//			theme: "panda-syntax",
-//			lineNumbers: true,
-//			autoCloseTags: true
-//		});
-//		editor.setSize("500", "1000");
-//		
-//		//버튼 생성
-//		addObject(body, 'button', 'run', true, (o)=>{
-//			o.innerHTML = 'RUN';
-//			o.addEventListener('click', ()=>{
-////			$.ajax({
-////				url: 'run',
-////				method: 'post',
-////				success: function(){
-////					
-////				}
-////			});
-//				console.log(val.value);
-//			});
-//		});
-//	});
-//	
-//	//결과창 생성
-//	addObject(body, 'div', 'result', true, (o)=>{
-//		o.innerHTML = `<!DOCTYPE html>
-//<html>
-//<body>
-//  <iframe src="editor.jsp"></iframe>
-//</body>
-//</html>`
-//	});
-//}
+
+window.onload = widget;
+
+
+const body  = document.querySelector('body');
+function widget(){
+	
+	addObject(body, 'button', 'wno', true, (o)=>{
+		o.innerHTML = 'WNO';
+		o.addEventListener('click', (o)=>{
+			start();
+		});
+	});
+}
+
+
+
+function start(){
+	
+	//코드 작성 div
+	const container = addObject(body, 'div', 'container', true, (o)=>{
+		
+//		const div = document.querySelector('.container');
+//		addObject(div, 'div', 'editor', true, null);
+//		addObject(div, 'iframe', 'iframe', true, null);
+		o.innerHTML = `<div id='editor'></div>
+		<button id='run'>RUN</button>
+		<iframe id='iframe' frameBorder="1"></iframe>`
+		
+	});
+	
+	editorSetup();
+}
+
 
 function update()
 {
@@ -76,7 +42,7 @@ function update()
 	idoc.close();
 }
 
-function setupEditor()
+function editorSetup()
 {
   window.editor = ace.edit("editor", {
 	  mode: "ace/mode/javascript",
@@ -92,28 +58,54 @@ function setupEditor()
 <body>
 </body>
 
-</html>`,1); //1 = moves cursor to end
+</html>`,1); 
 
-  editor.getSession().on('change', function() {
-    update();
-  });
+
+	document.getElementById('run').addEventListener('click',(o)=>{
+//		let code = editor.getValue();
+//		
+//		console.log(code);
+//		//let num = 1;//wno
+//		let editorCode = {code};
+//
+//		$.ajax({
+//			url: 'insertEditor',
+//			accept: 'application/json',
+//			method: 'post',
+//			contentType: 'application/json; charset=utf-8;',
+//			async: false,
+//			data: JSON.stringify(editorCode),
+//			success: function(res){
+//				if(res){
+//					boxFun(' success', true, null, false, 'updateSuc', (o)=>{
+//						update();
+//					},true);
+//				} else{
+//					boxFun(' fail', true, null, false, 'updateFail', null, true);
+//				}
+//			},
+//			error: function(){
+//				boxFun(' error', true, null, false, 'updateError', null, true);
+//			}
+//		
+//		});
+		update();
+	});
 
   editor.focus();
-  
-  
   editor.setOptions({
     fontSize: "16pt",
-    showLineNumbers: false,
-    showGutter: false,
+    showLineNumbers: true,
+    showGutter: true,
     vScrollBarAlwaysVisible:true,
-    enableBasicAutocompletion: false, enableLiveAutocompletion: false
+    enableBasicAutocompletion: true, 
+    enableLiveAutocompletion: true
   });
 
   editor.setShowPrintMargin(false);
   editor.setBehavioursEnabled(false);
   
-  console.log('setupeditor');
 }
 
-setupEditor();
-update();
+//setupEditor();
+//update();
