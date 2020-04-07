@@ -348,6 +348,7 @@ function widgetAddAndModify(){
 						<option name="MEMO" value="MEMO">메모</option>
 						<option name="CHAT" value="CHAT">채팅</option>
 						<option name="SNS" value="SNS">SNS</option>
+						<option name="PLAN" value="PLAN">계획</option>
 					</select>
 				</div>
 				`) +`
@@ -488,6 +489,7 @@ function widgetAddAndModify(){
 		
 		wcategory.addEventListener('change',(e)=>{
 			
+			widget.querySelector('.widgetHeader p span:nth-child(1)').innerHTML = e.target.value;
 			widget.info.wcategory = e.target.value;
 			widget.cateFun();
 			

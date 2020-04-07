@@ -71,8 +71,6 @@ li.nickName_li {
 .boxOpen.msgBox {
     width: 70%;
     height: 590px !important;
-    table-layout: fixed;
-    min-width: 700px;
 }
 
 .boxOpen.indvMsgBox{
@@ -98,7 +96,7 @@ li.nickName_li {
 .msglist {
     display: inline-block;
     background-color: aliceblue;
-    width: 70%;
+    width: 65%;
     height: 100%;
     margin-left: 10px;
     padding: 0 15px;
@@ -113,6 +111,7 @@ span.sum {
 	border-radius: 50%;
 	color: white;
 	position: absolute;
+	top: 2px;
 	right: 10px;
 }
 
@@ -137,6 +136,14 @@ span.sum {
 	background-color: white;
 	border-radius: 50px;
 	margin: 8px;
+	padding: 5px;
+	height: 28px;
+	vertical-align: middle;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	word-break: break-all;
+	width: 96%;
 }
 
 .opened>* {
@@ -157,6 +164,8 @@ span.sum {
 
 .msglist>div>* {
 	margin: 5px;
+	height: inherit;
+	vertical-align: middle;
 }
 
 .openMsgcontent {
@@ -174,10 +183,10 @@ span.sum {
 }
 
 .openMsgDiv>* {
-	text-align: left;
-	margin: 10px 20px;
-	border-radius: 20px;
-	font-size: small;
+    text-align: left;
+    margin: 5px 0;
+    border-radius: 20px;
+    font-size: small;
 }
 
 .openMsgfrom {
@@ -192,9 +201,13 @@ span.sum {
 
 .openMsgDiv span:nth-child(1) {
 	background-color: beige;
-	width: fit-content;
-	padding: 5px 20px;
-	font-size: larger;
+    border-radius: 20px;
+    padding: 5px;
+    display: inline-block;
+}
+
+#idForm div:nth-child(2), #idForm div:nth-child(3){
+	background-color: lightgray;
 }
 
 .boxOpen.writeBox {
@@ -205,7 +218,7 @@ span.sum {
 span.msgSpan {
     background-color: beige;
     border-radius: 20px;
-    margin-bottom: 15px;
+    padding: 5px;
     display: inline-block;
 }
 
@@ -222,16 +235,23 @@ span#msgCaption {
 input.indvMsgtitle {
     padding-left: 5px;
     width: -webkit-fill-available;
+    height: -webkit-fill-available;
     box-shadow: none;
     background-color: transparent;
+}
+
+input.indvMsgtitle:focus{
+	box-shadow:none;
+	outline:none;
+	background-color:transparent;
 }
 
 input.indvopenMsgto, input.indvopenDno{
     background-color: transparent;
     border: none;
 }
-input.indvopenMsgto:focus, input.indvopenDno:focus{
-	outline:none;
+input.indvopenMsgto:focus, input.indvopenDno:focus, .indvopenMsgcontent:focus{
+	box-shadow:none;
 }
 
 .indvopenMsgcontent {
@@ -243,24 +263,26 @@ input.indvopenMsgto:focus, input.indvopenDno:focus{
 
 .msgBox input[type="submit"], .msgBox input[type="button"],
 .indvMsgBox input[type="submit"], .indvMsgBox input[type="button"] {
-    width: fit-content;
+    width: max-content;
     border: 0px;
     border-radius: 5px;
     background-color: darkslateblue;
     color: white;
-    display: block;
+    display: inline-block;
     padding: 5px;
-    margin: auto;
-	margin-top: 10px;
+    margin-top: 10px;
 }
 
 .msgDiv {
     background-color: lavender;
     border-radius: 10px;
     padding: 0px 15px;
-    position: absolute;
-    top: 3px;
-    right: 1px;
+    height: 35px;
+    margin: 8px 0px;
+}
+
+.hiddenspan{
+	visibility: hidden;
 }
 
 li._dashLi {
@@ -272,7 +294,7 @@ li._dashItem {
     background-color: #5a94af;
     border-radius: 25px;
     box-shadow: 0px 1px 1px #22576f;
-    padding: 5px 20px 5px 10px;
+    padding: 5px 10px 5px 10px;
     margin: 1.5px 2.5px 0px 2.5px;
     width: 100px;
     text-align: center;
@@ -306,4 +328,62 @@ span.dashboardCloseBtn {
     box-shadow: 1px 1px 1px 0px #0277BD;
     color: #fff;
     font-size: 8pt;
+}
+
+select.indvopenDno {
+    float: left;
+    width: 86%;
+    height: 25px;
+    margin: 5px 0 0 8px;
+}
+
+select.indvopenMsgto {
+    float: left;
+    margin: 5px 0 0 10px;
+    height: 25px;
+    width: 94%;
+}
+
+.msgDiv:nth-child(4) {
+    height: max-content;
+    padding: 5px;
+}
+
+.msgAlarm {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background-color: #fff;
+    z-index: 9999;
+    width: 400px;
+    height: 125px;
+    margin: 20px;
+    padding: 8px;
+    box-shadow: 0 0 3px 1px #00000080;
+}
+
+.msgAlarm p {
+    font-size: 10pt;
+    letter-spacing: 0.8pt;
+    padding: 2px 10px;
+    margin: 3px;
+}
+
+.msgAlarm p span {
+	font-weight: 600;
+}
+
+.msgAlarm p:nth-child(3) {
+    font-size: 9pt;
+    height: 35px;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: pre-wrap;
+}
+
+.msgAlarm p:nth-child(4) {
+    font-size: 8pt;
+    color: #888;
+    float: right;
 }

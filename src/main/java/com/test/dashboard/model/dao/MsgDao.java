@@ -1,10 +1,12 @@
 package com.test.dashboard.model.dao;
 
+import java.lang.annotation.Repeatable;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
@@ -18,21 +20,22 @@ public interface MsgDao {
 	public List<Map<Object, Object>> selectAll(String mid);
 	
 	// 대쉬보드별 쪽지 출력 
-	@Select ("SELECT * from (select * from msgtable where msgto=#{mid}) where dno=#{dno}")
+	@Select ("SELECT msg.*, (select mnick from member where mid = msgto) msgtonick, (select mnick from member where mid = msgfrom) msgfromnick from msgtable msg where msg.msgto=#{mid} and msg.dno=#{dno}")
 	public List<MsgDto> selectList(Map<Object, Object> params);
 	
 	// 개별 쪽지 출력 
-	@Select ("SELECT * from msgtable where msgto=#{mid}")
+	@Select ("SELECT msg.*, (select mnick from member where mid = msgto) msgtonick, (select mnick from member where mid = msgfrom) msgfromnick from msgtable msg where msg.msgto=#{mid}")
 	public List<MsgDto> selectListAll(String mid) ;
 	
 	// 쪽지 읽음 표시 (참고 : 0이 읽음 1이 안읽음 카톡 처럼)
 	@Update("UPDATE msgtable set msgopened ='0' where msgno= #{msgno}")
 	public void setOpened(String msgno);
 	
-	@Select("Select * from msgtable where msgno=#{msgno}")
+	@Select("Select msg.*, (select mnick from member where mid = msgto) msgtonick, (select mnick from member where mid = msgfrom) msgfromnick from msgtable msg where msgno=#{msgno}")
 	public MsgDto getMsg(String msgno);
 	
-	@Insert("INSERT INTO MSGTABLE VALUES(MSGNOSEQ.NEXTVAL, #{msgfrom}, #{msgto}, #{msgdate}, 1, #{dno}, #{msgcontent}, #{msgtitle})")
-	public int sendMsg(Map<Object, Object> params);
+	@SelectKey(statement = "select MSGNOSEQ.NEXTVAL from dual", keyProperty = "msgno", before = true, resultType = Integer.class)
+	@Insert("INSERT INTO MSGTABLE VALUES(#{msgno}, #{msgfrom}, #{msgto}, #{msgdate}, 1, #{dno}, #{msgcontent}, #{msgtitle})")
+	public int sendMsg(MsgDto msgDto);
 	
 }

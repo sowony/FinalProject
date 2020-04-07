@@ -22,5 +22,11 @@ public class WboardDto {
 	private String wbenddate ;
 	private String wbcolor ;//할일게시판 색상
 	
+	
+	// join 용
+	
+	private String mnick;
+	
+	private String dmcolor;
 
 }

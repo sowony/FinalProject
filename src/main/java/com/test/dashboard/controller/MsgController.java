@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.test.dashboard.model.biz.DashMemberBiz;
+import com.test.dashboard.model.biz.MemberBiz;
 import com.test.dashboard.model.biz.MsgBiz;
 import com.test.dashboard.model.dto.DashMemberDto;
 import com.test.dashboard.model.dto.MemberDto;
@@ -26,6 +27,9 @@ public class MsgController {
 	
 	@Autowired
 	private MsgBiz msgbiz;
+	
+	@Autowired
+	private MemberBiz memberBiz;
 	
 	@Autowired
 	private DashMemberBiz dashMemberBiz;
@@ -46,13 +50,13 @@ public class MsgController {
 	}
 	
 	@GetMapping("/msgList")
-	public List<MsgDto> getMsgList(String dno, HttpSession session){
+	public List<MsgDto> getMsgList(int dno, HttpSession session){
 		logger.info("getMsgList===>dno: "+dno);
 		List<MsgDto> dto;
 		
 		MemberDto user = (MemberDto)session.getAttribute("user");
 		
-		if(dno.equals("all")) dto = msgbiz.selectListAll(user.getMid());
+		if(dno == 0) dto = msgbiz.selectListAll(user.getMid());
 		else dto = msgbiz.selectList(user.getMid(), dno);
 		
 		return dto;
@@ -73,7 +77,9 @@ public class MsgController {
 	
 	@PostMapping("/write")
 	public MsgDto sendMsg(@RequestBody MsgDto dto) {
+		
 		logger.info("sendMsgdd===>"+dto);
+		
 		int result = msgbiz.sendMsg(dto);
 		if(result > 0) {
 			return dto;
@@ -84,7 +90,10 @@ public class MsgController {
 	
 	@GetMapping("/getDashMember")
 	public List<DashMemberDto> getDashMember(int dno){
+		
 		logger.info("getDashMember===>"+dno);
+		
 		return dashMemberBiz.selectList(dno);
+		
 	}
 }

@@ -14,6 +14,7 @@ import com.test.dashboard.model.dto.MsgDto;
 public class MsgBizImpl implements MsgBiz {
 	
 	@Autowired private MsgDao msgdao;
+	@Autowired private MemberBiz memberbiz;
 
 	@Override
 	public List<Map<Object, Object>> selectAll(String mid) {
@@ -22,7 +23,7 @@ public class MsgBizImpl implements MsgBiz {
 	}
 
 	@Override
-	public List<MsgDto> selectList(String mid, String dno) {
+	public List<MsgDto> selectList(String mid, int dno) {
 		// TODO Auto-generated method stub
 		Map<Object, Object> params = new HashedMap();
 		params.put("mid", mid);
@@ -47,20 +48,22 @@ public class MsgBizImpl implements MsgBiz {
 	@Override
 	public MsgDto getMsg(String msgno) {
 		// TODO Auto-generated method stub
-		return msgdao.getMsg(msgno);
+		
+		MsgDto dto = msgdao.getMsg(msgno);
+		dto.setMsgtonick(memberbiz.selectById(dto.getMsgto()).getMnick());
+		dto.setMsgfromnick(memberbiz.selectById(dto.getMsgfrom()).getMnick());
+		
+		return dto;
 	}
 
 	@Override
 	public int sendMsg(MsgDto dto) {
 		// TODO Auto-generated method stub
-		Map<Object, Object> params = new HashedMap();
-		params.put("msgtitle",dto.getMsgtitle());
-		params.put("msgcontent",dto.getMsgcontent());
-		params.put("msgfrom",dto.getMsgfrom());
-		params.put("msgto",dto.getMsgto());
-		params.put("dno", dto.getDno());
-		params.put("msgdate",dto.getMsgdate());
-		return msgdao.sendMsg(params);
+		
+		dto.setMsgtonick(memberbiz.selectById(dto.getMsgto()).getMnick());
+		dto.setMsgfromnick(memberbiz.selectById(dto.getMsgfrom()).getMnick());
+		
+		return msgdao.sendMsg(dto);
 	}
 
 }

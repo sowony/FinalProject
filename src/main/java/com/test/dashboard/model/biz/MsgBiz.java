@@ -11,7 +11,7 @@ public interface MsgBiz {
 	public List<Map<Object, Object>> selectAll(String mid);
 	
 	// 선택한 대쉬보드 쪽지들 불러오기 
-	public List<MsgDto> selectList(String mid, String dno);
+	public List<MsgDto> selectList(String mid, int dno);
 	
 	// 모든 대쉬보드 쪽지들 불러오기 
 	public List<MsgDto> selectListAll(String mid);
