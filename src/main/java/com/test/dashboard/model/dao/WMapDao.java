@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
@@ -19,7 +20,8 @@ public interface WMapDao {
 	@Select("SELECT WMAPNO,WNO,WMAPKEYWORD,WMAPADDR,WMAPJIBUN, WMAPLAT, WMAPLNG, WMAPMEMO FROM WMAP WHERE WMAPNO=#{wmapno}")
 	public WMapDto select(int wmapno);
 	
-	@Insert("INSERT INTO WMAP VALUES(WMAP_SEQ.NEXTVAL,1,#{wmapkeyword},#{wmapaddr},#{wmapjibun},#{wmaplat},#{wmaplng},#{wmapmemo})")
+	@SelectKey(statement = "SELECT WMAP_SEQ.NEXTVAL FROM DUAL", keyProperty = "wmapno", resultType = Integer.class, before = true)
+	@Insert("INSERT INTO WMAP VALUES(#{wmapno},1,#{wmapkeyword},#{wmapaddr},#{wmapjibun},#{wmaplat},#{wmaplng},#{wmapmemo})")
 	public int insert(WMapDto dto);
 	
 	@Update("UPDATE WMAP SET WMAPMEMO=#{wmapmemo} WHERE WMAPNO=#{wmapno}")
