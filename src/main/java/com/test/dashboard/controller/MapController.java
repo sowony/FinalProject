@@ -39,17 +39,17 @@ public class MapController {
 
 	@PostMapping("addLocation")
 	@ResponseBody
-	public boolean addLocation(@RequestBody WMapDto wMapDto) {
+	public WMapDto addLocation(@RequestBody WMapDto wMapDto) {
 
 		List<WMapDto> list = wMapBiz.selectList(1);
 		wMapDto.setWno(1);
 		
-		boolean boolRes = false;
+		//boolean boolRes = false;
 		
 		Boolean[] exist = new Boolean[list.size()];
 		for(int i = 0; i < list.size(); i++) {
 			
-			
+		
 			if((wMapDto.getWno() == list.get(i).getWno() && wMapDto.getWmapkeyword().equals(list.get(i).getWmapkeyword()) && wMapDto.getWmaplat().equals(list.get(i).getWmaplat()) && wMapDto.getWmaplng().equals(list.get(i).getWmaplng()))) {
 				exist[i] = true;
 			} else {
@@ -61,11 +61,13 @@ public class MapController {
 		
 		if(!(Arrays.asList(exist).contains(true))) {
 			int res = wMapBiz.insert(wMapDto);
+			WMapDto insertRes = wMapBiz.select(wMapDto.getWmapno());
 			if(res > 0) {
-				boolRes = true;
-			}
+				return insertRes;
+			} 
 		}
-		return boolRes;
+		return null;
+		
 	}
 	
 	@PostMapping("update")
