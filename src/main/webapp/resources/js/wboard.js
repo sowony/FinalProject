@@ -111,6 +111,7 @@ function dragEnter(ev) {
 
 	
 const summernoteConfig = {
+		lang: 'ko-KR',
 		placeholder: 'content',
         minHeight: 220,
         maxHeight: null,

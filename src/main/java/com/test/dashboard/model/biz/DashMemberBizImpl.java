@@ -67,4 +67,16 @@ public class DashMemberBizImpl implements DashMemberBiz {
 		return dashMemberDao.update(dto);
 	}
 	
+	@Override
+	public int oldMemberDelete(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dashMemberDao.oldMemberDelete(params);
+	}
+	
+	@Override
+	public int dnoMemberDel(int dno) {
+		// TODO Auto-generated method stub
+		return dashMemberDao.dnoMemberDel(dno);
+	}
+	
 }

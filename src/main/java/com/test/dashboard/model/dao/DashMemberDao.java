@@ -31,10 +31,21 @@ public interface DashMemberDao {
 	@Insert("insert into dashmember values(dashmember_seq.nextval, #{dno}, #{mid}, #{dgno}, #{dmcolor})")
 	public int insert(DashMemberDto param);
 	
-	@Update("update dashmember set dgno = #{dgno}, dmcolor = #{dmcolor} where dmno = #{dmno}")
+	@Update("update dashmember set dgno = (select dgno from dashgrade where dggrade = #{dggrade} and dgalias = #{dgalias} and dno = #{dno}), dmcolor = #{dmcolor} where dmno = #{dmno}")
 	public int update(DashMemberDto dto);
 	
 	@Delete("delete from dashmember where dmno = #{dmno}")
 	public int delete(int dmno);
 	
+	@Delete("<script>"
+			+ "delete from dashmember where dno = #{dno} and dmno not in ("
+			+ "<foreach item = 'item' collection='updateNotInMemberList' separator=','>"
+			+ "#{item.value}"
+			+ "</foreach>"
+			+ ")"
+			+ "</script>")
+	public int oldMemberDelete(Map<String, Object> params);
+	
+	@Delete("delete from dashmember where dno = #{dno}")
+	public int dnoMemberDel(int dno);
 }

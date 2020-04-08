@@ -240,3 +240,22 @@ span.modifyBtn {
    
 }
 
+input.numInput.cur-year {
+    margin: 0 8px;
+}
+
+.flatpickr-current-month {
+    display: inline-block;
+    height: 40px;
+}
+
+.flatpickr-month {
+    height: 45px;
+}
+
+.flatpickr-prev-month svg, .flatpickr-next-month svg {margin-top: 5px;}
+
+.flatpickr-prev-month:hover, .flatpickr-next-month:hover {
+    vertical-align: middle;
+}
+

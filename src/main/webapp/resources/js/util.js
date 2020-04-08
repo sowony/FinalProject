@@ -10,6 +10,13 @@ const backgroundDiv = addObject(null,'div',null,false,(t)=>{
 });
 
 
+function resizeMap(widget) {
+    var mapContainer = widget.querySelector('#map');
+    const map_wrap = widget.querySelector('.map_wrap');
+    mapContainer.style.width = map_wrap.offsetWidth + 'px';
+    mapContainer.style.height = map_wrap.offsetHeight + 'px'; 
+}
+
 function hyphenDateFormat(date){
 	const dateArray = date.split('-');
 	const dateType = new Date(`${dateArray[1]}/${dateArray[2]}/${dateArray[0]}`);
@@ -459,6 +466,10 @@ function scaleEventFun(target, settingArea, mouseArea){
 		
 		const { wno, wwidth, wheight, wtop, wleft } = target.info;
 		
+		if(target.info.wcategory === 'MAP'){
+			resizeMap(target);
+		}
+		
 		client.send('/pub/wscale',{}, JSON.stringify({ wno, mid : userInfo.mid,  wwidth, wheight, wtop, wleft }));
 		
 	}
@@ -651,6 +662,8 @@ function widgetGradeCheck(widget){
 		
 		targets.push(widget.querySelector('.wbtadd'));
 		
+	} else if (wcategory === 'code'){
+		targets.push(widget.querySelector('.editor'));
 	}
 	
 	targets.forEach(t=>{
@@ -664,6 +677,8 @@ function widgetGradeCheck(widget){
 		});
 		
 	} else {
+		
+		
 		
 		classLists.forEach(c=>{
 			if(c.contains('eventDisabled')){
@@ -774,6 +789,10 @@ function widgetFun(setting){
 				widget.info.wleft = scaleInfo.wleft;
 				widget.style.top = scaleInfo.wtop + 'px';
 				widget.style.left = scaleInfo.wleft + 'px';
+				
+				if(widget.info.wcategory === 'MAP'){
+					resizeMap(widget);
+				}
 
 			}
 		},{});
@@ -833,12 +852,43 @@ function widgetFun(setting){
 							o.remove();
 						});
 					} else {
+						
 						w.info = upInfo;
 						w.style.transitionDuration = '1s';
+						
 						widgetUpdate(w);
 						widgetSettingFun(null, w);
 						widgetGradeCheck(w);
 						w.style.transitionDuration = '';
+						
+						if(w.info.mid !== userInfo.mid){
+							const widgetMoveArea = w.querySelector('.widgetMoveArea');
+							
+							const alarmP = addObject(null, 'p', null, false, (o)=>{
+								o.innerHTML = '위젯 수정이 감지 되었습니다.';
+								o.style.position = 'absolute';
+								o.style.color = '#fff';
+								o.style.width = 'max-content';
+								o.style.top = '50%';
+								o.style.left = '50%'
+								o.style.transform = 'translateX(-50%) translateY(-50%)'
+							});
+							
+							motionOnOff(widgetMoveArea, 1, false, { onOff : 'on' }, {
+								after : (o)=>{
+									console.log('afterCheck');
+									o.style.transitionDuration = '0.8s';
+									o.style.zIndex = 9;
+									o.style.backgroundColor = '#00000080';
+									o.appendChild(alarmP);
+								}
+							},(o)=>{
+								o.style.zIndex = '';
+								o.style.backgroundColor = '';
+								o.style.transitionDuration = '0.8s';
+								alarmP.remove();
+							});
+						}
 					}
 
 					return;
@@ -1017,6 +1067,8 @@ function widgetFun(setting){
 			wblist(widget);
 		} else if(wcategory === 'code'){
 			editorStart(widget);
+		} else if(wcategory === 'map'){
+			createMap(widget)
 		}
 		
 		
@@ -1283,6 +1335,7 @@ function brChange(val, chk){
 		} else {
 			let res = '';
 			res = val.split('<br>').join('\r\n');
+			res = res.split('<br/>').join('\r\n');
 			return res;	
 		}
 	}
@@ -1589,7 +1642,7 @@ function infoBar(obj, text){
 	// 툽팁 삭제 내장 함수
 	infoBar['infoBoxRemove'] = ()=>{
 		const infoBox = document.querySelector('.infoBox');
-		infoBox.remove();
+		if(infoBox) infoBox.remove();
 	}
 	
 	// 툴팁 마우스 움직임 콜백 함수 1

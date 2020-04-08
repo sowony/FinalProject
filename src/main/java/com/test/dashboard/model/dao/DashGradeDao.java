@@ -30,5 +30,17 @@ public interface DashGradeDao {
 	@Delete("delete from dashgrade where dgno = #{dgno}")
 	public int delete(int dgno);
 	
+	@Delete("<script>"
+			+ "delete from dashgrade where dno = #{dno} and dgno not in ("
+			+ "<foreach item = 'item' collection='updateNotInGradeList' separator=','>"
+			+ "#{item.value}"
+			+ "</foreach>"
+			+ ")"
+			+ "</script>")
+	public int oldGradeDelete(Map<String, Object> params);
+	
+	@Delete("delete from dashgrade where dno = #{dno}")
+	public int dnoGradeAllDel(int dno);
+	
 	
 }

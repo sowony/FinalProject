@@ -17,4 +17,8 @@ public interface DashGradeBiz {
 	public int update(DashGradeDto dto);
 	
 	public int delete(int dgno);
+	
+	public int oldGradeDelete(Map<String, Object> params);
+	
+	public int dnoGradeAllDel(int dno);
 }

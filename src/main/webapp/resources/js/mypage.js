@@ -81,10 +81,7 @@ function dashItemCreate(dashItem,loc){
 
 			const menuList = {
 					'newDash' : {
-						'대시보드 추가' : ()=>{ addDashBoardFun(); }
-					},
-					'dashMenu' :{
-						'대시보드 자세히 보기' : ()=>{alert('자세히보기 함수');}
+						'대시보드 추가' : ()=>{ addAndModifyDashBoardFun(); }
 					},
 					'logout' : {
 						'로그아웃' : ()=>{ logout(); }
@@ -92,7 +89,7 @@ function dashItemCreate(dashItem,loc){
 			}
 			
 			if(state === 'owner'){
-				menuList.dashMenu['대시보드 수정'] = ()=>{ alert('수정 함수 개발중...'); }
+//				menuList.dashMenu['대시보드 수정'] = ()=>{ addAndModifyDashBoardFun(o.dataset.dno); }
 				menuList.dashMenu['대시보드 삭제'] = ()=>{ dashboardDelete(o.dataset.dno); };
 			}
 			
@@ -163,6 +160,50 @@ function dashboardLoad(dno){
 }
 
 
+function memberItemCreate(area, member, rule, modify){
+	
+	const memberItem = addObject(area,'span', 'dashMemberItem', true, (o)=>{
+		
+		o.style.backgroundColor = (modify)? member.dmcolor : rule.dgcolor;
+		o.style.color =  (modify)? fontColorCheck(member.dmcolor) : fontColorCheck(rule.dgcolor);
+	
+		o.dataset.dgalias = (modify)? member.dgalias : rule.dgalias;
+		o.dataset.dggrade = (modify)? member.dggrade : rule.dggrade;
+		o.dataset.dmcolor = (modify)? member.dmcolor : rule.dgcolor;
+		o.dataset.mid = member.mid;
+		o.dataset.mnick = member.mnick;
+		o.dataset.dmno = (member.dmno) ? member.dmno : 0;
+		
+		o.innerHTML = `<img class="dashMemberImg" src="${member.mimgpath}" onerror="this.src='https://img.icons8.com/ultraviolet/80/000000/user.png';"/><span>${member.mnick}</span><button class="dashMemberDelteBtn">X</button>`;
+	
+		const dashMemberDelteBtn = o.querySelector('.dashMemberDelteBtn');
+	
+		dashMemberDelteBtn.addEventListener('click', (e)=>{
+		
+			infoBar.infoBoxRemove();
+		
+			const rule = e.target.parentNode;
+			rule.remove();
+			
+		});
+	
+		colorPickerBtn(o, dashMemberDelteBtn, (color)=>{
+		
+			o.dataset.dmcolor = color;
+			o.style.backgroundColor = color;
+		
+			o.style.color = fontColorCheck(color);
+		
+		});
+		
+		infoBar(o, `${((modify)? member.dgalias : rule.dgalias)} (우선 순위 : ${((modify)? member.dggrade : rule.dggrade)})`);
+
+	});
+	
+	return memberItem;
+}
+
+
 function addMemberBtnAdd(){
 	
 	if(!document.querySelector('.addMemberBtn')){
@@ -202,41 +243,9 @@ function addMemberBtnAdd(){
 					const mnickInput = document.querySelector('input[name=mnick]');
 					mnickInput.value = '';
 					
-					const memberItem = addObject(dashMemberList,'span', 'dashMemberItem', true, (o)=>{
+					memberItemCreate(dashMemberList, selectTmpMember, { dgalias, dggrade, dgcolor });
 					
-						o.style.backgroundColor = dashRuleSelect.style.backgroundColor;
-						o.style.color = dashRuleSelect.style.color;
-					
-						o.dataset.dgalias = dgalias;
-						o.dataset.dggrade = dggrade;
-						o.dataset.dmcolor = dgcolor;
-						o.dataset.mid = selectTmpMember.mid;
-						o.dataset.mnick = selectTmpMember.mnick;
-					
-						o.innerHTML = `<img class="dashMemberImg" src="${selectTmpMember.mimgpath}" onerror="this.src='https://img.icons8.com/ultraviolet/80/000000/user.png';"/><span>${selectTmpMember.mnick}</span><button class="dashMemberDelteBtn">X</button>`;
-					
-						const dashMemberDelteBtn = o.querySelector('.dashMemberDelteBtn');
-					
-						dashMemberDelteBtn.addEventListener('click', (e)=>{
-						
-							infoBar.infoBoxRemove();
-						
-							const rule = e.target.parentNode;
-							rule.remove();
-						});
-					
-						colorPickerBtn(o, dashMemberDelteBtn, (color)=>{
-						
-							o.dataset.dmcolor = color;
-							o.style.backgroundColor = color;
-						
-							o.style.color = fontColorCheck(color);
-						
-						});
-						
-						infoBar(o, `${dgalias} (우선 순위 : ${dggrade})`);
-				
-					});
+					selectTmpMember = '';
 					
 					o.remove();
 				}
@@ -272,6 +281,92 @@ function dashRuleSelectEvent(e){
 	}
 	
 }
+
+
+function dashRuleItemCreate(area, dgalias, dggrade, dgcolor, oldMember){
+	
+	const dashRuleItem = addObject(area, 'span', 'dashRuleItem', true , (o)=>{
+		
+		const colorArray = (!dgcolor)? randomColor() : [dgcolor, fontColorCheck(dgcolor)];
+	
+		o.dataset.dgcolor = colorArray[0];
+		o.dataset.dgalias = dgalias;
+		o.dataset.dggrade = dggrade;
+		
+		o.style.backgroundColor = colorArray[0];
+		o.style.color = colorArray[1];
+	
+		o.innerHTML = `${dgalias}<button class="dashRuleDelteBtn">X</button>`;
+	
+		const dashRuleDeleteBtn = o.querySelector('.dashRuleDelteBtn');
+	
+		dashRuleDeleteBtn.addEventListener('click', (e)=>{
+			
+			e.preventDefault();
+			e.stopPropagation();
+			
+			infoBar.infoBoxRemove();
+			
+			const rule = e.target.parentNode;
+			
+			const dashMemberList = document.querySelector('.dashMemberList');
+			
+			if(dashMemberList){
+				
+				const targetDalias = rule.dataset.dgalias;
+				const targetDggrade = rule.dataset.dggrade;
+				
+				const dashMemberItems = dashMemberList.querySelectorAll('.dashMemberItem');
+				
+				dashMemberItems.forEach(member=>{
+					
+					const { dgalias, dggrade } = member.dataset
+					
+					if(targetDalias === dgalias && targetDggrade === dggrade){
+						member.remove();
+					}
+					
+				});
+				
+			}
+			
+			if(oldMember){
+				
+				const targetDalias = rule.dataset.dgalias;
+				const targetDggrade = rule.dataset.dggrade;
+				
+				oldMember.forEach((m,i)=>{
+					
+					const { dgalias, dggrade } = m;
+					if(targetDalias === dgalias && targetDggrade === dggrade){
+						oldMember.splice(i,1);
+					}
+						
+				});
+				
+				console.log(oldMember);
+			}
+			
+			rule.remove();
+		});
+	
+		colorPickerBtn(o, dashRuleDeleteBtn, (color)=>{
+		
+			o.dataset.dgcolor = color;
+			o.style.backgroundColor = color;
+		
+			o.style.color = fontColorCheck(color);
+		
+		});
+	
+		infoBar(o, `${dgalias} (우선 순위 : ${dggrade})`);
+	
+	});
+
+	return dashRuleItem;
+
+}
+
 
 function dashRuleAdd(btn){
 	
@@ -311,44 +406,12 @@ function dashRuleAdd(btn){
 		});
 		
 		if(chk){
-			const dashRuleItem = addObject(dashRuleList, 'span', 'dashRuleItem', true , (o)=>{
 			
-				const colorArray = randomColor();
+			dashRuleItemCreate(dashRuleList, dgalias.value, dggrade.value);
 			
-				o.dataset.dgcolor = colorArray[0];
-				o.dataset.dgalias = dgalias.value;
-				o.dataset.dggrade = dggrade.value;
-				
-				o.style.backgroundColor = colorArray[0];
-				o.style.color = colorArray[1];
+			dgalias.value = '';
+			dggrade.value = '';
 			
-				o.innerHTML = `${dgalias.value}<button class="dashRuleDelteBtn">X</button>`;
-			
-				const dashRuleDeleteBtn = o.querySelector('.dashRuleDelteBtn');
-			
-				dashRuleDeleteBtn.addEventListener('click', (e)=>{
-				
-					infoBar.infoBoxRemove();
-				
-					const rule = e.target.parentNode;
-					rule.remove();
-				});
-			
-				colorPickerBtn(o, dashRuleDeleteBtn, (color)=>{
-				
-					o.dataset.dgcolor = color;
-					o.style.backgroundColor = color;
-				
-					o.style.color = fontColorCheck(color);
-				
-				});
-			
-				infoBar(o, `${dgalias.value} (우선 순위 : ${dggrade.value})`);
-			
-				dgalias.value = '';
-				dggrade.value = '';
-				
-			});
 		}
 		
 	});
@@ -418,8 +481,26 @@ function nickSearch(btn){
 	btn['oneStart'] = true;
 }
 
-function addDashBoardFun(){
-
+function addAndModifyDashBoardFun(modifyDno){
+	
+	let modifyObject;
+	let oldMemberCopy; 
+	
+	
+	if(modifyDno){
+		
+		xhrLoad('get','mypage/dashboard/modify/'+modifyDno, null, (res)=>{
+			if(res){
+				modifyObject = JSON.parse(res)
+				console.log(modifyObject);
+				
+				oldMemberCopy = JSON.parse(JSON.stringify(modifyObject.members));
+			}
+		});
+		
+	}
+	
+	
 	const addDashBox1 = document.querySelector('.addDashBox1');
 	const addDashBox2 = document.querySelector('.addDashBox2');
 	const addDashBox3 = document.querySelector('.addDashBox3');
@@ -431,16 +512,18 @@ function addDashBoardFun(){
 	// 1p
 	const dashInfoDiv = addObject(null, 'div', 'dashInfoDiv', false, (o)=>{
 		
+		const { dno, dtitle, ddesc } = (modifyObject)? modifyObject.dashBoardDto : '';
+		
 		o.innerHTML = `
 			<p>대시보드 만들기</p>
 			<fieldset>
 				<div>
 					<p>대시보드명</p>
-					<input type="text" name="dtitle"/>
+					<input type="text" name="dtitle" value="${(dtitle? dtitle : '')}"/>
 				</div>
 				<div>
 					<p>대시보드 소개</p>
-					<textarea name="ddesc"></textarea>
+					<textarea name="ddesc">${(ddesc? ddesc : '')}</textarea>
 				</div>
 			</fieldset>
 		`;
@@ -463,6 +546,14 @@ function addDashBoardFun(){
 				</div>
 			</fieldset>
 		`;
+		
+		const dashRuleList = o.querySelector('.dashRuleList');
+		
+		if(modifyObject){
+			modifyObject.rules.forEach(rule=>{
+				dashRuleItemCreate(dashRuleList, rule.dgalias, rule.dggrade, rule.dgcolor,modifyObject.members).dataset.dgno = rule.dgno;
+			});
+		}
 		
 	});
 	
@@ -497,6 +588,18 @@ function addDashBoardFun(){
 				</div>
 			</fieldset>
 		`;
+		
+		
+		const dashMemberList = o.querySelector('.dashMemberList');
+		
+		if(modifyObject){
+			modifyObject.members.forEach(member=>{
+				
+				if(member.mid !== modifyObject.dashBoardDto.mid)
+				memberItemCreate(dashMemberList, member, null, true).dataset.dmno = member.dmno;
+				
+			});
+		}
 		
 	});	
 	
@@ -558,7 +661,7 @@ function addDashBoardFun(){
 		o.style.float = 'right';
 		o.style.width = 'max-content';
 		o.style.margin = '0 5px';
-		o.value = '만들기';
+		o.value = (!modifyObject)? '만들기' : '수정';
 		o.addEventListener('click', ()=>{
 			
 			let dashCreateInfo = {};
@@ -581,7 +684,19 @@ function addDashBoardFun(){
 				const dgalias = item.dataset.dgalias;
 				const dgcolor = item.dataset.dgcolor;
 				
-				rules.push({ dgalias, dggrade, dgcolor });
+				const ruleObject = { dggrade, dgalias, dgcolor };
+				
+				
+				if(modifyObject){
+					
+					const dgno = item.dataset.dgno;
+					
+					ruleObject['dgno'] = dgno;
+					
+				}
+				
+				
+				rules.push(ruleObject);
 				
 			});
 			
@@ -600,7 +715,17 @@ function addDashBoardFun(){
 				const dgalias = item.dataset.dgalias;
 				const dmcolor = item.dataset.dmcolor;
 				
-				members.push({ mid, mnick, dggrade, dgalias, dmcolor });
+				const memberObject = { mid, mnick, dggrade, dgalias, dmcolor };
+				
+				if(modifyObject){
+					
+					const dmno = item.dataset.dmno;
+					
+					memberObject['dmno'] = dmno;
+					
+				}
+				
+				members.push(memberObject);
 				
 			});
 			
@@ -629,62 +754,63 @@ function addDashBoardFun(){
 						});
 					});
 			
-			dashRuleItems.forEach(item=>{
+			
+			function myInfoFun(dashMemberDivClone, item, modify){
 				
-				item.querySelector('.colorPickerBtn').remove();
-				item.querySelector('.dashRuleDelteBtn').remove();
+				let addDashMyInfo = dashMemberDivClone.querySelector('.addDashMyInfo');
+				let addDashMyInfoSubmitBtn = dashMemberDivClone.querySelector('.addDashMyInfoSubmitBtn');
 				
-				item.addEventListener('click', ()=>{
+				if(addDashMyInfo && addDashMyInfoSubmitBtn){
+					addDashMyInfo.remove();
+					addDashMyInfoSubmitBtn.remove();
+				}
+				
+				addDashMyInfo = addObject(dashMemberDivClone.querySelector('div'), 'div', 'addDashMyInfo', true, (o)=>{
 					
-					let addDashMyInfo = dashMemberDivClone.querySelector('.addDashMyInfo');
-					let addDashMyInfoSubmitBtn = dashMemberDivClone.querySelector('.addDashMyInfoSubmitBtn');
-					
-					if(addDashMyInfo && addDashMyInfoSubmitBtn){
-						addDashMyInfo.remove();
-						addDashMyInfoSubmitBtn.remove();
+					if(modifyObject){
+						o.dataset.dmno = item.dmno;
 					}
 					
-					addDashMyInfo = addObject(dashMemberDivClone.querySelector('div'), 'div', 'addDashMyInfo', true, (o)=>{
+					o.dataset.dggrade = (modify)? item.dggrade : item.dataset.dggrade;
+					o.dataset.dgalias = (modify)? item.dgalias : item.dataset.dgalias;
+					o.dataset.dmcolor = (modify)? item.dmcolor : item.dataset.dgcolor;
+					o.style.backgroundColor = (modify)? item.dmcolor : item.dataset.dgcolor;
+					o.style.color = fontColorCheck(((modify)? item.dmcolor : o.style.backgroundColor));
+					o.innerHTML = `당신의 권한은 ${((modify)? item.dgalias : item.dataset.dgalias)}입니다.`;
+					
+					infoBar(o, `${((modify)? item.dgalias : item.dataset.dgalias)} (우선 순위 : ${((modify)? item.dggrade : item.dataset.dggrade)})`);					
+					colorPickerBtn(o,null, (color)=>{
 						
-						o.dataset.dggrade = item.dataset.dggrade;
-						o.dataset.dgalias = item.dataset.dgalias;
-						o.dataset.dmcolor = item.dataset.dgcolor;
-						o.style.backgroundColor = item.dataset.dgcolor;
-						o.style.color = fontColorCheck(o.style.backgroundColor);
-						o.innerHTML = `당신의 권한은 ${item.dataset.dgalias}입니다.`;
-						
-						infoBar(o, `우선 순위 : ${item.dataset.dggrade}`);
-						
-						colorPickerBtn(o,null, (color)=>{
-							
-							o.style.backgroundColor = color;
-							o.style.color = fontColorCheck(color);
-							
-						});
+						o.style.backgroundColor = color;
+						o.style.color = fontColorCheck(color);
 						
 					});
 					
+				});
+				
+				
+				addDashMyInfoSubmitBtn = addObject(dashMemberDivClone, 'input', ['addDashMyInfoSubmitBtn', 'grayBtn'], true, (o)=>{
 					
-					addDashMyInfoSubmitBtn = addObject(dashMemberDivClone, 'input', ['addDashMyInfoSubmitBtn', 'grayBtn'], true, (o)=>{
+					o.type = 'button';
+					o.style.width = 'max-content';
+					o.style.float = 'right';
+					o.value = (modifyObject)? '수정' : '만들기';
+					
+					
+					o.addEventListener('click',()=>{
 						
-						o.type = 'button';
-						o.style.width = 'max-content';
-						o.style.float = 'right';
-						o.value = '만들기';
-						
-						
-						o.addEventListener('click',()=>{
-							
-							dashCreateInfo.downer = {
-									
-									dggrade : addDashMyInfo.dataset.dggrade,
-									dgalias : addDashMyInfo.dataset.dgalias,
-									dmcolor : addDashMyInfo.dataset.dmcolor
-									
-							};
-							
-							xhrLoad('post', 'mypage/dashboard', dashCreateInfo, (res)=>{
+						dashCreateInfo.downer = {
 								
+								dggrade : addDashMyInfo.dataset.dggrade,
+								dgalias : addDashMyInfo.dataset.dgalias,
+								dmcolor : addDashMyInfo.dataset.dmcolor
+								
+						};
+						
+						
+						if(!modifyObject){
+							xhrLoad('post', 'mypage/dashboard', dashCreateInfo, (res)=>{
+
 								if(res){
 									const jsonObject = JSON.parse(res);
 									console.log(jsonObject);
@@ -696,10 +822,98 @@ function addDashBoardFun(){
 //									dashboardLoad(jsonObject.dashBoardDto.dno);
 								}
 							});
+						} else {
 							
-						});
+							dashCreateInfo['dashBoardDto'] = modifyObject.dashBoardDto;
+							
+							xhrLoad('post', 'mypage/dashboard/modify', dashCreateInfo, (res)=>{
+								
+								if(res){
+									const jsonObject = JSON.parse(res);
+									console.log(oldMemberCopy);
+									console.log(jsonObject);
+									
+//									jsonObject.members.forEach(member=>{
+//										
+//										let chk = false;
+//										
+//										oldMemberCopy.forEach(oldMember=>{
+//											if(member.mnick === oldMember.mnick){
+//												client.send('/pub/upDash',{},JSON.stringify({ mid : member.mid, dno : jsonObject.dashBoardDto.dno }));
+//												chk = true;
+//												return;
+//											}
+//										});
+//										
+//										if(!chk){
+//											client.send('/pub/addDash',{},JSON.stringify({ mid : member.mid, dno : jsonObject.dashBoardDto.dno }));
+//										}
+//										
+//									});
+//									
+//									oldMemberCopy.forEach(oldMember=>{
+//										
+//										let chk = false;
+//										
+//										jsonObject.members.forEach(member=>{
+//											if(member.mnick === oldMember.mnick){
+//												chk = true;
+//												return;
+//											}
+//										});
+//										
+//										if(!chk){
+//											client.send('/pub/addDash',{},JSON.stringify({ mid : member.mid, dno : jsonObject.dashBoardDto.dno }));
+//										}
+//										
+//									});
+									
+								}
+								
+							});
+							
+						}
 						
 					});
+					
+				});
+				
+			}
+			
+			if(modifyObject){
+				
+				let item;
+				
+				modifyObject.members.forEach(member=>{
+					
+					if(member.mid === modifyObject.dashBoardDto.mid){
+						
+						dashCreateInfo.rules.forEach(rule=>{
+							
+							if(rule.dgalias === member.dgalias){
+								
+								item = member;
+								return;
+								
+							}
+							
+						});
+						return;
+					}
+					
+				});
+				
+				if(item) myInfoFun(dashMemberDivClone, item, true);
+			}
+			
+			dashRuleItems.forEach(item=>{
+				
+				item.querySelector('.colorPickerBtn').remove();
+				item.querySelector('.dashRuleDelteBtn').remove();
+				
+				item.addEventListener('click', ()=>{
+					
+					myInfoFun(dashMemberDivClone, item);
 					
 				});
 				
@@ -914,7 +1128,7 @@ window.onload = ()=>{
 		contextMenuFun(body,{
 			'newDash' : {
 				'대시보드 추가' : (e)=>{
-					addDashBoardFun();
+					addAndModifyDashBoardFun();
 				}
 			},
 			'logout' : {
@@ -937,8 +1151,11 @@ window.onload = ()=>{
 			const dashAllItem = document.querySelectorAll('.dashItem');
 			dashAllItem.forEach((item,i)=>{
 				if(Number(item.dataset.dno) === body.dno){
-					motionOnOff(item, 0.8, false, { setting : 'offDefault' }, false, (o)=>{
-						o.remove();
+					
+					xhrLoad('get', 'board/dashboardClose', { dno : body.dno }, (res)=>{
+						motionOnOff(item, 0.8, false, { setting : 'offDefault' }, false, (o)=>{
+							o.remove();
+						});
 					});
 				}
 				

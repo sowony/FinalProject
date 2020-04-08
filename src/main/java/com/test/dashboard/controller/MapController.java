@@ -4,17 +4,21 @@ package com.test.dashboard.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.test.dashboard.common.util.Util;
 import com.test.dashboard.model.biz.WMapBiz;
+import com.test.dashboard.model.dto.MemberDto;
 import com.test.dashboard.model.dto.WMapDto;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
@@ -39,10 +43,9 @@ public class MapController {
 
 	@PostMapping("addLocation")
 	@ResponseBody
-	public WMapDto addLocation(@RequestBody WMapDto wMapDto) {
+	public WMapDto addLocation(@RequestBody WMapDto wMapDto, HttpSession session) {
 
-		List<WMapDto> list = wMapBiz.selectList(1);
-		wMapDto.setWno(1);
+		List<WMapDto> list = wMapBiz.selectList(wMapDto.getWno());
 		
 		//boolean boolRes = false;
 		
@@ -60,6 +63,10 @@ public class MapController {
 		logger.info("배열 : " + Arrays.toString(exist));
 		
 		if(!(Arrays.asList(exist).contains(true))) {
+			
+			MemberDto user = (MemberDto) session.getAttribute("user");
+			wMapDto.setMid(user.getMid());
+			wMapDto.setWmapmemo(Util.brChange(wMapDto.getWmapmemo()));
 			int res = wMapBiz.insert(wMapDto);
 			WMapDto insertRes = wMapBiz.select(wMapDto.getWmapno());
 			if(res > 0) {
@@ -72,9 +79,14 @@ public class MapController {
 	
 	@PostMapping("update")
 	@ResponseBody
-	public WMapDto updateMemo(WMapDto wMapDto) {
+	public WMapDto updateMemo(WMapDto wMapDto, HttpSession session) {
 		
 		logger.info(wMapDto.getWmapmemo());
+		
+		MemberDto user = (MemberDto) session.getAttribute("user");
+		
+		wMapDto.setWmapmemo(Util.brChange(wMapDto.getWmapmemo()));
+		wMapDto.setMid(user.getMid());
 		
 		int res = wMapBiz.update(wMapDto);
 		WMapDto updateRes = wMapBiz.select(wMapDto.getWmapno());
@@ -102,13 +114,11 @@ public class MapController {
 	}
 	
 	
-	@PostMapping("marker")
+	@GetMapping("marker/{wno}")
 	@ResponseBody
-	public List<WMapDto> postMarker() {
+	public List<WMapDto> postMarker(@PathVariable int wno) {
 
-		List<WMapDto> list = wMapBiz.selectList(1);
-		
-		System.out.println(list);
+		List<WMapDto> list = wMapBiz.selectList(wno);
 		
 		return list;
 	}
