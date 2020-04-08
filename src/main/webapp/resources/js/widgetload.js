@@ -74,6 +74,12 @@ function widgetload(){
 	let oldWidgets = widgetArea.querySelectorAll('.widget');
 	
 	oldWidgets.forEach(w=>{
+		
+		if(w.info.wcategory === 'CODE'){
+			console.log('dd')
+			w.editor.getSession().setUndoManager(new ace.UndoManager());
+		}
+		
 		motionOnOff(w, 1, false, { onOff : 'off', opactiy : { num0 : 0 } }, null, (o)=>{
 			o.remove();
 		});

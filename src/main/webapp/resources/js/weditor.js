@@ -1,56 +1,56 @@
 
-window.onload = widget;
 
 
-const body  = document.querySelector('body');
-function widget(){
+function editorStart(widget){
 	
-	addObject(body, 'button', 'wno', true, (o)=>{
-		o.innerHTML = 'WNO';
-		o.addEventListener('click', (o)=>{
-			start();
-		});
+	const widgetContent = widget.querySelector('.widgetContent');
+	
+	widgetContent.addEventListener('mouseover',(e)=>{
+		widget.style.cursor = 'default';
 	});
-}
-
-
-
-function start(){
+	
+	const randomNum = Math.floor(Math.random() * (10000)) + 0;
 	
 	//코드 작성 div
-	const container = addObject(body, 'div', 'container', true, (o)=>{
-		
-//		const div = document.querySelector('.container');
-//		addObject(div, 'div', 'editor', true, null);
-//		addObject(div, 'iframe', 'iframe', true, null);
-		o.innerHTML = `<div id='editor'></div>
-		<button id='run'>RUN</button>
+	const container = addObject(widgetContent, 'div', 'container', true, (o)=>{
+		o.innerHTML = `<div id="editor${randomNum}" class="editor"></div>
 		<iframe id='iframe' frameBorder="1"></iframe>`
-		
 	});
 	
-	editorSetup();
+	const runBtn = addObject(null, 'button', 'grayBtn', false, (o)=>{
+		o.id = 'run';
+		o.innerHTML = '코드 실행';
+	});
+	
+	widgetContent.insertBefore(runBtn,container);
+	
+	editorSetup(widget, randomNum);
+
 }
 
 
-function update()
-{
-	var idoc = document.getElementById('iframe').contentWindow.document;
-
+function editorUpdate(widget){
+	
+	var idoc = widget.querySelector('#iframe').contentWindow.document;
+	
 	idoc.open();
-	idoc.write(editor.getValue());
+	idoc.write(widget.editor.getValue());
 	idoc.close();
+
 }
 
-function editorSetup()
-{
-  window.editor = ace.edit("editor", {
-	  mode: "ace/mode/javascript",
-	  selectionStyle: "text"
-  });
-  editor.setTheme("ace/theme/monokai");
-  editor.getSession().setMode("ace/mode/html");
-  editor.setValue(`<!DOCTYPE html>
+function editorSetup(widget, randomNum){
+	
+	const wno =  widget.info.wno;
+	
+	widget.editor = ace.edit(`editor${randomNum}`, {
+		mode: "ace/mode/javascript",
+		selectionStyle: "text"
+	});
+	
+	
+	let oldCode = `
+<!DOCTYPE html>
 <html>
 <head>
 </head>
@@ -58,54 +58,151 @@ function editorSetup()
 <body>
 </body>
 
-</html>`,1); 
+</html>`;
+	
+	if(!widget.info.preview){
+	
+		xhrLoad('get', 'widget/wcode/'+wno, null, (res)=>{
+
+			if(res){
+				const wcode = JSON.parse(res);
+				oldCode = wcode.wecontent;
+			}
+
+		}, false);
 
 
-	document.getElementById('run').addEventListener('click',(o)=>{
-//		let code = editor.getValue();
-//		
-//		console.log(code);
-//		//let num = 1;//wno
-//		let editorCode = {code};
-//
-//		$.ajax({
-//			url: 'insertEditor',
-//			accept: 'application/json',
-//			method: 'post',
-//			contentType: 'application/json; charset=utf-8;',
-//			async: false,
-//			data: JSON.stringify(editorCode),
-//			success: function(res){
-//				if(res){
-//					boxFun(' success', true, null, false, 'updateSuc', (o)=>{
-//						update();
-//					},true);
-//				} else{
-//					boxFun(' fail', true, null, false, 'updateFail', null, true);
-//				}
-//			},
-//			error: function(){
-//				boxFun(' error', true, null, false, 'updateError', null, true);
-//			}
-//		
-//		});
-		update();
+		widget.websocket.codeClient = client.subscribe('/sub/wcode/' + wno,(res)=>{
+
+			const code = JSON.parse(res.body);
+
+			if(code.mid !== userInfo.mid){
+
+				if(code.status === 'complete'){
+
+					const container = widget.querySelector('.container');
+
+					container.removeAttribute('style');
+
+					widget.editor.setValue(code.wecontent);
+
+					const blockBox = container.querySelector('.blockBox');
+
+					motionOnOff(blockBox, 0.8, false, { setting : 'offDefault' }, null, (o)=>{
+						o.remove();
+					});
+
+				} else {
+					const container = widget.querySelector('.container');
+
+					let blockBox = container.querySelector('.blockBox');
+
+					if(!blockBox){
+
+						blockBox = addObject(null,'div','blockBox',false,(o)=>{
+
+							o.setAttribute('style', `
+									display: block;
+									opacity : 0;
+									position: absolute;
+									transition-duration: 0.8s;
+									z-index: 8;
+									top : 0;
+									left : 0;
+									width: 100%;
+									height: 100%;
+							background-color: #00000080;`);
+							const alarmP = addObject(o, 'p', null, true, (o)=>{
+								o.innerHTML = '누군가 작성중입니다.';
+								o.style.position = 'absolute';
+								o.style.color = '#fff';
+								o.style.width = 'max-content';
+								o.style.top = '50%';
+								o.style.left = '50%'
+									o.style.transform = 'translateX(-50%) translateY(-50%)'
+							});
+
+						});
+
+						container.appendChild(blockBox);
+
+						motionOnOff(blockBox,0.8, false, { setting : 'onDefault' });
+
+						container.setAttribute('style','pointer-events: none;');
+
+					}
+				}
+			}
+
+		});
+	}
+	widget.editor.setTheme("ace/theme/monokai");
+	
+	widget.editor.session.setMode("ace/mode/html");
+	
+	widget.editor.setValue(oldCode,1); 
+	
+	widget.querySelector('#run').addEventListener('click',(o)=>{
+		editorUpdate(widget);
 	});
 
-  editor.focus();
-  editor.setOptions({
-    fontSize: "16pt",
-    showLineNumbers: true,
-    showGutter: true,
-    vScrollBarAlwaysVisible:true,
-    enableBasicAutocompletion: true, 
-    enableLiveAutocompletion: true
-  });
+	widget.editor.setOptions({
+		fontSize: "9pt",
+		showLineNumbers: true,
+		showGutter: true,
+		vScrollBarAlwaysVisible:true,
+		enableBasicAutocompletion: true, 
+		enableLiveAutocompletion: true
+	});
 
-  editor.setShowPrintMargin(false);
-  editor.setBehavioursEnabled(false);
+	widget.editor.setShowPrintMargin(false);
+	widget.editor.setBehavioursEnabled(false);
+	widget.editor.focus();
+	
+	
+	if(!widget.info.preview){
+		const inputBar = widget.querySelector('textarea');
+
+		inputBar.addEventListener('input',(e)=>{
+
+			const wno =  widget.info.wno;
+			const wecontent = widget.editor.getValue();
+
+			if(inputBar['saveTimeoutCheckId']) {
+
+				client.send('/pub/wcode', {}, JSON.stringify({
+					wno,
+					mid: userInfo.mid,
+					status : 'writing'
+				}));
+
+				window.clearTimeout(inputBar['saveTimeoutCheckId']);
+			}
+
+			inputBar['saveTimeoutCheckId'] = window.setTimeout(()=>{
+
+				xhrLoad('post','widget/wcode', { wno, wecontent }, (res)=>{
+
+					if(res){
+
+						boxFun('코드가 저장되었습니다.', false, false, false, 'codesave', false, true);
+
+						client.send('/pub/wcode', {}, JSON.stringify({
+							wecontent,
+							wno,
+							mid: userInfo.mid,
+							status : 'complete'
+						}));
+
+					} else {
+						boxFun('잘못된 접근입니다.');
+					}
+
+				});
+
+			},3000);
+
+		});
+	}
   
 }
-
-//setupEditor();
-//update();

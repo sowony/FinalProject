@@ -142,6 +142,8 @@ public class WboardController {
 			
 			int	res = biz.wbinsert(dto);
 			
+			logger.info("wbinsertres" + res);
+			
 			if(res > 0) {
 				logger.info("wbinsert >> [ success ]");
 				

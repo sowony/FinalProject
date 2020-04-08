@@ -105,10 +105,14 @@ public class DashBoardController {
 	@GetMapping("/dashboardClose")
 	public int getDashboardClose(DashBoardDto dashBoardDto, HttpSession session) {
 		
-		logger.info("[ INFO ] : DashBoardController > getDashboardClose [path : /board/dashboardClose]");
+		logger.info("[ INFO ] : DashBoardController > getDashboardClose [path : /board/dashboardClose/ | check"+ dashBoardDto.getDno() +"]");
 		
 		Set<Integer> selectBoardList = ((Set<Integer>)session.getAttribute("selectBoardList"));
-		boolean res = selectBoardList.remove(dashBoardDto.getDno());
+		boolean res = false;
+		
+		if(selectBoardList != null && selectBoardList.size() > 0) {
+			res = selectBoardList.remove(dashBoardDto.getDno());
+		}
 		
 		if(res) {
 			session.setAttribute("selectBoardList", selectBoardList);

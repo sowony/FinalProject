@@ -349,6 +349,8 @@ function widgetAddAndModify(){
 						<option name="CHAT" value="CHAT">채팅</option>
 						<option name="SNS" value="SNS">SNS</option>
 						<option name="PLAN" value="PLAN">계획</option>
+						<option name="CODE" value="CODE">코드 에디터</option>
+						<option name="MAP" value="MAP">지도</option>
 					</select>
 				</div>
 				`) +`
@@ -453,8 +455,6 @@ function widgetAddAndModify(){
 			widget.info['w'+paramWidget.info.wcategory.toLowerCase()] = paramWidget.info['w'+paramWidget.info.wcategory.toLowerCase()];
 		}
 		
-		widget.cateFun();
-		
 		middlePositionFun(widget);
 		
 		const widgetPreview = o.querySelector('.widgetPreview');
@@ -473,6 +473,11 @@ function widgetAddAndModify(){
 			e.stopPropagation();
 			
 			widget.style.height = e.target.value + 'px';
+			
+			if(widget.info.wcategory === 'MAP'){
+				resizeMap(widget);
+			}
+			
 //			middlePositionFun(widget);
 			
 		});
@@ -483,6 +488,13 @@ function widgetAddAndModify(){
 			e.stopPropagation();
 			
 			widget.style.width = e.target.value + 'px';
+			
+			const wcategory = o.querySelector('.wcategory');
+			
+			if(widget.info.wcategory === 'MAP'){
+				resizeMap(widget);
+			}
+			
 //			middlePositionFun(widget);
 			
 		});
@@ -1054,7 +1066,8 @@ function widgetAddAndModify(){
 	
 	// 1p
 	const widgetAddBox1 = boxFun(null, false, [widgetSetting, widgetAddCloseBtn, widgetAddNextBtn], true, 'widgetAddBox1', (o)=>{
-		
+		const previewWidget = o.querySelector('.widget');
+		previewWidget.cateFun();
 	}, true);
 	
 }

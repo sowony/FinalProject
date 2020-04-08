@@ -16,5 +16,6 @@ public class WMapDto {
 	private String wmaplat;
 	private String wmaplng;
 	private String wmapmemo;
+	private String mid;
 
 }

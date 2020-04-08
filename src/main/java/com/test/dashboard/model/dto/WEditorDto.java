@@ -11,5 +11,11 @@ public class WEditorDto {
 	private int weno;
 	private int wno;
 	private String wecontent;
+	
+	
+	// 참고용
+	
+	private String mid;
+	private String status;
 
 }

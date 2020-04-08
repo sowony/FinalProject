@@ -46,5 +46,16 @@ public class DashGradeBizImpl implements DashGradeBiz{
 		return dashGradeDao.update(dto);
 	}
 	
+	@Override
+	public int oldGradeDelete(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dashGradeDao.oldGradeDelete(params);
+	}
+	
+	@Override
+	public int dnoGradeAllDel(int dno) {
+		// TODO Auto-generated method stub
+		return dashGradeDao.dnoGradeAllDel(dno);
+	}
 	
 }

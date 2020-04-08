@@ -7,8 +7,8 @@
 <title>Insert title here</title>
 
 <!--외부 라이브러리 -->
-<script type="text/javascript" src="/dashboard/resources/js/sockjs.min.js"></script>
-<script type="text/javascript" src="/dashboard/resources/js/stomp.min.js"></script>
+<script type="text/javascript" src="/dashboard/resources/js/websocket/sockjs.min.js"></script>
+<script type="text/javascript" src="/dashboard/resources/js/websocket/stomp.min.js"></script>
 
 <!-- 커스텀 유틸  -->
 <link rel="stylesheet" href="./resources/css/defaultstyle.css" type="text/css"/>

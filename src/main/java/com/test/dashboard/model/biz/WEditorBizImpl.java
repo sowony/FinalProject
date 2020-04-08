@@ -15,9 +15,9 @@ public class WEditorBizImpl implements WEditorBiz {
 	private WEditorDao dao;
 
 	@Override
-	public WEditorDto select(int weno) {
+	public WEditorDto select(int wno) {
 		
-		return dao.select(weno);
+		return dao.select(wno);
 	}
 
 	@Override
@@ -33,9 +33,9 @@ public class WEditorBizImpl implements WEditorBiz {
 	}
 
 	@Override
-	public int delete(int weno) {
+	public int delete(int wno) {
 		
-		return dao.delete(weno);
+		return dao.delete(wno);
 	}
 
 }

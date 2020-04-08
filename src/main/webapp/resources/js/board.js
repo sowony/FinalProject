@@ -69,6 +69,8 @@ function selectDashBoardLoad(){
 		// 위젯 로드
 		widgetload();
 		
+		
+		
 		// widget 추가 감지 웹 소켓
 		addClient = client.subscribe('/sub/wadd/'+ dashboardInfo.dashboard.dno, (res)=>{
 			
@@ -270,5 +272,71 @@ window.onload = ()=>{
 			}
 
 		});
+		
+		delDashClient = client.subscribe('/sub/delDash/'+userInfo.mno, (res)=>{
+			const body = JSON.parse(res.body);
+			
+			const _dashItems = document.querySelectorAll('li._dashItem');
+			
+			_dashItems.forEach((item,i)=>{
+				
+				if(Number(item.dataset.dno) === body.dno){
+					
+					xhrLoad('get', 'board/dashboardClose', { dno : body.dno }, (res)=>{
+						
+						
+						
+						const resNo = Number(res)
+						
+						if(resNo > 0){
+							
+							const dashboard = document.querySelector('.dashboard');
+							
+							if(Number(dashboard.dataset.dno) === body.dno){
+								
+								const body = document.querySelector('body');
+								
+								const alertDiv = addObject(body, 'div', 'alertDiv', true, (o)=>{
+									o.innerHTML = `<pre class="dashAlert">해당 대시보드에 삭제 혹은 권한 변경이 이루어졌습니다.</pre>`;
+								});
+								
+								motionOnOff(alertDiv, 0.8, false, { setting : 'onDefault' });
+								
+								window.setTimeout(()=>{
+									
+									motionOnOff(alertDiv, 0.8, false, { setting : 'offDefault' }, null, (o)=>{
+										
+										o.remove();
+										
+										const widgets = document.querySelectorAll('.widget');
+										// 웹 소켓 연결 해제
+										addClient.unsubscribe();
+										widgetWebSocketClose(widgets);
+										
+										selectDashBoardLoad();
+										
+									});
+									
+								},2000);
+								
+							}
+							
+							motionOnOff(item, 0.8, false, { setting : 'offDefault'}, null, (o)=>{
+								o.remove();
+							});
+							
+						} else {
+							location.href = '/dashboard';
+						}
+						
+					});
+					
+					return;
+				}
+			});
+			
+		});
+		
 	});
+	
 };

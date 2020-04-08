@@ -15,6 +15,8 @@ import com.test.dashboard.model.biz.MemberBiz;
 import com.test.dashboard.model.dto.DashMemberDto;
 import com.test.dashboard.model.dto.MsgDto;
 import com.test.dashboard.model.dto.WChatDto;
+import com.test.dashboard.model.dto.WEditorDto;
+import com.test.dashboard.model.dto.WMapDto;
 import com.test.dashboard.model.dto.WboardDto;
 import com.test.dashboard.model.dto.WidgetDto;
 
@@ -146,6 +148,33 @@ public class WebSocketController {
 		
 	}
 	
+	@MessageMapping("/wcode")
+	public void wCodeMessage(WEditorDto wEditorDto) {
+			
+		logger.info("[ INFO ] : WebSocketController > wCodeMessage [wEditorDto : " + wEditorDto + "]");
+			
+		template.convertAndSend("/sub/wcode/" + wEditorDto.getWno(), wEditorDto);
+		
+	}
+	
+	@MessageMapping("/wmarker")
+	public void wMarkerMessage(WMapDto wMapDto) {
+			
+		logger.info("[ INFO ] : WebSocketController > wMarkerMessage [wMapDto : " + wMapDto + "]");
+			
+		template.convertAndSend("/sub/wmarker/" + wMapDto.getWno(), wMapDto);
+		
+	}
+	
+	@MessageMapping("/wmarkerdel")
+	public void wMarkerDelMessage(WMapDto wMapDto) {
+			
+		logger.info("[ INFO ] : WebSocketController > wMarkerDelMessage [wMapDto : " + wMapDto + "]");
+			
+		template.convertAndSend("/sub/wmarkerdel/" + wMapDto.getWno(), wMapDto);
+		
+	}
+	
 	
 	@MessageMapping("/addDash")
 	public void dAddMessage(DashMemberDto dashMemberDto) {
@@ -165,6 +194,18 @@ public class WebSocketController {
 		int mno = memberBiz.selectById(dashMemberDto.getMid()).getMno();
 			
 		logger.info("[ INFO ] : WebSocketController > dDelMessage [mno : " + mno + "]");
+			
+		template.convertAndSend("/sub/delDash/" + mno, dashMemberDto);
+			
+		
+	}
+	
+	@MessageMapping("/upDash")
+	public void dUpMessage(DashMemberDto dashMemberDto) {
+			
+		int mno = memberBiz.selectById(dashMemberDto.getMid()).getMno();
+			
+		logger.info("[ INFO ] : WebSocketController > dUpMessage [mno : " + mno + "]");
 			
 		template.convertAndSend("/sub/delDash/" + mno, dashMemberDto);
 			

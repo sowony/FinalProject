@@ -1,7 +1,13 @@
 package com.test.dashboard.controller;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -58,6 +64,102 @@ public class MyPageController {
 		return dashBoardBiz.selectOne(dno);
 	}
 	
+	@GetMapping("/dashboard/modify/{dno}")
+	public Map<String, Object> getDashBoardModify(@PathVariable int dno) {
+		logger.info("[ INFO ] : MyPageController > getDashBoardOne [path : /mypage/dashboard/"+ dno +"]");
+		
+		Map<String, Object> output = new HashMap<String, Object>();
+		
+		DashBoardDto dashBoardDto = dashBoardBiz.selectOne(dno);
+		
+		List<DashMemberDto> dashMemberDtos = dashMemberBiz.selectList(dno);
+		
+		List<DashGradeDto> dashGradeDtos = dashGradeBiz.selectList(dno);
+		
+		output.put("dashBoardDto",dashBoardDto);
+		output.put("members",dashMemberDtos);
+		output.put("rules",dashGradeDtos);
+		
+		return output;
+	}
+	
+	@PostMapping("/dashboard/modify")
+	public DashAddObjectDto postDashBoardModify(@RequestBody DashAddObjectDto dashAddObjectDto, HttpSession session) throws SQLException {
+		
+		logger.info("[ INFO ] : MyPageController > postDashBoardModify [dashAddObjectDto : "+ dashAddObjectDto +"]");
+		
+		MemberDto user = (MemberDto) session.getAttribute("user");
+		
+		DashBoardDto dashBoardDto = dashAddObjectDto.getDashBoardDto();
+		
+		dashBoardDto.setDdesc(dashAddObjectDto.getDdesc());
+		dashBoardDto.setDtitle(dashAddObjectDto.getDtitle());
+		
+		logger.info("[ INFO ] DashInfo :" + dashBoardDto);
+		
+		int res = dashBoardBiz.update(dashBoardDto);
+		
+		logger.info("[ INFO ] dashboardModifyRes :" + res);
+		
+		int dno;
+		
+		if(res == 1) {
+			
+			logger.info("[ INFO ] DashBoardNum :" + dashBoardDto.getDno());
+			
+			dno = dashBoardDto.getDno();
+		
+		} else {
+			
+			return null;
+		
+		}
+		
+		DashMemberDto downer = dashAddObjectDto.getDowner();
+		
+		DashMemberDto oldOwner = dashMemberBiz.selectById(dno, user.getMid());
+		
+		downer.setDmno(oldOwner.getDmno());
+		downer.setMid(user.getMid());
+		downer.setMnick(user.getMnick());
+
+		dashAddObjectDto.getMembers().add(downer);
+		
+		dashMemberBiz.dnoMemberDel(dno);
+		dashGradeBiz.dnoGradeAllDel(dno);
+		
+		logger.info("[ INFO ] DashBoard 초기화");
+		
+		for(DashGradeDto out : dashAddObjectDto.getRules()) {
+			
+			out.setDno(dno);
+			
+			logger.info("[ INFO ] DashGradeList :" + out);
+			
+			
+			res = dashGradeBiz.insert(out);
+		
+		}
+		
+		for(DashMemberDto out : dashAddObjectDto.getMembers()) {
+			logger.info("[ INFO ] DashMemberList :" + out);
+		}
+		
+		res = dashMemberBiz.insert(dashAddObjectDto.getMembers(), dno);
+		
+		if(res == 1) {
+			
+			logger.info("[ INFO ] DashBoard Modify");
+			return dashAddObjectDto;
+		
+		} else {
+			
+			return null;
+			
+		}
+		
+	}
+	
 	@GetMapping("/dashboard/delete/{dno}")
 	public List<DashMemberDto> getDashBoardDel(@PathVariable int dno) {
 		logger.info("[ INFO ] : MyPageController > getDashBoardDel [path : /mypage/dashboard/delete/"+ dno +"]");
@@ -89,6 +191,8 @@ public class MyPageController {
 		logger.info("[ INFO ] DashInfo :" + dashBoardDto);
 		
 		int res = dashBoardBiz.insert(dashBoardDto);
+		
+		logger.info("[ INFO ] dashboardcreateres :" + res);
 		
 		dashAddObjectDto.setDashBoardDto(dashBoardDto);
 		
@@ -130,10 +234,14 @@ public class MyPageController {
 		res = dashMemberBiz.insert(dashAddObjectDto.getMembers(), dno);
 		
 		if(res == 1) {
+			
 			logger.info("[ INFO ] DashBoard Create");
 			return dashAddObjectDto;
+		
 		} else {
+			
 			return null;
+			
 		}
 
 	}

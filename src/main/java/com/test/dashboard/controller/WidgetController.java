@@ -22,10 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.test.dashboard.common.util.Util;
 import com.test.dashboard.model.biz.WChatBiz;
+import com.test.dashboard.model.biz.WEditorBiz;
 import com.test.dashboard.model.biz.WMemoBiz;
 import com.test.dashboard.model.biz.WidgetBiz;
 import com.test.dashboard.model.dto.MemberDto;
 import com.test.dashboard.model.dto.WChatDto;
+import com.test.dashboard.model.dto.WEditorDto;
 import com.test.dashboard.model.dto.WMemoDto;
 import com.test.dashboard.model.dto.WRuleDto;
 import com.test.dashboard.model.dto.WidgetDto;
@@ -45,6 +47,9 @@ public class WidgetController {
 	
 	@Autowired
 	private WChatBiz wChatBiz; 
+	
+	@Autowired
+	private WEditorBiz wEditorBiz;
 	
 	@GetMapping("/list")
 	public List<WidgetDto> getListWidget(HttpSession session){
@@ -271,6 +276,39 @@ public class WidgetController {
 	
 	}
 	
+	
+	@GetMapping("/wcode/{wno}")
+	public WEditorDto getWcode(@PathVariable int wno) {
+		logger.info("[ INFO ] : WidgetController > getWcode [wno : " + wno +"]");
+		
+		WEditorDto wEditorDto = wEditorBiz.select(wno);
+		
+		logger.info("[ INFO ] : WidgetController > getWcode [wEditorDto : " + wEditorDto +"]");
+		
+		if(wEditorDto != null) return wEditorDto;
+		else return null;
+	}
+	
+	@PostMapping("/wcode")
+	public WEditorDto postWcode(@RequestBody WEditorDto wEditorDto) {
+		
+		WEditorDto checkDto = wEditorBiz.select(wEditorDto.getWno());
+		logger.info("[ INFO ] : WidgetController > getWcode [wEditorDto : " + wEditorDto +"]");
+		
+		int res;
+		
+		if(checkDto != null) {
+			res = wEditorBiz.update(wEditorDto);
+		} else {
+			res = wEditorBiz.insert(wEditorDto);
+		}
+		
+		if(res > 0) {
+			return wEditorDto;
+		} else {
+			return null;
+		}
+	}
 	
 	@GetMapping("/updatewdel/{wno}")
 	public boolean getUpdateWdel(@PathVariable int wno) {
