@@ -33,6 +33,8 @@ public interface WboardBiz {
 	
 	public int conUpdate(WboardDto wboardDto);
 	
+	public int stateUpdate(WboardDto wboardDto);
+	
 	//달력 자료 뿌려주기
 	public List<WboardDto> wbdatesend(WboardDto dto);
 	

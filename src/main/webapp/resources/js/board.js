@@ -49,7 +49,7 @@ function selectDashBoardLoad(){
 			
 		}, false);
 		
-		const widgetArea = dashboard.querySelector('.widgetArea');
+		const widgetArea = dashboard.querySelector('#widgetArea');
 		
 		dashboardInfo.dashmember.forEach(member=>{
 			if(member.mid === userInfo.mid){
@@ -75,6 +75,9 @@ function selectDashBoardLoad(){
 			const addInfo = JSON.parse(res.body);
 			
 			let widgetCheck = false;
+			
+			const widgets = document.querySelectorAll('.widget');
+			
 			widgets.forEach(widget=>{
 				
 				if(widget.info.wno === addInfo.wno){
@@ -89,8 +92,11 @@ function selectDashBoardLoad(){
 				const widgetArea = document.querySelector('#widgetArea');
 				
 				function addWidget(addInfo){
+					
 					xhrLoad('get', 'widget/'+ addInfo.wno, null, (res)=>{
+						
 						const w = widgetSettingFun(JSON.parse(res));
+						
 						motionOnOff(w, 1, false, { onOff : 'on', opactiy : { num0 : 0, num1: 1 } }, {
 							after : (o)=>{
 								widgetArea.appendChild(o);
@@ -176,6 +182,7 @@ function openDashBoardList(){
 									
 									if(dashboard.dataset.dno === dno){
 										
+										const widgets = document.querySelectorAll('.widget');
 										// 웹 소켓 연결 해제
 										addClient.unsubscribe();
 										widgetWebSocketClose(widgets);
@@ -199,6 +206,7 @@ function openDashBoardList(){
 							e.preventDefault();
 							e.stopPropagation();
 							
+							const widgets = document.querySelectorAll('.widget');
 							// 웹 소켓 연결 해제
 							addClient.unsubscribe();
 							widgetWebSocketClose(widgets);
@@ -255,16 +263,6 @@ window.onload = ()=>{
 				'새 위젯 만들기' : ()=>{
 					widgetAddAndModify();
 				}
-			},
-			'dashboardInfo' : {
-				'대시보드 자세히 보기' : ()=>{}
-			},
-			'letter' : {
-				'쪽지함 보기' : ()=>{},
-				'쪽지 작성' : ()=>{}
-			},
-			'alram' : {
-				'말람함 보기' : ()=>{}
 			},
 			'myInfo' : {
 				'내 정보 보기' : ()=>{},

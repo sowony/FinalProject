@@ -77,21 +77,31 @@ function wchatBox(widget){
 			
 			function msgBoxLoad(msg){
 				
+				let backColor, fontColor;
 				let writer;
 				let classNames = ['messageBox'];
 				
 				if(msg.mnick === userInfo.mnick){
 					writer = 'msgMe';
+					backColor = userInfo.dashmember.dmcolor;
 					classNames.push('msgR');
 				} else {
+					dashboardInfo.dashmember.forEach(member=>{
+						if(member.mnick === msg.mnick){
+							backColor = member.dmcolor;
+						}
+					});
 					writer = 'msgOther';
 					classNames.push('msgL');
 				}
 				
+				fontColor = `color: ${fontColorCheck(backColor)}dd;`;
+				backColor = `background-color : ${backColor};`;
+				
 				const messageBox = addObject(wrChatLog, 'div', classNames, true, (o)=>{
 					o.innerHTML = `
 						<p class="wcMnick ${classNames[1]}">${msg.mnick}</p>
-						<div class="msgCon ${writer} ${classNames[1]}">${msg.msg}</div>
+						<div class="msgCon ${writer} ${classNames[1]}" style="${fontColor} ${backColor}">${msg.msg}</div>
 					`;
 				});
 				

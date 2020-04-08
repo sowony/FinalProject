@@ -181,7 +181,7 @@ function memberListOpen(e){
 			
 			addObject(o, 'p', 'memberItem', true, (o)=>{
 				
-				o.innerHTML = `<span><img style="border: 2px solid ${member.dmcolor}" src=${member.mimgpath}>${member.mnick}</span><span>${member.dgalias}</span><span>${member.dggrade}</span>`;
+				o.innerHTML = `<span><img style="border: 2px solid ${member.dmcolor}" src="${member.mimgpath}" onerror="this.src='https://img.icons8.com/ultraviolet/80/000000/user.png';"/>${member.mnick}</span><span>${member.dgalias}</span><span>${member.dggrade}</span>`;
 				
 				o.dataset.mnick = member.mnick;
 				o.dataset.dgalias = member.dgalias;
@@ -473,7 +473,7 @@ function widgetAddAndModify(){
 			e.stopPropagation();
 			
 			widget.style.height = e.target.value + 'px';
-			middlePositionFun(widget);
+//			middlePositionFun(widget);
 			
 		});
 		
@@ -483,7 +483,7 @@ function widgetAddAndModify(){
 			e.stopPropagation();
 			
 			widget.style.width = e.target.value + 'px';
-			middlePositionFun(widget);
+//			middlePositionFun(widget);
 			
 		});
 		
@@ -497,8 +497,6 @@ function widgetAddAndModify(){
 		
 		
 		const widgetPreviewScaleMinus = o.querySelector('.widgetPreviewScaleMinus');
-		
-		console.log(widgetPreviewScaleMinus);
 		
 		widgetPreviewScaleMinus.addEventListener('click',(e)=>{
 			

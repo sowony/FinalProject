@@ -10,9 +10,9 @@ function dragEnter(ev) {
 	
 	// 드래그 했을때
 	function drag(ev) {
-		ev.target.id = 'drag';
+		ev.currentTarget.id = 'drag';
 		
-		const classArr = ev.target.parentNode.className.split(' ');
+		const classArr = ev.currentTarget.parentNode.parentNode.className.split(' ');
 		
 		// ondrag시 원하는 클래스에 복사붙여넣기를 할 수 있게 만드는 코드 , true값을 "copyCheck"에 담아서 전송해줌
 		if(classArr[1]){
@@ -33,27 +33,77 @@ function dragEnter(ev) {
 		
 		var data = ev.dataTransfer.getData("text");
 		var dragObj = document.querySelector('#' + data);
+		
 		const wbtodono = dragObj.dataset.wbtodono;
-		const area = dragObj.parentNode;
+		const span = dragObj.parentNode;
+		const area = ev.currentTarget;
 		
 		let chk = true;
 		area.childNodes.forEach(item=>{
-			if(item.tagName === 'input'){
-				if(item.dataset.wbtodono === wbtodono){
+			
+			if(item.tagName === 'SPAN'){
+				if(item.childNodes[0].dataset.wbtodono === wbtodono){
 					chk = false;
+					return;
 				}
 			}
 		});
 		
 		if(chk){
+			
 			const copyCheck = ev.dataTransfer.getData("copyCheck");
-		
 			if(copyCheck){
-				var ccopy = dragObj.cloneNode(true);
-				ev.target.appendChild(ccopy);
+				
+				function searchAreaFun(searchArea){
+					let chk = true;
+					let moveTarget;
+					
+					searchArea.childNodes.forEach(item=>{
+						if(item.tagName === 'SPAN'){
+							if(item.childNodes[0].dataset.wbtodono === wbtodono){
+								chk = false;
+								moveTarget = item;
+								return;
+							}
+						}
+					});
+					
+					if(chk){
+						var ccopy = span.cloneNode(true);
+						area.appendChild(ccopy);
+					} else {
+						area.appendChild(moveTarget);
+					}
+				}
+				
+				const areaParent = area.parentNode;
+				let searchArea;
+				
+				if(area.id === 'wtasklistDo'){
+					
+					searchArea = areaParent.querySelector('#wtasklistDone');
+					
+				} else if (area.id === 'wtasklistDone'){
+					
+					searchArea = areaParent.querySelector('#wtasklistDo');
+				}
+				
+				searchAreaFun(searchArea);
+				
 			} else {
-				ev.target.appendChild(dragObj);
+				
+				area.appendChild(span);
+				
 			}
+			
+			let wbtodo;
+			
+			if(area.id === 'wtasklistDo') wbtodo = 'N';
+			else if (area.id === 'wtasklistDone') wbtodo = 'Y';
+			
+			
+			xhrLoad('post', 'wbstatechange', { wbtodono : dragObj.dataset.wbtodono, wbtodo }, (res)=>{});
+			
 		}
 		
 		dragObj.id = '';
@@ -70,25 +120,237 @@ const summernoteConfig = {
 		    ['style', ['bold', 'italic', 'underline', 'clear']],
 		    ['fontsize', ['fontsize']],
 		    ['color', ['color']],
-		    ['para', ['ul', 'ol', 'paragraph']],
+		    ['para', ['paragraph']],
 		    ['height', ['height']],
 		    ['insert', ['picture', 'link', 'video', 'table']]
 		  ]
 }
+
+function planDelete(item, areas){
 	
+	const { wbtodono } = item;
+	
+	console.log(areas);
+	
+	areas.forEach(area=>{
+		
+		const inputs = area.querySelectorAll('input[type=text]');
+		
+		inputs.forEach(input=>{
+			
+			if(Number(input.dataset.wbtodono) === wbtodono){
+				input.parentNode.remove();
+				return;
+			}
+		});
+		
+	});
+	
+}
+
+function planUpdate(item, area){
+
+	const { wbtodono, wbtitle, wbstartdate, wbenddate } = item;
+		
+	const inputs = area.querySelectorAll('input[type=text]');
+	
+	inputs.forEach(input=>{
+		if(Number(input.dataset.wbtodono) === wbtodono){
+			if(wbtitle){
+				console.log(input);
+				input.value = wbtitle;
+			} else if (wbstartdate && wbenddate && !input.classList.contains('wbinputMy')){
+				infoBar(input, `${item.mnick} : ${item.wbstartdate.split(" ")[0]} ~ ${item.wbenddate.split(" ")[0]}`);
+			}
+			return;
+		}
+	});
+	
+	
+}
+
+function schedulItemLoad(item, area, all, write){
+	
+	let color, fontColor;
+	let target;
+	let img;
+	
+	dashboardInfo.dashmember.forEach(member=>{
+		
+		if(member.mid === item.mid){
+			color = `box-shadow: 0 0 0 1000px ${member.dmcolor} inset, 0 0 4px #989898`;
+			fontColor = `-webkit-text-fill-color :${fontColorCheck(member.dmcolor)}dd`;
+			img = `<img src="${member.mimgpath}" onerror="this.src='https://img.icons8.com/ultraviolet/100/000000/user.png';"/>`
+			return;
+		}
+		
+	});
+	
+	
+	
+	if(!all){
+		target = $(`<span style="position: relative;"><input class="wbinputMy" style="${color}; ${fontColor};" draggable="true" data-wbtodono="${item.wbtodono}"  type="text" value="${item.wbtitle}" readonly ondragstart="drag(event)"/>${img}</span>`);
+	} else {
+		target = $(`<span style="position: relative;"><input class="wbinput" style="${color}; ${fontColor};" data-wbtodono="${item.wbtodono}"  type="text" readonly value="${item.wbtitle}"/>${img}</span>`);
+	}
+	
+	
+	target.on('click',()=>{
+		selectbtn($(target).find('input').data('wbtodono'));
+	});
+	
+	
+	if(!write){
+		$(area).append(target);
+	} else {
+		const firstInput = area.querySelector('input[type=text]');
+		if(firstInput){
+			$(firstInput).before(target);
+		} else {
+			$(area).append(target);
+		}
+	}
+	
+	const obj = $(target).get(0);
+	if(all){
+		infoBar(obj, `${item.mnick} : ${item.wbstartdate.split(" ")[0]} ~ ${item.wbenddate.split(" ")[0]}`);
+	}
+	
+}
+
+
 //글목록 게시판 
 function wblist(widget) {
 	
-
 	const wno = widget.info.wno;
 	
-	widget.websocket.planClient = client.subscribe('/sub/wplan/'+wno,(res)=>{
-		const item = JSON.parse(res.body);
-		console.log(item);
-		const wtasklistAll = widget.querySelector('#wtasklistAll');
-		schedulItemLoad(item, wtasklistAll, true, true);
-	});
-	
+	if(!widget.info.preview){
+		
+		widget.websocket.wbDeleteClient = client.subscribe('/sub/wbdelete/'+wno,(res)=>{
+			
+			const item = JSON.parse(res.body);
+			
+			const areas = [];
+			
+			const wtasklistAll = widget.querySelector('#wtasklistAll');
+			
+			areas.push(wtasklistAll);
+			
+			if(userInfo.mnick === item.mnick){
+
+				const wtasklistMy = widget.querySelector('#wtasklistMy');
+				areas.push(wtasklistMy);
+
+				const wtasklistDo = widget.querySelector('#wtasklistDo');
+				areas.push(wtasklistDo);
+
+				const wtasklistDone = widget.querySelector('#wtasklistDone');
+				areas.push(wtasklistDone);
+
+				const wbinnerBox = document.querySelector('.wbinnerBox');
+				areas.push(wbinnerBox);
+
+			}
+			
+			planDelete(item, areas);
+			
+		});
+		
+		widget.websocket.planClient = client.subscribe('/sub/wplan/'+wno,(res)=>{
+			const item = JSON.parse(res.body);
+			const wtasklistAll = widget.querySelector('#wtasklistAll');
+			schedulItemLoad(item, wtasklistAll, true, true);
+		});
+
+
+		widget.websocket.wbTitleClient = client.subscribe('/sub/wbtitleup/'+wno,(res)=>{
+
+			const item = JSON.parse(res.body);
+
+			const wtasklistAll = widget.querySelector('#wtasklistAll');
+			planUpdate(item, wtasklistAll);
+			if(userInfo.mnick === item.mnick){
+
+				const wtasklistMy = widget.querySelector('#wtasklistMy');
+				planUpdate(item, wtasklistMy);
+
+				const wtasklistDo = widget.querySelector('#wtasklistDo');
+				planUpdate(item, wtasklistDo);
+
+				const wtasklistDone = widget.querySelector('#wtasklistDone');
+				planUpdate(item, wtasklistDone);
+
+				const wbinnerBox = document.querySelector('.wbinnerBox');
+				planUpdate(item, wbinnerBox);
+
+			}
+			
+			if(wbinnerBox){
+				console.dir(wbinnerBox);
+				if(Number(wbinnerBox.wbtodono) === item.wbtodono){
+
+					const wbtitle = wbinnerBox.querySelector('.wbtitle');
+					console.log(wbtitle);
+					wbtitle.innerHTML = item.wbtitle;
+				}
+			}
+		});
+
+		widget.websocket.wbDateClient = client.subscribe('/sub/wbdateup/'+wno,(res)=>{
+
+			const item = JSON.parse(res.body);
+
+			const wtasklistAll = widget.querySelector('#wtasklistAll');
+			planUpdate(item, wtasklistAll);
+			
+			if(userInfo.mnick === item.mnick){
+				
+				const wtasklistMy = widget.querySelector('#wtasklistMy');
+				planUpdate(item, wtasklistMy);
+
+				const wtasklistDo = widget.querySelector('#wtasklistDo');
+				planUpdate(item, wtasklistDo);
+
+				const wtasklistDone = widget.querySelector('#wtasklistDone');
+				planUpdate(item, wtasklistDone);
+
+				const wbinnerBox = document.querySelector('.wbinnerBox');
+				planUpdate(item, wbinnerBox);
+				
+			}
+			
+			const wbinnerBox = document.querySelector('.wbinnerBox');
+
+			if(wbinnerBox){
+
+				if(Number(wbinnerBox.wbtodono) === item.wbtodono){
+
+					const wbstartdate = wbinnerBox.querySelector('span.wbstartdate');
+					const wbenddate = wbinnerBox.querySelector('span.wbenddate');
+
+					wbstartdate.innerHTML = item.wbstartdate.split(" ")[0];
+					wbenddate.innerHTML = item.wbenddate.split(" ")[0];
+
+				}
+			}
+		});
+
+		widget.websocket.wbContentClient = client.subscribe('/sub/wbcontentup/'+wno,(res)=>{
+
+			const wbinnerBox = document.querySelector('.wbinnerBox');
+
+			if(wbinnerBox){
+				const item = JSON.parse(res.body);
+				const wbcontentDiv = wbinnerBox.querySelector('.wbcontentDiv');
+
+				if(Number(wbinnerBox.wbtodono) === item.wbtodono){
+					wbcontentDiv.innerHTML = item.wbcontent;
+					wbcontentDiv.addEventListener('click',modifyEvent);
+				}
+			}
+
+		});
+	}
 	const wboardcon = addObject(null, 'div', 'wboardcon',false,(o)=>{
 		
 		o.innerHTML = `
@@ -115,7 +377,7 @@ function wblist(widget) {
 		
 		const wbtadd = o.querySelector('.wbtadd');
 		
-		schedulInsert(wbtadd, widget);
+		
 		
 		$(o).on('click',(e)=>{
 			widget.style.cursor = 'default';
@@ -123,7 +385,7 @@ function wblist(widget) {
 		
 		if(!widget.info.preview){
 		
-			
+			schedulInsert(wbtadd, widget);
 			$(function() {
 
 				//프로그램 전체 일정 
@@ -260,8 +522,8 @@ function schedulInsert(item, widget){
 			    		};
 		    	  
 		    	  //플랫피커 호출 
-		    	  let cal1 =	$(o).find("#wbstartdate1").flatpickr(calConfig);
-		    	  let cal2 =	$(o).find("#wbenddate1").flatpickr(calConfig);
+		    	  let cal1 = $(o).find("#wbstartdate1").flatpickr(calConfig);
+		    	  let cal2 = $(o).find("#wbenddate1").flatpickr(calConfig);
 		    	  
 		    	  
 		    	});
@@ -299,6 +561,11 @@ function schedulInsert(item, widget){
     				wbtodo = null;
     			} else if(dateNum2 < nowDate){
     				wbtodo = 'Y';
+    			}
+    			
+    			if(!wbtitle || !wbstartdate || !wbenddate || !wbcontent){
+    				boxFun('정보가 누락되었습니다.', false, false, false, 'fail', false, true);
+    				return;
     			}
     			
     			$.ajax({
@@ -354,38 +621,65 @@ function schedulInsert(item, widget){
 	});
 }
 
-function schedulItemLoad(item, area, all, write){
+
+function modifyEvent(e){
 	
-	let target;
+	e.preventDefault();
+	e.stopPropagation();
 	
-	if(!all){
-		target = $('<input class="wbinputMy" draggable="true" data-wbtodono="'+item.wbtodono+'"  type="text" readonly  ondragstart="drag(event)">');
-	} else {
-		target = $('<input class="wbinput" data-wbtodono="'+ item.wbtodono + '"  type="text" readonly>');
-	}
+	const wbcontentDiv = e.currentTarget;
+	const wbinnerBox = wbcontentDiv.parentNode.parentNode;
+	const wbtodono = wbinnerBox.wbtodono
+	const wno = wbinnerBox.wno;
+	const wbcontent = wbcontentDiv.parentNode.parentNode.wbcontent;
 	
-	target.val(item.wbtitle);
+	wbcontentDiv.removeEventListener('click',modifyEvent);
 	
-	target.on('click',()=>{
-		selectbtn(target.data('wbtodono'));
+	wbcontentDiv.innerHTML = `
+		<textarea id="summernote" name="wbcontent"></textarea>
+		<div style="text-align:center;">
+			<input type="button" style="display:inline-block; width:49%;" class="grayBtn" value="본문 수정"/>
+			<input type="button" style="display:inline-block; width:49%;" class="grayBtn" value="수정 취소"/>
+		</div>
+	`;
+	
+	const btns = wbcontentDiv.querySelectorAll('input[type=button]');
+	
+	
+	btns[0].addEventListener('click', (e)=>{
+		const wbcontent = $('#summernote').val();
+		xhrLoad('post', 'conupdate', { wno, wbtodono, wbcontent }, (res)=>{
+			
+			const obj = JSON.parse(res);
+			
+			$('#summernote').summernote('destroy');
+			
+			wbcontentDiv.parentNode.parentNode.wbcontent = obj.wbcontent;
+			client.send('/pub/wbcontentup',{},res);
+		
+		});
 	});
 	
-	if(!write){
-		$(area).append(target);
-	} else {
-		const firstInput = area.querySelector('input[type=text]');
-		if(firstInput){
-			$(firstInput).before(target);
-		} else {
-			$(area).append(target);
-		}
-	}
+	btns[1].addEventListener('click', (e)=>{
+		
+		e.preventDefault();
+		e.stopPropagation();
+		
+		$('#summernote').summernote('destroy');
+		wbcontentDiv.innerHTML = wbcontentDiv.parentNode.parentNode.wbcontent;
+		wbcontentDiv.addEventListener('click',event);
+		
+	});
+	
+	$('#summernote').summernote(summernoteConfig);
+	
+	$('#summernote').summernote('code',wbcontent);
 }
-
-
 
 // 글 선택시 생성되는 박스
 function selectbtn(selectno){
+	
+	console.log(selectno);
 	
 	let wbinnerBox = document.querySelector('.wbinnerBox');
 	
@@ -394,9 +688,8 @@ function selectbtn(selectno){
 	writeContent = addObject(null, 'div', 'writeContent', false, (o)=>{
 		
 		$.ajax({
-			url : 'wSelectOne',
-			method : 'post',
-			data : { selectno },
+			url : `wSelectOne?wbtodono=${selectno}`,
+			method : 'get',
 			success : (data)=>{
 				
 				let modifyBtn = ``;
@@ -422,10 +715,17 @@ function selectbtn(selectno){
 					<div class="wbcontentDiv">${data.wbcontent !== null? data.wbcontent : ''}</div>
 					`;
 				
-				const modifyBtns = o.querySelectorAll('.modifyBtn');
 				
-				if(modifyBtns){
+				const modifyBtns = o.querySelectorAll('.modifyBtn');
+				const wbcontentDiv = o.querySelector('.wbcontentDiv');
+				o.parentNode.wno = data.wno;
+				o.parentNode.wbtodono = selectno;
+				o.parentNode.wbcontent = data.wbcontent;
+				o.parentNode.mnick = data.mnick;
+				
+				if(modifyBtns.length !== 0){
 					modifyBtns.forEach((btn,i)=>{
+						infoBar(btn, '수정하기');
 						if(i===0){
 							btn.addEventListener('click', (e)=>{
 								
@@ -451,9 +751,15 @@ function selectbtn(selectno){
 								modifyTarget.innerHTML = modifyInput;
 								modifyTarget.querySelector('input[type=button]').addEventListener('click',(e)=>{
 									const wbtitle = modifyTarget.querySelector('input[type=text]').value;
-									xhrLoad('post','titleupdate', { wbtodono : selectno, wbtitle }, (res)=>{
+									
+									if(!wbtitle){
+						    			boxFun('정보가 누락되었습니다.', false, false, false, 'fail', false, true);
+						    			return;
+									}
+									
+									xhrLoad('post','titleupdate', { wno : o.parentNode.wno, mnick : o.parentNode.mnick, wbtodono : selectno, wbtitle }, (res)=>{
 			    		    			if(res){
-					    		    		modifyTarget.innerHTML = wbtitle;
+			    		    				client.send('/pub/wbtitleup',{},res);
 			    		    			}
 			    		    		});
 								});
@@ -467,10 +773,14 @@ function selectbtn(selectno){
 						    		    	
 						    		    	const p = instance.input.parentNode;
 						    		    	
-						    		    	console.log(p);
 						    		    	
 						    		    	var wbstartdate = p.querySelector('.wbstartdate');
 							    			var wbenddate = p.querySelector('.wbenddate');
+							    			
+							    			if(!wbstartdate || !wbenddate){
+								    			boxFun('정보가 누락되었습니다.', false, false, false, 'fail', false, true);
+								    			return;
+											}
 							    			
 							    			
 						    		    	if(selectedDates.length === 2){
@@ -480,11 +790,10 @@ function selectbtn(selectno){
 						    		    		const startDate = dateArray[0].trim();
 						    		    		const endDate = dateArray[1].trim();
 						    		    		
-						    		    		xhrLoad('post','dateupdate', { wbtodono : selectno, wbstartdate : startDate, wbenddate : endDate }, (res)=>{
+						    		    		xhrLoad('post','dateupdate', { wno : o.parentNode.wno, mnick : o.parentNode.mnick, wbtodono : selectno, wbstartdate : startDate, wbenddate : endDate }, (res)=>{
 						    		    			
 						    		    			if(res){
-						    		    				wbstartdate.innerHTML = startDate;
-								    		    		wbenddate.innerHTML = endDate;
+						    		    				client.send('/pub/wbdateup',{},res);
 						    		    			}
 						    		    		});
 						    		    		
@@ -497,64 +806,8 @@ function selectbtn(selectno){
 						}
 						
 					});
-					
-					if(modifyBtns){
-						const wbcontentDiv = o.querySelector('.wbcontentDiv');
 						
-						function event(e){
-							
-							e.preventDefault();
-							e.stopPropagation();
-							
-							const wbcontentDiv = e.currentTarget;
-							const wno = wbcontentDiv.wno;
-							const wbcontent = wbcontentDiv.wbcontent;
-							
-							wbcontentDiv.removeEventListener('click',event);
-							
-							wbcontentDiv.innerHTML = `
-								<textarea id="summernote" name="wbcontent"></textarea>
-								<div style="text-align:center;">
-									<input type="button" style="display:inline-block; width:49%;" class="grayBtn" value="수정"/>
-									<input type="button" style="display:inline-block; width:49%;" class="grayBtn" value="수정 취소"/>
-								</div>
-							`;
-							
-							const btns = wbcontentDiv.querySelectorAll('input[type=button]');
-							
-							
-							btns[0].addEventListener('click', (e)=>{
-								const wbcontent = $('#summernote').val();
-								xhrLoad('post', 'conupdate', { wbtodono : selectno, wbcontent }, (res)=>{
-									
-									const obj = JSON.parse(res);
-									
-									$('#summernote').summernote('destroy');
-									
-									wbcontentDiv.innerHTML = obj.wbcontent;
-									wbcontentDiv.wbcontent = obj.wbcontent;
-									wbcontentDiv.addEventListener('click',event);
-								});
-							});
-							
-							btns[1].addEventListener('click', (e)=>{
-								
-								e.preventDefault();
-								e.stopPropagation();
-								
-								$('#summernote').summernote('destroy');
-								wbcontentDiv.innerHTML = wbcontentDiv.wbcontent;
-								wbcontentDiv.addEventListener('click',event);
-							});
-							
-							$('#summernote').summernote(summernoteConfig);
-							
-							$('#summernote').summernote('code',wbcontent);
-						}
-						wbcontentDiv.wno = selectno;
-						wbcontentDiv.wbcontent = data.wbcontent;
-						wbcontentDiv.addEventListener('click', event);
-					}
+					wbcontentDiv.addEventListener('click', modifyEvent);
 					
 				}
 				
@@ -567,202 +820,60 @@ function selectbtn(selectno){
 	
 
 	
-//	const modifyBtn = addObject(null, 'input', 'grayBtn', false, (o)=>{
-//		o.type='button';
-//		o.value='수정';
-//		o.style.width='max-content';
-//		o.style.marginRight='5px';
-//		o.addEventListener('click', (e)=>{
-//			
-//			const writeContent = o.parentNode.querySelector('.writeContent');
-//			
-//			$(writeContent).find('.wpic').fadeOut(400);
-//			$(writeContent).find('.wtitle').fadeOut(400);
-//			$(writeContent).find('.wdate').fadeOut(400);
-//			$(writeContent).find('.wcontent').fadeOut(400);
-//			$(writeContent).find('.winsertbtn').fadeOut(400);
-//			$(writeContent).find('.wbinnerBox p').html('일정 수정');
-//			
-//			const wucontents = addObject(writeContent,'div','wucontents',true,(o)=>{
-//				
-//				o.innerHTML =`
-//				
-//				<p><span>제목</span><input id="wutitle" class="wutxt" type="text" placeholder="제목" name="wbtitle"/></p>
-//				<p><span>날짜</span>
-//				<input id="wbstartdate" class="wutxt" type="text" placeholder="날짜" name="wbstartdate"/>
-//				<input id="wbenddate" class="wutxt" type="text" placeholder="날짜" name="wbenddate"/><p>
-//				<div id="summernotediv"><textarea id="summernote" name="wbcontent"></textarea></div>
-//				<p id="wbhibtn">
-//				<input type="hidden" name="wbtodono" id="wbtodono">
-//				<input type="button" value="취소" id="wbcancle">
-//				<input type="button" value="수정완료" id="wbupdateres"></p>
-//				`;
-//				
-//
-//				$.ajax({
-//					url: 'summerupdate',
-//					// accept : 'application/json',
-//					method: 'post',
-//					// contentType : 'application/json; charset=utf-8;',
-//					// async: false,
-//					data: {"selectno":selectno},
-//					success: function(res){
-//						console.log(res);
-//						// alert(res);
-//						var id = res.mid;
-//						var title = res.wbtitle;
-//						var startdate = res.wbstartdate ;
-//						var enddate =  res.wbenddate;
-//						var content = res.wbcontent; 
-//						console.log(id+" " +title+" " +" " +content);
-//						$(".wutxt").eq(0).val(id);
-//						$(".wutxt").eq(1).val(title);
-//						$(".wutxt").eq(2).val(startdate);
-//						$(".wutxt").eq(3).val(enddate);
-//						$('#summernote').summernote('code',content);
-//						//질문 수정시 섬머노트에 글 불러오기시 p테그 남아있음 
-//
-//					},
-//					error: function(res){
-//						alert("다시 선택해주세요!");
-//						
-//					}
-//				});
-//				
-//				
-//				$(function() {
-//					   $("#wbstartdate").flatpickr({
-//						    enableTime: false,
-//						    dateFormat: "Y-m-d"
-//						});
-//					   $("#wbenddate").flatpickr({
-//						    enableTime: false,
-//						    dateFormat: "Y-m-d"
-//						});
-//					
-//				});
-//				
-//			    $(document).ready(function() {
-//			    	  $('#summernote').summernote({
-//			     	    	placeholder: '내용을 입력하세요',
-//			    	        minHeight: 220,
-//			    	        maxHeight: null,
-//			    	        focus: true, 
-//			    	  });
-//					
-//			    	  
-//			    	});
-//				document.querySelector('#wbupdateres').addEventListener('click',(e)=>{
-//					
-//					document.querySelector('#wbtodono').value=selectno;
-//						
-//						var wbtodono = $('#wbtodono').val().trim();
-//						var mid = $('#wupic').val();
-//						var wbtitle = $('#wutitle').val();
-//						var wbstartdate =$('#wbstartdate').val();
-//						var wbenddate =$('#wbenddate').val();
-//						var wbcontent =$('#summernote').val();
-//
-//						
-//						var val = {
-//								"wbtodono":selectno,
-//								"mid":mid,
-//								"wbtitle":wbtitle,
-//								"wbstartdate":wbstartdate,
-//								"wbenddate":wbenddate,
-//								"wbcontent":wbcontent
-//							}
-//					
-//					$.ajax({
-//						
-//						type:'post',
-//						
-//						url:'summerUpdateres',
-//						
-//						//contentType : 'application/json',
-//						data:val,
-//						
-//						dataType:'text',
-//						
-//						success: function(res){
-//							
-//							if(res === 'true'){
-//								alert("수정내용 저장성공하였습니다.");
-//								$('.wbinnerBox').remove();
-//								reloadList();
-//								
-//							}else{
-//								alert("수정실패하였습니다");
-//							}
-//						},
-//						error: function(res){
-//							alert("실패");
-//							
-//						}
-//						
-//					});
-//					
-//
-//					
-//				});
-//				
-//			});
-//
-//		});
-//		
-//	});
-	
-	
 		// 2번째,배경 투명 = false, 검정 = true/ true 4번째 취소버튼 없애기
-	const box = boxFun('일정', false, [ writeContent ],false,'wbinnerBox',null,true);
-	
-	
-	
-	
-	const winsertbtn = addObject(writeContent,'p','winsertbtn',true,(o)=>{
-		o.innerHTML = `
-		<input type="button" value="삭제" id="wbdelete">
-		<input type="button" value="수정" id="wbupdate" >
-		`;
+	const box = boxFun('<span>일정</span><span><img src="https://img.icons8.com/wired/64/000000/delete-forever.png"/></span>', false, [ writeContent ],false,'wbinnerBox',(o)=>{
+		const firstP = o.querySelector('p');
+		firstP.querySelector('span').setAttribute('style','vertical-align: middle;');
+		const deleteBtn = firstP.querySelector('img');
+		deleteBtn.setAttribute('style',`
+    height: 20px;
+    padding: 2.5px;
+    vertical-align: middle;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 0 8px;`);
+		infoBar(firstP,'삭제하기');
 		
-		document.querySelector('#wbdelete').addEventListener('click', (e)=>{
-
-			$.ajax({
-				
-				url: 'wDelete',
-				// accept : 'application/json',
-				method: 'post',  
-				// contentType : 'application/json; charset=utf-8;',
-				// async: false,
-				data: {"selectno":selectno},
-				
-				success: function(res){
+		deleteBtn.addEventListener('click',(e)=>{
+			
+			const wbinnerbox = e.target.parentNode.parentNode.parentNode;
+			
+			const submit = addObject(null, 'input', 'grayBtn', false, (o)=>{
+				o.type = 'button';
+				o.value = '삭제';
+				o.style.width = 'max-content';
+				o.style.marginRight = '5px';
+				o.addEventListener('click',(e)=>{
 					
-					console.log(res);
-					if(true){
-						alert("삭제되었습니다.");	
-						 $('.wbinnerBox').remove();
-						reloadList();
+					xhrLoad('get', 'wbdelete', { wno : wbinnerbox.wno, mnick : wbinnerbox.mnick, wbtodono : wbinnerbox.wbtodono }, (res)=>{
 						
-					}else if(false){
-						alert("삭제 실패 ");
-					}
+						if(res){
+							client.send('/pub/wbdelete', {}, res);
+							motionOnOff(e.target.parentNode, 0.8, false, { setting : 'offDefault' }, null, o=>{
+								o.remove();
+							});
+							motionOnOff(wbinnerbox, 0.8, false, { setting : 'offDefault' }, null, o=>{
+								o.remove();
+							});
+							
+						}
+						
+					});
 					
-				
-				},
-				error: function(res){
-					alert("실패");
-					
-				}
+				});
 			});
-		
+			
+			boxFun('해당 일정을 삭제하시겠습니다.', false, [submit], false, 'deleteCheck', false, true).closeDisabledDelete(e.target);
+			
 		});
+		
+	},true);
 	
-	});
+	
+	
+	
+
 }
-
-
-
 
 
 //달력 자르기 기능 
@@ -790,97 +901,6 @@ function confirmbtn(that){
 	
 
 }	
-	
-//리스트 불러오기 
 
-//function reloadList(widget){
-//    
-//	var mid = document.querySelector('#mid').value; 
-//	var wno = document.querySelector('#wno').value;
-//	
-//	$('.wbinput').remove();
-//	$('.wbinputMy').remove();
-//	
-//	//프로그램 전체 일정 
-//	$.ajax({
-//		url:'wbAllList',
-//		method:'post',
-//		data:{
-//			"wno":wno},
-//		success: function(data) {
-//			
-//			data.forEach(function(item){
-//				var mid = item.mid;
-//				var wbtodono = item.wbtodono; 
-//				var wbcontent = item.wbcontent; 
-//				var wbtitle = item.wbtitle; 
-//				
-//				 $('<input class="wbinput" data-wbtodono="'+wbtodono+'"  type="text" readonly>').val(mid+':'+wbtitle).appendTo('#wtasklistAll');
-//
-//			});
-//			
-//			 
-//			 $('.wbinput').on('click',function(){
-//				 
-//				 var index = $(".wbinput").index(this);
-//				 var selectno =$(".wbinput:eq(" + index + ")").data('wbtodono');
-//				
-//				 console.log(selectno);
-//				 selectbtn(selectno);
-//			 }); 
-//
-//			
-//
-//			//append와 appendTo 붙이는 방식 다르다 
-//			//$('.wtasklist').append('<input type="text" value="쨘">');
-//           //$('<input type="text" value="어라" readonly>').appendTo('.wtasklist');
-//        
-//
-//				
-//		},error: function(data) {
-//			alert("통신실패");
-//		}
-//	
-//	});
-//	
-//	//나의 일정 
-//	$.ajax({
-//		url:'wbMyList',
-//		method:'post',
-//		data:{
-//			"wno":wno
-//		},
-//		success:function(data){
-//			
-//			data.forEach(function(item){
-//				var mid = item.mid;
-//				var wbtodono = item.wbtodono; 
-//				var wbcontent = item.wbcontent; 
-//				var wbtitle = item.wbtitle; 
-//				
-//				 $('<input class="wbinputMy" data-wbtodono="'+wbtodono+'"  type="text" readonly>').val(mid+':'+wbtitle).appendTo('#wtasklistMy');
-//
-//			});
-//			
-//			 
-//			 $('.wbinputMy').on('click',function(){
-//				 
-//				 var index = $(".wbinputMy").index(this);
-//				 var selectno =$(".wbinputMy:eq(" + index + ")").data('wbtodono');
-//				
-//				 selectbtn(selectno);
-//			 }); 
-//			
-//			
-//		},error:function(data){
-//			alert("통신실패");
-//			wbnewtask();
-//		}
-//		
-//	});
-//	
-//}
-	
-	
 	
 	

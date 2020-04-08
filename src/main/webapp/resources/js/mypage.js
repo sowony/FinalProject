@@ -60,7 +60,7 @@ function dashItemCreate(dashItem,loc){
 				<p class="d_title"><span>${dashItem.dtitle}</span></p>
 				<p class="d_date"><span>${new Intl.DateTimeFormat('ko-KR').format(new Date(dashItem.dcreatedate))}</span></p>
 				<p class="d_nick">
-				<span style="background-image:url('${dashItem.mimgpath}');"></span><span>
+				<span><img src="${dashItem.mimgpath}" onerror="this.src='https://img.icons8.com/ultraviolet/80/000000/user.png';"/></span><span>
 				`+
 				((state === 'owner')? `본인 소유` : `${dashItem.mnick}`)
 				+`
@@ -79,26 +79,24 @@ function dashItemCreate(dashItem,loc){
 
 			});
 
-			contextMenuFun(o,{
-				'newDash' : {
-					'대시보드 추가' : ()=>{ addDashBoardFun(); }
-				},
-				'dashMenu' :{
-					'대시보드 자세히 보기' : ()=>{alert('자세히보기 함수');},
-					'대시보드 수정' : ()=>{ alert('수정 함수'); },
-					'대시보드 삭제' : ()=>{ dashboardDelete(o.dataset.dno); }
-				},
-				'messageMenu' : {
-					'쪽지함 보기' : ()=>{alert('쪽지함 함수');},
-					'쪽지 작성' : ()=>{alert('쪽지 작성 함수');}
-				},
-				'alramMenu' : {
-					'알람 보기' : ()=>{alert('알람 함수');}
-				},
-				'logout' : {
-					'로그아웃' : ()=>{ logout(); }
-				}
-			});
+			const menuList = {
+					'newDash' : {
+						'대시보드 추가' : ()=>{ addDashBoardFun(); }
+					},
+					'dashMenu' :{
+						'대시보드 자세히 보기' : ()=>{alert('자세히보기 함수');}
+					},
+					'logout' : {
+						'로그아웃' : ()=>{ logout(); }
+					}
+			}
+			
+			if(state === 'owner'){
+				menuList.dashMenu['대시보드 수정'] = ()=>{ alert('수정 함수 개발중...'); }
+				menuList.dashMenu['대시보드 삭제'] = ()=>{ dashboardDelete(o.dataset.dno); };
+			}
+			
+			contextMenuFun(o,menuList);
 
 			if(!loc){
 
@@ -215,7 +213,7 @@ function addMemberBtnAdd(){
 						o.dataset.mid = selectTmpMember.mid;
 						o.dataset.mnick = selectTmpMember.mnick;
 					
-						o.innerHTML = `<img class="dashMemberImg" src="${selectTmpMember.mimgpath}"/><span>${selectTmpMember.mnick}</span><button class="dashMemberDelteBtn">X</button>`;
+						o.innerHTML = `<img class="dashMemberImg" src="${selectTmpMember.mimgpath}" onerror="this.src='https://img.icons8.com/ultraviolet/80/000000/user.png';"/><span>${selectTmpMember.mnick}</span><button class="dashMemberDelteBtn">X</button>`;
 					
 						const dashMemberDelteBtn = o.querySelector('.dashMemberDelteBtn');
 					
@@ -830,7 +828,7 @@ window.onload = ()=>{
 				`;
 
 			const myImgBox = addObject(o, 'div', 'myImgBox', true, (o)=>{
-				o.style.backgroundImage = `url('${userInfo.mimgpath}')`;
+				o.innerHTML = `<img src="${userInfo.mimgpath}"  onerror="this.src='https://img.icons8.com/ultraviolet/100/000000/user.png';"/>`;
 			});
 
 			const mabout = document.querySelector('#p_mabout');
@@ -918,13 +916,6 @@ window.onload = ()=>{
 				'대시보드 추가' : (e)=>{
 					addDashBoardFun();
 				}
-			},
-			'messageMenu' : {
-				'쪽지함 보기' : ()=>{alert('쪽지함 함수');},
-				'쪽지 작성' : ()=>{alert('쪽지 작성 함수');}
-			},
-			'alramMenu' : {
-				'알람 보기' : ()=>{alert('알람 함수');}
 			},
 			'logout' : {
 				'로그아웃' : ()=>{ logout(); }
