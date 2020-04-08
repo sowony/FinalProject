@@ -189,9 +189,9 @@ function schedulItemLoad(item, area, all, write){
 	
 	
 	if(!all){
-		target = $(`<span style="position: relative;"><input class="wbinputMy" style="${color}; ${fontColor};" draggable="true" data-wbtodono="${item.wbtodono}"  type="text" value="${item.wbtitle}" readonly ondragstart="drag(event)"/>${img}</span>`);
+		target = $(`<span style="position: relative;display: block;"><input class="wbinputMy" style="${color}; ${fontColor};" draggable="true" data-wbtodono="${item.wbtodono}"  type="text" value="${item.wbtitle}" readonly ondragstart="drag(event)"/>${img}</span>`);
 	} else {
-		target = $(`<span style="position: relative;"><input class="wbinput" style="${color}; ${fontColor};" data-wbtodono="${item.wbtodono}"  type="text" readonly value="${item.wbtitle}"/>${img}</span>`);
+		target = $(`<span style="position: relative;display: block;"><input class="wbinput" style="${color}; ${fontColor};" data-wbtodono="${item.wbtodono}"  type="text" readonly value="${item.wbtitle}"/>${img}</span>`);
 	}
 	
 	

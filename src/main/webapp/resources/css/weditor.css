@@ -9,17 +9,17 @@ html,body { margin:0; padding:0; height:100%; width:100%; overflow: hidden;}
 }
 
 .container {
-	height:100%;
+	height:90%;
 	width:auto;
   white-space : nowrap; 
   overflow : hidden;
   position:relative;
 }
 
-#run{
-	position: absolute;
+#run {
+    display: block;
+    width: 100%;
 }
-
 #iframe {
 	height:100%;
 	display:inline-block;

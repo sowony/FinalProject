@@ -349,6 +349,7 @@ function widgetAddAndModify(){
 						<option name="CHAT" value="CHAT">채팅</option>
 						<option name="SNS" value="SNS">SNS</option>
 						<option name="PLAN" value="PLAN">계획</option>
+						<option name="CODE" value="CODE">코드 에디터</option>
 					</select>
 				</div>
 				`) +`

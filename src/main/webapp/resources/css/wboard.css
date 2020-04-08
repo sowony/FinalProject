@@ -35,11 +35,12 @@ input.wbinput, input.wbinputMy {
     background-color: #fff;
     border-radius: 50%;
     position: absolute;
-    right: 5px;
     display: inline-block;
-    width: 22px;
+    width: 10%;
     box-shadow: 0 0 1px 1px #5656569e;
-    margin: 12px;
+    top: 50%;
+    right: 8%;
+    transform: translateY(-50%);
 }
 
 .wboardcon input[type="text"],

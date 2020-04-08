@@ -28,6 +28,8 @@
 <script type="text/javascript" src="/dashboard/resources/js/xhr.js"></script>
 <script type="text/javascript" src="/dashboard/resources/js/util.js"></script>
 
+<!-- editor -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js"></script>
 
 <!-- 페이지 js, css -->
 <link rel="stylesheet" href="/dashboard/resources/css/header.css" type="text/css">
@@ -45,13 +47,14 @@
 <!-- 디폴트가 씹혀버림 -->
 <link rel="stylesheet" href="./resources/css/wbcal.css" type="text/css" />
 <link rel="stylesheet" href="./resources/css/wboard.css" type="text/css" />
+<link rel="stylesheet" href="./resources/css/weditor.css" type="text/css">
 
 <script type="text/javascript" src="./resources/js/wboard.js"></script>
 <script type="text/javascript" src="./resources/js/wbcal.js"></script>
 
 <script type="text/javascript" src="/dashboard/resources/js/widgetaddandmodify.js"></script>
 <script type="text/javascript" src="/dashboard/resources/js/widgetload.js"></script>
-
+<script type="text/javascript" src="/dashboard/resources/js/weditor.js" charset="utf-8"></script>
 
 
 </head>

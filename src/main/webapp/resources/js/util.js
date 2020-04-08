@@ -872,11 +872,6 @@ function widgetFun(setting){
 		widget['websocket'] = {
 				upClient, delClient, moveClient, scaleClient,
 				close : ()=>{
-//					widget.websocket.upClient.unsubscribe();
-//					widget.websocket.delClient.unsubscribe();
-//					widget.websocket.moveClient.unsubscribe();
-//					widget.websocket.scaleClient.unsubscribe();
-//					widget.websocket[widget.info.wcategory.toLowerCase() + 'Client'].unsubscribe();
 					const clientKeys = Object.keys(widget.websocket);
 					for(k of clientKeys){
 						if(k !== 'close'){
@@ -1020,6 +1015,8 @@ function widgetFun(setting){
 			wcralingBox(widget);
 		} else if(wcategory === 'plan'){
 			wblist(widget);
+		} else if(wcategory === 'code'){
+			editorStart(widget);
 		}
 		
 		

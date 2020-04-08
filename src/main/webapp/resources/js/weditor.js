@@ -1,56 +1,49 @@
 
-window.onload = widget;
 
 
-const body  = document.querySelector('body');
-function widget(){
+function editorStart(widget){
 	
-	addObject(body, 'button', 'wno', true, (o)=>{
-		o.innerHTML = 'WNO';
-		o.addEventListener('click', (o)=>{
-			start();
-		});
-	});
-}
-
-
-
-function start(){
+	const widgetContent = widget.querySelector('.widgetContent');
 	
 	//코드 작성 div
-	const container = addObject(body, 'div', 'container', true, (o)=>{
-		
-//		const div = document.querySelector('.container');
-//		addObject(div, 'div', 'editor', true, null);
-//		addObject(div, 'iframe', 'iframe', true, null);
+	const container = addObject(widgetContent, 'div', 'container', true, (o)=>{
 		o.innerHTML = `<div id='editor'></div>
-		<button id='run'>RUN</button>
 		<iframe id='iframe' frameBorder="1"></iframe>`
-		
 	});
 	
-	editorSetup();
+	const runBtn = addObject(null, 'button', 'grayBtn', false, (o)=>{
+		o.id = 'run';
+		o.innerHTML = '코드 실행';
+	});
+	
+	widgetContent.insertBefore(runBtn,container);
+	
+	editorSetup(widget);
+
 }
 
 
-function update()
-{
-	var idoc = document.getElementById('iframe').contentWindow.document;
+function editorUpdate(widget){
+	
+	var idoc = widget.querySelector('#iframe').contentWindow.document;
 
 	idoc.open();
-	idoc.write(editor.getValue());
+	idoc.write(widget.editor.getValue());
 	idoc.close();
+
 }
 
-function editorSetup()
-{
-  window.editor = ace.edit("editor", {
-	  mode: "ace/mode/javascript",
-	  selectionStyle: "text"
-  });
-  editor.setTheme("ace/theme/monokai");
-  editor.getSession().setMode("ace/mode/html");
-  editor.setValue(`<!DOCTYPE html>
+function editorSetup(widget){
+	
+	widget.editor = ace.edit("editor", {
+		mode: "ace/mode/javascript",
+		selectionStyle: "text"
+	});
+	
+	widget.editor.setTheme("ace/theme/monokai");
+	widget.editor.getSession().setMode("ace/mode/html");
+	widget.editor.setValue(`
+<!DOCTYPE html>
 <html>
 <head>
 </head>
@@ -61,51 +54,21 @@ function editorSetup()
 </html>`,1); 
 
 
-	document.getElementById('run').addEventListener('click',(o)=>{
-//		let code = editor.getValue();
-//		
-//		console.log(code);
-//		//let num = 1;//wno
-//		let editorCode = {code};
-//
-//		$.ajax({
-//			url: 'insertEditor',
-//			accept: 'application/json',
-//			method: 'post',
-//			contentType: 'application/json; charset=utf-8;',
-//			async: false,
-//			data: JSON.stringify(editorCode),
-//			success: function(res){
-//				if(res){
-//					boxFun(' success', true, null, false, 'updateSuc', (o)=>{
-//						update();
-//					},true);
-//				} else{
-//					boxFun(' fail', true, null, false, 'updateFail', null, true);
-//				}
-//			},
-//			error: function(){
-//				boxFun(' error', true, null, false, 'updateError', null, true);
-//			}
-//		
-//		});
-		update();
+	widget.querySelector('#run').addEventListener('click',(o)=>{
+		editorUpdate(widget);
 	});
 
-  editor.focus();
-  editor.setOptions({
-    fontSize: "16pt",
-    showLineNumbers: true,
-    showGutter: true,
-    vScrollBarAlwaysVisible:true,
-    enableBasicAutocompletion: true, 
-    enableLiveAutocompletion: true
-  });
+	widget.editor.focus();
+	widget.editor.setOptions({
+		fontSize: "10pt",
+		showLineNumbers: true,
+		showGutter: true,
+		vScrollBarAlwaysVisible:true,
+		enableBasicAutocompletion: true, 
+		enableLiveAutocompletion: true
+	});
 
-  editor.setShowPrintMargin(false);
-  editor.setBehavioursEnabled(false);
+	widget.editor.setShowPrintMargin(false);
+	widget.editor.setBehavioursEnabled(false);
   
 }
-
-//setupEditor();
-//update();

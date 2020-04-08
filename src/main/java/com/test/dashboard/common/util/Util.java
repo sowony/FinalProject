@@ -133,6 +133,13 @@ public class Util {
 
 		String tmpName = userId + System.currentTimeMillis();
 
+		String pathCheck = savePath + "/resources/images/userimage/tmp";
+		
+		File dir = new File(pathCheck);
+		if(!dir.exists()) {
+			dir.mkdirs();
+		}
+		
 		String filePath = savePath + "/resources/images/userimage/tmp/" + tmpName + "."+ext;
 
 		File target = new File(filePath);

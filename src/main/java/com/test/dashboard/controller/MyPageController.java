@@ -90,6 +90,8 @@ public class MyPageController {
 		
 		int res = dashBoardBiz.insert(dashBoardDto);
 		
+		logger.info("[ INFO ] dashboardcreateres :" + res);
+		
 		dashAddObjectDto.setDashBoardDto(dashBoardDto);
 		
 		int dno;
