@@ -12,6 +12,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import com.test.dashboard.model.biz.MemberBiz;
+import com.test.dashboard.model.dto.DashBoardDto;
 import com.test.dashboard.model.dto.DashMemberDto;
 import com.test.dashboard.model.dto.MsgDto;
 import com.test.dashboard.model.dto.WChatDto;
@@ -201,13 +202,13 @@ public class WebSocketController {
 	}
 	
 	@MessageMapping("/upDash")
-	public void dUpMessage(DashMemberDto dashMemberDto) {
+	public void dUpMessage(DashBoardDto dashBoardDto) {
 			
-		int mno = memberBiz.selectById(dashMemberDto.getMid()).getMno();
+		int mno = memberBiz.selectById(dashBoardDto.getMid()).getMno();
 			
 		logger.info("[ INFO ] : WebSocketController > dUpMessage [mno : " + mno + "]");
 			
-		template.convertAndSend("/sub/delDash/" + mno, dashMemberDto);
+		template.convertAndSend("/sub/upDash/" + mno, dashBoardDto);
 			
 		
 	}
