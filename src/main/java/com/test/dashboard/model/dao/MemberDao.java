@@ -36,11 +36,11 @@ public interface MemberDao {
 	public int selectByName(String mname);
 
 	// 아이디 찾기
-	@Select("select mid from member where mname = #{mname} and memail = #{memail} and mplatform is null")
+	@Select("select mid from member where mname = #{mname} and memail = #{memail} and mplatform = 'home'")
 	public MemberDto idSearchByName(MemberDto memberDto);
 
 	// 비밀번호 재설정 유효성
-	@Select("select mno from member where mid = #{mid} and memail = #{memail} and mphone = #{mphone} and mplatform is null")
+	@Select("select mno from member where mid = #{mid} and memail = #{memail} and mphone = #{mphone} and mplatform = 'home'")
 	public MemberDto pwSearchCheck(MemberDto memberDto);
 
 	// 비밀번호 아이디

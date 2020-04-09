@@ -51,11 +51,6 @@
 							<a href="javascript:idAndPwSearchOn();" id="idAndPwFind">아이디
 								/ 비밀번호 를 잊어버리셨나요?</a>
 						</p>
-						<!-- Jiae TEST -->
-						<div>
-							<p><a href="./pagechange">CrawlingTest</a></p>
-						</div>
-						<!-- Jiae TEST -->
 					</fieldset>
 				</div>
 				<div id="con_foot">

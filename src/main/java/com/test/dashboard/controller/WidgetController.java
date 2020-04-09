@@ -18,12 +18,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.test.dashboard.common.util.Util;
 import com.test.dashboard.model.biz.WChatBiz;
 import com.test.dashboard.model.biz.WEditorBiz;
 import com.test.dashboard.model.biz.WMemoBiz;
+import com.test.dashboard.model.biz.WRuleBiz;
 import com.test.dashboard.model.biz.WidgetBiz;
 import com.test.dashboard.model.dto.MemberDto;
 import com.test.dashboard.model.dto.WChatDto;
@@ -41,6 +43,9 @@ public class WidgetController {
 	
 	@Autowired
 	private WidgetBiz widgetBiz;
+	
+	@Autowired
+	private WRuleBiz wRuleBiz;
 	
 	@Autowired
 	private WMemoBiz wmemoBiz;
@@ -305,6 +310,21 @@ public class WidgetController {
 		
 		if(res > 0) {
 			return wEditorDto;
+		} else {
+			return null;
+		}
+	}
+	
+	@PostMapping("/wrule/modify")
+	public WRuleDto postRuleModify(@RequestBody WRuleDto wRuleDto) {
+		
+		logger.info("[ INFO ] : WidgetController > postRuleModify [WRuleDto : " + wRuleDto +"]");
+		
+		int res = wRuleBiz.update(wRuleDto);
+		
+		if(res > 0) {
+			logger.info("[ INFO ] : WidgetController > postRuleModify [success]");
+			return wRuleDto;
 		} else {
 			return null;
 		}

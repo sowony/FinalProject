@@ -89,7 +89,8 @@ function dashItemCreate(dashItem,loc){
 			}
 			
 			if(state === 'owner'){
-//				menuList.dashMenu['대시보드 수정'] = ()=>{ addAndModifyDashBoardFun(o.dataset.dno); }
+				menuList['dashMenu'] = {};
+				menuList.dashMenu['대시보드 수정'] = ()=>{ addAndModifyDashBoardFun(o.dataset.dno); }
 				menuList.dashMenu['대시보드 삭제'] = ()=>{ dashboardDelete(o.dataset.dno); };
 			}
 			
@@ -283,7 +284,7 @@ function dashRuleSelectEvent(e){
 }
 
 
-function dashRuleItemCreate(area, dgalias, dggrade, dgcolor, oldMember){
+function dashRuleItemCreate(area, dgalias, dggrade, dgcolor){
 	
 	const dashRuleItem = addObject(area, 'span', 'dashRuleItem', true , (o)=>{
 		
@@ -328,23 +329,6 @@ function dashRuleItemCreate(area, dgalias, dggrade, dgcolor, oldMember){
 					
 				});
 				
-			}
-			
-			if(oldMember){
-				
-				const targetDalias = rule.dataset.dgalias;
-				const targetDggrade = rule.dataset.dggrade;
-				
-				oldMember.forEach((m,i)=>{
-					
-					const { dgalias, dggrade } = m;
-					if(targetDalias === dgalias && targetDggrade === dggrade){
-						oldMember.splice(i,1);
-					}
-						
-				});
-				
-				console.log(oldMember);
 			}
 			
 			rule.remove();
@@ -551,7 +535,7 @@ function addAndModifyDashBoardFun(modifyDno){
 		
 		if(modifyObject){
 			modifyObject.rules.forEach(rule=>{
-				dashRuleItemCreate(dashRuleList, rule.dgalias, rule.dggrade, rule.dgcolor,modifyObject.members).dataset.dgno = rule.dgno;
+				dashRuleItemCreate(dashRuleList, rule.dgalias, rule.dggrade, rule.dgcolor).dataset.dgno = rule.dgno;
 			});
 		}
 		
@@ -830,44 +814,47 @@ function addAndModifyDashBoardFun(modifyDno){
 								
 								if(res){
 									const jsonObject = JSON.parse(res);
-									console.log(oldMemberCopy);
-									console.log(jsonObject);
 									
-//									jsonObject.members.forEach(member=>{
-//										
-//										let chk = false;
-//										
-//										oldMemberCopy.forEach(oldMember=>{
-//											if(member.mnick === oldMember.mnick){
-//												client.send('/pub/upDash',{},JSON.stringify({ mid : member.mid, dno : jsonObject.dashBoardDto.dno }));
-//												chk = true;
-//												return;
-//											}
-//										});
-//										
-//										if(!chk){
-//											client.send('/pub/addDash',{},JSON.stringify({ mid : member.mid, dno : jsonObject.dashBoardDto.dno }));
-//										}
-//										
-//									});
-//									
-//									oldMemberCopy.forEach(oldMember=>{
-//										
-//										let chk = false;
-//										
-//										jsonObject.members.forEach(member=>{
-//											if(member.mnick === oldMember.mnick){
-//												chk = true;
-//												return;
-//											}
-//										});
-//										
-//										if(!chk){
-//											client.send('/pub/addDash',{},JSON.stringify({ mid : member.mid, dno : jsonObject.dashBoardDto.dno }));
-//										}
-//										
-//									});
+									jsonObject.members.forEach(member=>{
+										
+										let chk = false;
+										
+										oldMemberCopy.forEach(oldMember=>{
+											if(member.mnick === oldMember.mnick){
+												
+												const mid = member.mid;
+												const { dno, dtitle, ddesc } =  jsonObject.dashBoardDto;
+												
+												client.send('/pub/upDash',{},JSON.stringify({ mid, dno, dtitle, ddesc }));
+												chk = true;
+												return;
+											}
+										});
+										
+										if(!chk){
+											client.send('/pub/addDash',{},JSON.stringify({ mid : member.mid, dno : jsonObject.dashBoardDto.dno }));
+										}
+										
+									});
 									
+									oldMemberCopy.forEach(oldMember=>{
+										
+										let chk = false;
+										
+										jsonObject.members.forEach(member=>{
+											if(member.mnick === oldMember.mnick){
+												chk = true;
+												return;
+											}
+										});
+										
+										if(!chk){
+											client.send('/pub/delDash',{},JSON.stringify({ mid : oldMember.mid, dno : jsonObject.dashBoardDto.dno }));
+										}
+										
+									});
+									utilBoxDelete(true);
+									boxFun('대시보드가 수정되었습니다..');
 								}
 								
 							});
@@ -964,8 +951,36 @@ function addAndModifyDashBoardFun(modifyDno){
 				nickSearch(nickSearchBtn);
 				
 				const dashRuleList = dashMemberDiv.querySelector('.dashRuleList');
+				const dashMemberItems = dashMemberListDiv.querySelectorAll('.dashMemberItem');
+				
+				console.log(dashMemberItems)
+				
+				dashMemberItems.forEach(item=>{
+					
+					let chk = false;
+					
+					const targetDalias = item.dataset.dgalias;
+					const targetDggrade = Number(item.dataset.dggrade);
+					
+					dashRuleItemArray.forEach((item)=>{
+						
+						const { dgalias, dggrade } = item.dataset;
+						if(targetDalias === dgalias && targetDggrade === Number(dggrade)){
+							chk = true;
+						}
+							
+					});
+				
+					if(!chk){
+						item.remove();
+					}
+					
+				});
 				
 				for(let item of dashRuleItemArray){
+					
+						
+					
 					item.addEventListener('click', dashRuleSelectEvent);
 					dashRuleList.appendChild(item);
 				}
@@ -1163,5 +1178,29 @@ window.onload = ()=>{
 			
 		});
 		
+		client.subscribe('/sub/upDash/'+userInfo.mno, (res)=>{
+		
+			const body = JSON.parse(res.body);
+			
+			const dashAllItem = document.querySelectorAll('.dashItem');
+			
+			dashAllItem.forEach((item,i)=>{
+				
+				const dno = Number(item.dataset.dno);
+				
+				if(dno === body.dno){
+					
+					const d_title = item.querySelector('p.d_title span');
+					const d_desc = item.querySelector('p.d_desc');
+					
+					d_title.innerHTML = body.dtitle;
+					d_desc.innerHTML = body.ddesc;
+					
+				}
+				
+			});
+			
+			
+		});
 	});
 };

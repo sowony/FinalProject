@@ -258,7 +258,7 @@ function startMap(_map,_menu, _map_wrap, widget){
 			//console.log(keyword);
 
 			if (!keyword.replace(/^\s+|\s+$/g, '')) {
-				boxFun('키워드를 입력해주세요!', true, null, false, 'keywordNull', null, true);
+				boxFun('키워드를 입력해주세요!', false, null, false, 'keywordNull', null, true);
 
 				return true;
 			}
@@ -280,11 +280,11 @@ function startMap(_map,_menu, _map_wrap, widget){
 
 			} else if (status === kakao.maps.services.Status.ZERO_RESULT) {
 
-				boxFun('검색 결과가 존재하지 않습니다.', true, null, false, 'search', null, true);
+				boxFun('검색 결과가 존재하지 않습니다.', false, null, false, 'search', null, true);
 
 			} else if (status === kakao.maps.services.Status.ERROR) {
 
-				boxFun('검색 오류', true, null, false, 'error', null, true);
+				boxFun('검색 오류', false, null, false, 'error', null, true);
 
 			}
 		}
@@ -394,7 +394,7 @@ function startMap(_map,_menu, _map_wrap, widget){
 				});
 			});
 
-			boxFun('메모 추가', true, [textarea, btn], false, 'memopopup', null, true);
+			boxFun('메모 추가', false, [textarea, btn], false, 'memopopup', null, true);
 		}
 
 
@@ -483,13 +483,13 @@ function startMap(_map,_menu, _map_wrap, widget){
 										}
 									},
 									error: function(){
-										boxFun('삭제 에러', true, false, false, 'deleteError', null, true);
+										boxFun('삭제 에러', false, false, false, 'deleteError', null, true);
 									}
 								});
 							})
 						});
 
-						boxFun('삭제하시겠습니까?', true, [deleteBtn], false, 'deletePopup', null, true);
+						boxFun('삭제하시겠습니까?', false, [deleteBtn], false, 'deletePopup', null, true);
 					}
 				},
 				'update' : {
@@ -547,7 +547,7 @@ function startMap(_map,_menu, _map_wrap, widget){
 							});
 
 						});
-						boxFun('메모 수정', true, [textarea, updateBtn], false, 'updatePopup', null, true);
+						boxFun('메모 수정', false, [textarea, updateBtn], false, 'updatePopup', null, true);
 					}
 				}		
 			}

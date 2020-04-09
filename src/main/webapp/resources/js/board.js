@@ -45,7 +45,7 @@ function selectDashBoardLoad(){
 				
 				dashboardInfo.dashmember = JSON.parse(res);
 				
-			});
+			},false);
 			
 		}, false);
 		
@@ -140,7 +140,7 @@ function selectDashBoardLoad(){
 		console.log(userInfo);
 		console.log(dashboardInfo);
 		
-	},{});
+	},false);
 	
 }
 
@@ -271,6 +271,70 @@ window.onload = ()=>{
 				'로그아웃' : ()=>{logout();}
 			}
 
+		});
+		
+		upDashClient = client.subscribe('/sub/upDash/'+userInfo.mno, (res)=>{
+			
+			const body = JSON.parse(res.body);
+			
+			const _dashItems = document.querySelectorAll('li._dashItem');
+			
+			_dashItems.forEach(item=>{
+				
+				const dno = Number(item.dataset.dno);
+				if(dno === body.dno){
+				
+					const tmp = item.innerHTML.split('<a');
+					item.innerHTML = body.dtitle + '<a' + tmp[1];
+					return;
+				}
+				
+			});
+			
+			
+			selectDashBoardLoad();
+			
+			const widgets = document.querySelectorAll('.widget');
+			
+			dashboardInfo['dashmember'].forEach(member=>{
+				
+				const { dggrade, dgalias, dmcolor, mnick } = member;
+				
+				widgets.forEach(widget=>{
+					
+					widget.info.rules.forEach(rule=>{
+						
+						let chk = false;
+						
+						if(rule.mnick === mnick){
+							
+							if(rule.dggrade !== dgrrade){
+								rule.dggrade = dgrrade;
+								chk = true;
+							}
+							
+							if(rule.dgalias !== dgalias){
+								rule.dgalias !== dgalias;
+								chk = true;
+							}
+							
+							rule.dmcolor = dmcolor
+						}
+						
+						if(chk){
+							xhrLoad('post', 'widget/wrule/modify', rule, (res)=>{
+
+								if(res) console.log('wrule 수정 성공');
+
+							});
+						}
+						
+					});
+					
+				});
+				
+			});
+			
 		});
 		
 		delDashClient = client.subscribe('/sub/delDash/'+userInfo.mno, (res)=>{
