@@ -499,7 +499,7 @@ function addAndModifyDashBoardFun(modifyDno){
 		const { dno, dtitle, ddesc } = (modifyObject)? modifyObject.dashBoardDto : '';
 		
 		o.innerHTML = `
-			<p>대시보드 만들기</p>
+			<p>대시보드 ${(modifyDno? '수정' : '만들기')}</p>
 			<fieldset>
 				<div>
 					<p>대시보드명</p>
@@ -545,7 +545,7 @@ function addAndModifyDashBoardFun(modifyDno){
 	const dashMemberDiv = addObject(null, 'div', 'dashMemberDiv', false, (o)=>{
 		
 		o.innerHTML = `
-			<p>대시보드 만들기</p>
+			<p>대시보드 ${(modifyDno? '수정' : '만들기')}</p>
 			<fieldset>
 				<div>
 					<p>대시보드 맴버 추가</p>

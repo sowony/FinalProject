@@ -9,7 +9,7 @@ const backgroundDiv = addObject(null,'div',null,false,(t)=>{
 	t.setAttribute('id','bgBlack');
 });
 
-
+// 위젯 KaKao 지도, 위젯에 맞춰서 크기 조절
 function resizeMap(widget) {
     var mapContainer = widget.querySelector('#map');
     const map_wrap = widget.querySelector('.map_wrap');
@@ -17,12 +17,17 @@ function resizeMap(widget) {
     mapContainer.style.height = map_wrap.offsetHeight + 'px'; 
 }
 
+
+// YYYY-MM-DD 양식의 String 타입에서 - 제거 후 Date 타입으로 변경
 function hyphenDateFormat(date){
 	const dateArray = date.split('-');
 	const dateType = new Date(`${dateArray[1]}/${dateArray[2]}/${dateArray[0]}`);
 	return dateType
 }
 
+
+// 이미지 크게, 작게 보기 팝업창 생성 함수
+// img : 조절할 이미지
 function imageView(img){
 	
 	const viewImg = img.cloneNode(true);
@@ -66,6 +71,8 @@ function imageView(img){
 	
 };
 
+
+// 로그아웃 함수
 function logout(){
 	
 	xhrLoad('get','logout', null, (res)=>{
@@ -77,6 +84,7 @@ function logout(){
 }
 
 
+// WYSIWYG 에디터에서 이벤트가 일어나기 전 커서위치 불러오기
 function setCusor(target){
 	target.focus();
 	const c = target.querySelector('#editCusor');
@@ -90,6 +98,7 @@ function setCusor(target){
 	}
 }
 
+//WYSIWYG 에디터에서 이벤트가 일어나기 전 커서위치 셋팅
 function getCusor(target){
 	target.focus();
 	const tmpSpan = document.createElement('span');
@@ -100,11 +109,15 @@ function getCusor(target){
 	return tmpSpan;
 }
 
+// 입력이 없을시 3초마다 저장시키는 함수, 메모 위젯에 사용
 function setSaveTime(widget){
 	
 	const wmContent = widget.querySelector('.wmContent');
 	const wmMsg = widget.querySelector('span.wmMsg'); 
 	
+	// 만약 입력했을 시 wmContent 객체 내부에 saveTimeoutCheckId 값이 있다면,
+	// 현재 작성 중임을 뜻하며, 해당 위젯을 구독하고 있는 구독자들에게 작성중임을 알림,
+	// 또한 saveTimeoutCheckId에 저장된 Id 값으로 Timeout으로 등록된 이벤트 큐를 제거 시킨다.
 	if(wmContent['saveTimeoutCheckId']) {
 		
 		client.send('/pub/wmemo', {}, JSON.stringify({
@@ -116,6 +129,9 @@ function setSaveTime(widget){
 		window.clearTimeout(wmContent['saveTimeoutCheckId']);
 	}
 	
+	// Timeout으로 큐에 위젯의 메모 내용을 저장시키는 함수를 등록 시키고 리턴되는 Id 값을
+	// wmContent 객체의 saveTimeoutCheckId 속성에 등록하여, 후에 다시 값을 입력했을 시,
+	// 등록된 큐를 제거 되게끔 한다.
 	wmContent['saveTimeoutCheckId'] = window.setTimeout(()=>{
 		
 		let wmno = 0;
@@ -138,11 +154,15 @@ function setSaveTime(widget){
 					});
 				},2000);
 				
+				// 해당 메모 위젯을 구독한 구독자들에게 작성이 완료되었음을 알리며,
+				// 변경된 내용도 전달
 				client.send('/pub/wmemo', {}, JSON.stringify({
+					
 					wmcontent : wmContent.innerHTML,
 					wno : widget.info.wno,
 					mid: userInfo.mid,
 					status : 'complete'
+						
 				}));
 			} else {
 				boxFun('잘못된 접근입니다.');
@@ -153,8 +173,13 @@ function setSaveTime(widget){
 	},3000);
 }
 
+
+// 이미지 크기 변경하는 박스 생성하는 함수
+// 메모 위젯의 WYSIWYG 에디터에서 등록된 이미지를 클릭시 해당 함수 호출
+// imageScaleBoxFun(타겟 이미지, 박스가 생성될 영역, 해당 박스가 종속된 위젯)
 function imageScaleBoxFun(targetImage, area, widget){
 	
+	// 타겟 이미지를 클릭햇을 시 이벤트 연결
 	targetImage.addEventListener('mousedown', (e)=>{
 		
 		
@@ -188,7 +213,9 @@ function imageScaleBoxFun(targetImage, area, widget){
 			
 			const checkbox = o.querySelector('input[type=checkbox]');
 			
+			// 가로 버튼 이벤트
 			imgWidth.addEventListener('change',()=>{
+				
 				const width = imgWidth.value;
 				targetImage.style.width = width + 'px';
 				
@@ -205,9 +232,12 @@ function imageScaleBoxFun(targetImage, area, widget){
 				
 				targetImage.style.height = height + 'px';
 				
+				// 이미지 크기가 변경되었을 때도 메모 저장 기능 발동
 				setSaveTime(widget);
+				
 			});
 			
+			// 세로 버튼 이벤트
 			imgHeight.addEventListener('change',()=>{
 				const height = imgHeight.value;
 				targetImage.style.height = height + 'px';
@@ -225,6 +255,7 @@ function imageScaleBoxFun(targetImage, area, widget){
 				
 				targetImage.style.width = width + 'px';
 				
+				// 이미지 크기가 변경되었을 때도 메모 저장 기능 발동
 				setSaveTime(widget);
 				
 			});
@@ -238,6 +269,8 @@ function imageScaleBoxFun(targetImage, area, widget){
 			
 		});
 		
+		
+		// 생성된 크기 조절 박스 위치 지정
 		let top = e.offsetY + e.target.offsetTop + 5;
 		let left = e.offsetX + e.target.offsetLeft + 5;
 		
@@ -256,19 +289,27 @@ function imageScaleBoxFun(targetImage, area, widget){
 }
 
 
-//버튼 리스트
+// 메모 위젯의 WYSIWYG 에디터에서 상단 메뉴들 클릭했을 나오는 하위 메뉴 생성 함수
+// btnList(하위 메뉴가 생길 div,
+//			상단 메뉴 버튼,
+//			만들어질 메뉴 클래스 네임,
+//			li 형태의 태그 String 형태의 묶음,
+//			4번째 인자로 들어간 li들에게 연결해줄 이벤트 함수의 배열 
 function btnList(pop, btn, className, liContent, lisFunArray){
 	
 	const chk = pop.querySelector('.btnList');
 	const chkName = chk? chk.className.split(' ')[0] : null;
 	
+	// 다른 btnList가 열려 있으면 닫기
 	if(chk) chk.remove();
 	
 	if(chkName === className) {
 		return;
 	}
 	
+	// 열리는 박스 위치 조절
 	const openBoxLeft = btn.offsetLeft;
+	
 	const box = addObject(pop, 'ul', [className, 'btnList'], true, (o)=>{
 		
 		o.innerHTML = liContent;
@@ -280,18 +321,24 @@ function btnList(pop, btn, className, liContent, lisFunArray){
 		
 		
 		const lis = o.querySelectorAll('li');
-			
+		
+		// li 태그들에게 5번째 인자의 배열 순으로 이벤트 연결
 		lis.forEach((li,i)=>{
+			
 			li.addEventListener('mousedown',(e)=>{
+				
 				lisFunArray[i]();
 				li.parentNode.remove();
+				
 			});
+			
 		});
 	});
 	
 }
 
 // 배열 정렬
+// 리턴 값으로 정렬된 새로운 배열 배출
 function arrSort(arr){
 	
 	let chkNum = 0;
@@ -312,10 +359,11 @@ function arrSort(arr){
 		});
 		returnArr[chkNum] = val;
 	});
-	console.log(returnArr);
 	return returnArr;
 }
 
+
+// 위젯 이동 이벤트 (타겟이 되는 위젯, 위젯 어느부분을 클릭했을 시, 마우스가 움직일 영역)
 function mouseEventFun(target, clickArea, mouseArea){
 	
 	let areaClone;
@@ -325,6 +373,7 @@ function mouseEventFun(target, clickArea, mouseArea){
 	const widgetHeader = clickArea.parentNode.parentNode.querySelector('.widgetHeader');
 
 	
+	// 마우스 누른 상태 + 움직임
 	function mousemove(e){
 		
 		e.preventDefault();
@@ -343,6 +392,8 @@ function mouseEventFun(target, clickArea, mouseArea){
 		
 	}
 	
+	
+	// 마우스 누른 상태
 	function mousedown(e){
 		
 		e.preventDefault();
@@ -354,6 +405,8 @@ function mouseEventFun(target, clickArea, mouseArea){
 		mouseX = e.pageX;
 		mouseY = e.pageY;
 		
+		// 가상의 마우스 영역을 만들어서 모든 객체의 가장 위에 올림,
+		// 가상의 마우스 영역에 마우스 이벤트를 연결
 		if(areaClone){
 			areaClone.remove();
 		} else {
@@ -389,8 +442,6 @@ function mouseEventFun(target, clickArea, mouseArea){
 	
 	function mouseOutAndUp(e){
 		
-		
-		
 		target.info.wtop = target.style.top.split('px')[0];
 		target.info.wleft = target.style.left.split('px')[0];
 		
@@ -407,6 +458,9 @@ function mouseEventFun(target, clickArea, mouseArea){
 	
 }
 
+
+// 위젯 크기 조절 이벤트 (타겟이 되는 위젯, 위젯 어느부분을 클릭했을 시, 마우스가 움직일 영역)
+// 위젯 이동과 비슷한 구조
 function scaleEventFun(target, settingArea, mouseArea){
 	
 	let areaClone;
@@ -598,6 +652,15 @@ function scaleEventFun(target, settingArea, mouseArea){
 	settingArea.addEventListener('mousedown', mousedown);
 }
 
+
+
+
+// 위젯의 권한 설정 체크 함수
+// 자신의 권한과 타겟이 되는 위젯의 권한을 비교해서,
+// 쓰기를 방지해줌
+// 해당 설정을 개발자 도구를 통해 우회해도
+// Interceptor 쪽에서 권한을 한번더 체크하기 때문에
+// 강제로 입력시 에러 발생함
 function widgetGradeCheck(widget){
 	
 	const owner = widget.info.mid;
@@ -608,11 +671,13 @@ function widgetGradeCheck(widget){
 	
 	let wrrwd;
 	
+	// 로그인한 대상이 위젯의 소유주가 아니라면
 	if(owner !== targetId){
 		
 		let individualCheck = false;
 		let groupCheck = false;
 		
+		// 개인 권한에 아이디가 있다면
 		rules.forEach(rule=>{
 
 			if(rule.mid === targetId){
@@ -624,9 +689,12 @@ function widgetGradeCheck(widget){
 
 		});
 		
+		// 개인 권한에 아이디 없다면 그룹 권한 체크
 		if(!individualCheck){
+			
 			rules.forEach(rule=>{
-
+				
+				// 자신의 권한이 그룹 권한 내에 속하는게 있는지 확인
 				if(rule.wrmin <= dggrade && rule.wrmax >= dggrade){
 					wrrwd = rule.wrrwd;
 					groupCheck = true;
@@ -641,6 +709,7 @@ function widgetGradeCheck(widget){
 	let targets = [];
 	let classLists = [];
 	
+	// 어떤 객체를 막을지 설정
 	if(wcategory === 'chat'){
 		
 		const wrContent = widget.querySelector('.wrContent');
@@ -678,17 +747,20 @@ function widgetGradeCheck(widget){
 		
 	} else {
 		
-		
-		
 		classLists.forEach(c=>{
 			if(c.contains('eventDisabled')){
 				c.remove('eventDisabled');
 			}
 		});
+		
 	}
 	
 }
 
+
+// 위젯 업데이트 함수
+// 인자로 들어온 위젯 객체 내부의 info 속성을 참조해서
+// 위젯 형태를 바꿔준다.
 function widgetUpdate(widget){
 	
 	widget.style.width = widget.info.wwidth +'px';
@@ -726,6 +798,9 @@ function widgetUpdate(widget){
 	
 }
 
+
+// 위젯 객체 생성 함수
+// widgetFun(셋팅 객체)
 function widgetFun(setting){
 	
 	const widget = addObject(null, 'div', 'widget', false, (o)=>{
@@ -772,8 +847,11 @@ function widgetFun(setting){
 	const widgetHeaderArea = widget.querySelector('.widgetHeaderArea');
 	
 	if(!setting.preview){
-		// 웹 소켓 오픈
-		console.log('웹 소켓 연결');
+		
+		// 웹 소켓 구독
+		console.log('웹 소켓 구독');
+		
+		// 위젯 크기 조절 동기화 구독
 		const scaleClient = client.subscribe('/sub/wscale/'+widget.info.wno, (res)=>{
 
 			const scaleInfo = JSON.parse(res.body);
@@ -796,7 +874,9 @@ function widgetFun(setting){
 
 			}
 		},{});
-
+		
+		
+		// 위젯 이동 동기화 구독
 		const moveClient = client.subscribe('/sub/wloc/'+widget.info.wno, (res)=>{
 
 			const scaleInfo = JSON.parse(res.body);
@@ -811,6 +891,8 @@ function widgetFun(setting){
 			}
 		},{});
 
+		
+		// 위젯 업데이트 동기화 구독
 		const upClient = client.subscribe('/sub/wup/' + widget.info.wno, (res)=>{
 
 			const upInfo = JSON.parse(res.body);
@@ -823,6 +905,7 @@ function widgetFun(setting){
 					let individualCheck = false;
 					let groupCheck = false;
 
+					// 위젯이 수정된 개인 권한에서 자신의 권한 체크
 					upInfo.rules.forEach(rule =>{
 
 						if(rule.mid === userInfo.mid){
@@ -831,7 +914,8 @@ function widgetFun(setting){
 						}
 
 					});
-
+					
+					// 위젯이 수정된 그룹 권한에서 자신의 권한 체크
 					if(!individualCheck){
 						const dggrade = userInfo.dashgrade.dggrade;
 						upInfo.rules.forEach(rule =>{
@@ -844,24 +928,36 @@ function widgetFun(setting){
 						});
 					}
 
+					
+					// 만약 충족되는 권한이 없다면 영역 내에서 해당 위젯 삭제
 					if(!individualCheck && !groupCheck){
+						
 						w.style.transitionDuration = '1s';
 						motionOnOff(w, 0.8, false, { onOff : 'off' }, false, (o)=>{
 							w.websocket.close();
-//							widgets.splice(i,1);
 							o.remove();
 						});
+					
+					// 만약 충족 위젯이 있다면, 위젯 정보를 새로 적용
 					} else {
 						
+						// info 속성 교체
 						w.info = upInfo;
 						w.style.transitionDuration = '1s';
 						
+						// 새로 교체된 info 속성을 토대로 위젯 형태 업데이트
 						widgetUpdate(w);
+						
+						// info 속성과 매칭되는 대시보드 정보 끌고 오기
 						widgetSettingFun(null, w);
+						
+						// 해당 위젯에서 자신의 권한 설정 적용
 						widgetGradeCheck(w);
+						
 						w.style.transitionDuration = '';
 						
 						if(w.info.mid !== userInfo.mid){
+							
 							const widgetMoveArea = w.querySelector('.widgetMoveArea');
 							
 							const alarmP = addObject(null, 'p', null, false, (o)=>{
@@ -898,6 +994,8 @@ function widgetFun(setting){
 
 		},{});
 
+		
+		// 위젯 삭제 동기화 구독
 		const delClient = client.subscribe('/sub/wdel/'+widget.info.wno , (res)=>{
 
 			const delInfo = JSON.parse(res.body);
@@ -909,8 +1007,10 @@ function widgetFun(setting){
 
 					w.style.transitionDuration = '1s';
 					motionOnOff(w, 0.8, false, { onOff : 'off' }, false, (o)=>{
+						
+						// 해당 위젯을 통해 연결되있던 동기화 구독들 모두 해제 ( 크기 조절, 이동, 기능에 따른 구독 등 )
 						w.websocket.close();
-//						widgets.splice(i,1);
+						// 그리고 해당 위젯 삭제
 						o.remove();
 					});
 
@@ -919,6 +1019,9 @@ function widgetFun(setting){
 			});
 		},{});
 
+		// 위젯 객체 내부 속성으로 websocket이란 이름의 속성을 동적 할당
+		// 값으로 해당 위젯이 생성되는 과정에서 구독시킨 구독정보 저장
+		// close내장 함수를 생성해서 해당 함수를 실행 시키면 모든 구독이 해체되게끔 만듬
 		widget['websocket'] = {
 				upClient, delClient, moveClient, scaleClient,
 				close : ()=>{
@@ -931,6 +1034,8 @@ function widgetFun(setting){
 				}
 		}
 	}
+	
+	// 위젯 업데이트 내장 함수
 	widget['update'] = ()=>{
 		
 		xhrLoad('post','widget/update', widget.info, (res)=>{
@@ -941,10 +1046,14 @@ function widgetFun(setting){
 				
 				Object.assign(widget.info, updateRes);
 				
+				// 위젯을 수정한 자신을 포함한 해당 위젯을 보고 있는 모든 구독자에게 해당 수정 정보 전달
 				client.send('/pub/wup', {}, JSON.stringify(widget.info));
 				
 				const { wno, dno, rules } = widget.info;
 				
+				// 해당 위젯이 속한 대시보드의 모든 구독자들에게 위젯 정보 전달
+				// 해당 정보를 받은 사람들 중 권한이 맞지만 위젯 영역 내에 해당 정보가 가르키는 위젯이 없을시
+				// 해당 정보를 사용해여 위젯을 생성한다.
 				client.send('/pub/wadd', {}, JSON.stringify({ wno, dno, rules }));
 				
 			} else {
@@ -955,14 +1064,17 @@ function widgetFun(setting){
 		
 	};
 	
+	// 이동 이벤트 연결 함수 ( 해당 함수를 호출 안하면 해당 위젯은 이동 불가능 )
 	widget['mouseEventFun'] = ()=>{
 		mouseEventFun(widget, widgetHeaderArea, widget.parentNode);
 	};
 	
+	// 크기 조절 에빈트 연결 함수 ( 해당 함수를 호출 안하면 해당 위젯은 크기 조절 불가능 )
 	widget['scaleEventFun'] = ()=>{
 		scaleEventFun(widget, widgetMoveArea, widget.parentNode);
 	};
 	
+	// 위젯 내부에서 커스텀 메뉴 호출 설정
 	widget['contextMenuAddFun'] = ()=>{
 		
 		const menuSetting = {
@@ -1001,7 +1113,9 @@ function widgetFun(setting){
 				
 			};
 		
+		// 위젯 생성자가 자기 자신이라면 위젯 수정 및 삭제 버튼 생성
 		if(userInfo.mid === widget.info.mid){
+			
 			menuSetting.widget['위젯 수정'] = ()=>{
 				
 				widgetAddAndModify(widget);
@@ -1025,6 +1139,7 @@ function widgetFun(setting){
 						xhrLoad('get', 'widget/updatewdel/'+widget.info.wno, null, (res)=>{
 							if(res === 'true'){
 								
+								// 위젯이 삭제되었을 시 해당 위젯을 구독하고 있는 자신을 포함한 모든 구독자에게 해당 정보 전달
 								client.send('/pub/wdel', {}, JSON.stringify({wno : widget.info.wno}));
 								
 								const widgetDelRes = document.querySelector('.widgetDelRes');
@@ -1051,6 +1166,8 @@ function widgetFun(setting){
 	};
 	
 	
+	// 해당 widget 객체 내부 info 객체가 가지고 있는
+	// wcategory 속성 값에 따른 위젯 기능 연결 함수
 	widget['cateFun'] = ()=>{
 		
 		const widgetContent = widget.querySelector('.widgetContent');
@@ -1074,12 +1191,16 @@ function widgetFun(setting){
 		
 	};
 	
+	
+	// 위젯 크기에 따른 위젯 본문 가로 길이 퍼센트 설정
 	let widgetContent = widget.querySelector('.widgetContent');
 	widgetContent.style.height = 100 - 35/(Number(widget.style.height.split('px')[0])-10)*100 + '%';
 	
 	return widget;
 }
 
+// 위젯 z축 조절 함수
+// widgetZMove(타겟 위젯, 위로 아래로, 가장 위로 갈지 아래로 갈지)
 function widgetZMove(widget, upDown, maxMin){
 	
 	const area = widget.parentNode;
@@ -1137,6 +1258,10 @@ function widgetZMove(widget, upDown, maxMin){
 	}
 }
 
+
+// 컬러 픽커 버튼 생성
+// (버튼이 위치할 부모 객체, 형제 객체, 콜백(color, btn))
+// 형제 객체가 null 일 때 부모 객체 내부 가장 아래에 붙는다.
 function colorPickerBtn(parentNode, beforeNode, submit){
 	
 	const btn = addObject(null, 'div', 'colorPickerBtn', false, (o)=>{
@@ -1160,6 +1285,10 @@ function colorPickerBtn(parentNode, beforeNode, submit){
 	return btn;
 }
 
+
+// 컬러픽커 박스 함수(콜백(color, 박스를 호출 '시킨' 버튼), 박스를 호출 '시킨' 버튼)
+// new 연산자를 이용해 객체 생성해서 호출해야 합니다!
+// colorPickerBtn함수를 쓰는 것을 권장
 function colorPickerFun(callback,btn){
 	
 	const oldColorPicker = document.querySelector('.colorBox');
@@ -1266,12 +1395,15 @@ function colorPickerFun(callback,btn){
 		o.style.float = 'left';
 		o.style.width = 'max-content';
 		o.addEventListener('click', ()=>{
+			
 			callback(colorPickerFun['colorValue'],btn);
+			
 			const box = o.parentNode;
 			motionOnOff(box, 0.8, false, { setting : 'offDefault' },null, (o)=>{
 				o.remove();
 			});
 		});
+		
 	});
 	
 	const colorClose = addObject(null, 'input', ['colorClose', 'grayBtn'], false, (o)=>{
@@ -1284,6 +1416,7 @@ function colorPickerFun(callback,btn){
 		o.addEventListener('click',()=>{
 			
 			const box = o.parentNode;
+			
 			motionOnOff(box, 0.8, false, { setting : 'offDefault' }, null, (o)=>{
 				o.remove();
 			});
@@ -1294,6 +1427,7 @@ function colorPickerFun(callback,btn){
 
 }
 
+// rgb 색상에 맞춰서 글자 색을 화이트로 할지 블랙으로 할지 결정
 function fontColorCheck(rgb){
 	
 	const colorArray = rgb.split('(')[1].split(',');
@@ -1313,6 +1447,10 @@ function fontColorCheck(rgb){
 	return fontColor;
 }
 
+
+// 랜덤으로 RGB 컬러와 해당 컬러에 맞춰 폰트 화이트 / 블랙 설정 해주는 함수
+// 리턴 값 배열
+// [0] = 랜덤 RGB / [1] = 폰트 색상
 function randomColor(){
 	
 	const R = Math.round((Math.random() * 255) + 0);
@@ -1326,6 +1464,13 @@ function randomColor(){
 	return [rgb, fontColor];
 }
 
+
+// <br> 태그 \n 문자로 대체
+// 혹은 \n 문자를 <br> 태그로 대체
+// (수정할 String 문자열,
+//	true 일 경우 \n => <br>
+//  false이거나 Null 일 경우 <br> => \n
+// )
 function brChange(val, chk){
 	if(val){
 		if(chk){
@@ -1341,6 +1486,8 @@ function brChange(val, chk){
 	}
 }
 
+
+// login / mypage에서 뒤에 배경 움직이는 함수
 function backgroundMotion(){
 	
 	const backgroundImg = document.querySelectorAll('.backgroundImg');
