@@ -1107,7 +1107,6 @@ function widgetFun(setting){
 					}
 				},
 				'myInfo' : {
-					'내 정보 보기' : ()=>{},
 					'로그아웃' : ()=>{logout();}
 				}
 				
@@ -1563,6 +1562,10 @@ function backgroundMotion(){
 
 
 // 정규표현식 확인 함수
+// o : 정규표현식을 확인할 텍스트 입력 객체 (input or textarea)
+// str : 정규 표현식
+// success : 입력 값이 정규표현식과 일치하는 텍스트 일 경우 콜백
+// fail : 입력 값이 정규표현식과 일치하지 않는 텍스트 일 경우 콜백
 function valueCheck(o, str, success, fail){
 	
 	let c;
@@ -1585,12 +1588,51 @@ function valueCheck(o, str, success, fail){
 	
 }
 
+
+// 모션 넣어주는 함수
+// obj : 움직일 도큐먼트 내의 객체
+// time : 몇초동안 움직일 것인가
+// bg : id가 bgBlack인 div 객체가 있을 경우 해당 객체도 같이 없어지게 하기 위한 옵션 ( 일반적으로 false )
+// option : 움직임을 설정하는 객체
+/*
+ * setting : {
+ * 		onDefault : 생성 기본 모션 ( 불투명도 0 > 1 / top : 현재값 -1% ) 
+ *  	offDefault : 사라지는 기본 모션 ( 불투명도 1 > 0 / top : 현재값 +1% )
+ * 		
+ * }
+ * opacity : { 
+ * 		num0 : 초기값 ( onOff 속성값이 off 일 경우에는 num1은 생략되고 현재값을 기준으로 num0의 값이 최종값이 된다. )
+ * 		num1 : 최종값
+ * }
+ * property : {
+ * 		mpp : 객체 스타일에 position이 걸려있을 경우 position 아닐 경우 margin과 padding 둘중 하나를 선택해서 주입
+ * 		x : 기본으로 mpp가 설정 안되어 있을 경우 margin-left으로 이동 position으로 설정되어 있을 경우 left
+ * 		y : 기본으로 mpp가 설정 안되어 있을 경우 margin-top으로 이동 position으로 설정되어 있을 경우 top
+ * }
+ * block : off 일 경우 움직이는 모션 중에 내부 객체 클릭 되지 않도록 하기 ( !! true 일경우 해당 기능이 꺼집니다. 지정하지 마세요. )
+ * onOff : {
+ * 		on : 객체가 생기는 모션임을 명시
+ * 		off : 객체가 사라지는 모션임을 명시
+ * }
+ * 
+ */
+// addMotion : 추가적인 모션 ( 해당 셋팅으로 위 option 생략 가능 )
+/*
+ * addMotion : {
+ * 		after : function(targetObject) { 위 셋팅 값이 적용되기 전에 할 적용할 초기 css }
+ * 		before : function(targetObject) { 위 셋팅 값이 마무리되고 적용할 최종 css  }
+ * }
+ */
+// complete : 모든 모션이 마무리 되었을 떄 콜백 함수 ( 첫번째 인자로 모션이 걸린 object )
 function motionOnOff(obj, time, bg, option, addMotion, complete){
 	
+	// addMotion 실행
 	if(addMotion) if(addMotion['after']) addMotion['after'](obj);
 	
 	let op = option || {};
 	
+	
+	// option setting
 	if(op['setting'] === 'onDefault'){
 		op = {
 				onOff : 'on',
@@ -1616,6 +1658,8 @@ function motionOnOff(obj, time, bg, option, addMotion, complete){
 		}
 	}
 	
+	
+	// 불투명도 기본값 설정
 	obj.style.opacity = (op['opacity'])? (op['opacity']['num0'] || '0' ) : '0';
 	
 	let x, y;
@@ -1624,8 +1668,12 @@ function motionOnOff(obj, time, bg, option, addMotion, complete){
 	let tmp;
 	let disabledDiv = document.querySelector('.disabledDiv');
 	
+	
+	// mpp 값 설정
 	const mpp = op['property']? (op['property']['mpp'] || 'position' ) : 'position';
 	
+	
+	// block div 설정
 	if(op['onOff'] === 'off' && !disabledDiv){
 		if(!op['block']){
 			disabledDiv = addObject(document.querySelector('body'), 'div', 'disabledDiv', true, (o)=>{
@@ -1648,6 +1696,7 @@ function motionOnOff(obj, time, bg, option, addMotion, complete){
 		}
 	}
 	
+	// 최초 값
 	if(op['property']){
 		
 		x = op['property']['x'] || 0;
@@ -1668,6 +1717,8 @@ function motionOnOff(obj, time, bg, option, addMotion, complete){
 		
 	}
 	
+	
+	// 최종 값
 	if(!op['onOff'] || op['onOff']=== 'on'){
 		window.setTimeout(()=>{
 		
@@ -1703,11 +1754,15 @@ function motionOnOff(obj, time, bg, option, addMotion, complete){
 		obj.style.transitionDuration = time + 's';
 	}
 	
+	
+	// bg가 있을 경우
 	if(bg){
 		if(!op['onOff'] || op['onOff']=== 'on') motionOnOff(backgroundDiv, time, null, { onOff : 'on', opacity : { num0 : 0, num1 : 1 }}, null, complete);
 		else motionOnOff(backgroundDiv, time, null, { onOff : 'off', opacity : { num0 : 0 }}, null, complete);
 	}
 	
+	
+	// 콜백 함수
 	if(complete){
 		
 		window.setTimeout(()=>{
@@ -1715,6 +1770,8 @@ function motionOnOff(obj, time, bg, option, addMotion, complete){
 			
 		}, time*1000);
 	}
+	
+	
 	if(disabledDiv){
 		window.setTimeout(()=>{
 			disabledDiv.remove();
@@ -1725,17 +1782,6 @@ function motionOnOff(obj, time, bg, option, addMotion, complete){
 
 // 오브젝트 중앙 정렬
 function middlePositionFun(obj){
-	/*
-	const width = obj.offsetWidth;
-	const height = obj.offsetHeight;
-	
-	obj.style.top = window.innerHeight/2 - height/2 - 30 + 'px';
-	obj.style.left = window.innerWidth/2 - width/2 + 'px';
-	
-	if(Number(obj.style.top.substring(0,obj.style.top.indexOf('px'))) < 0){
-		obj.style.top = '20px';
-	}
-	*/
 	
 	obj.style.position = 'absolute';
 	obj.style.top = '50%';
@@ -1787,6 +1833,7 @@ function utilBoxDelete(slide){
 function infoBar(obj, text){
 	
 	// 툽팁 삭제 내장 함수
+	// 혹시 남아 있는 infoBar 삭제
 	infoBar['infoBoxRemove'] = ()=>{
 		const infoBox = document.querySelector('.infoBox');
 		if(infoBox) infoBox.remove();
@@ -1864,6 +1911,20 @@ function infoBar(obj, text){
 }
 
 // 박스 만들기 함수
+// text : 박스 상단 붉은 글씨 ( 생략 가능 )
+// bg : 배경 블랙을 만들지 설정
+// addTagObject : 배열 형태로 들어가야 하며, 추가적으로 append 시킬 태그 객체가 배열값으로 들어간다.
+// closeBtnDelete : 기본을로 설정되어 있는 박스 닫기 버튼을 지울지 설정
+// boxSelector : 박스 객체의 클래스명 지정
+// callback : 박스가 다 만들어 졋을 경우 실행할 함수 function(box, childNodes, className){ }
+// autoMotion : 박스가 도큐먼트에 생길 때 모션을 준다.
+//
+//
+// 내장 함수
+// .closeDisabledDelete : (callObject){ 만약  기본 닫기 버튼이 존재하고 있을 시, callObject으로 해당 박스를 호출하는 객체를 지정하면, 해당 객체의 추가적인 이벤트 막는다.
+//										(중복 호출 방지), 또한 닫기 버튼으로 박스를 닫을 시 자동으로 이벤트가 다시 활성화 된다. }
+// .removeDisabledDelete : (callObject){ 만약 기본 닫기 버튼을 없앴고, 해당 박스를 호출하는 객체에 이벤트를 통해 박스를 생성한 후 객체 pointer-events or disabled을 걸어 주어 이벤트를 막았을 경우,
+//										  박스에 커스텀한 닫기 버튼을 만들었을 경우, 해당 버튼에 이벤트를 걸어 박스가 살아질 때 해당 내장 함수를 호출하여 pointer-events or disabled 삭제 }
 function boxFun(text,bg, addTagObject, closeBtnDelete, boxSelector, callback, autoMotion){
 
 	const box = document.querySelector((boxSelector)? '.'+ boxSelector : '.boxOpen');
@@ -1915,6 +1976,8 @@ function boxFun(text,bg, addTagObject, closeBtnDelete, boxSelector, callback, au
 				}
 			});
 			
+			
+			// 내장 함수 1
 			contentBox['closeDisabledDelete'] = (callObject)=>{
 				
 				if(callObject.tagName === 'A' || callObject.tagName === 'IMG'){
@@ -1938,8 +2001,8 @@ function boxFun(text,bg, addTagObject, closeBtnDelete, boxSelector, callback, au
 			
 		}
 		
+		// 내장 함수 2
 		contentBox['removeDisabledDelete'] = (callObject)=>{
-			console.log(callObject);
 			if(callObject.tagName === 'A' || callObject.tagName === 'IMG'){
 				
 				let styleArray = callObject.getAttribute('style').split(';');
@@ -1977,7 +2040,12 @@ function boxFun(text,bg, addTagObject, closeBtnDelete, boxSelector, callback, au
 	
 }
 
-// 편하게 오브젝트 만들기
+// 편하게 오브젝트 만들기 위한 함수
+// parentNode : 부모가 되는 객체
+// tagName : 객체의 태그 종류
+// className : 지정 클래스명 단일 일 경우 String 값 여러개 일 경우 배열로 지정
+// defaultLocation : 지정한 부모 객체 append 시킬지 설정 true/false ( parentNode와 한 셋트 )
+// callback : 객체가 생성된 후 실행할 콜백함수 ( 첫번째 인자로 생성된 객체 )
 function addObject(parentNode, tagName, className, defaultLocation, callback){
 	
 	const tag = document.createElement(tagName);
@@ -1990,7 +2058,7 @@ function addObject(parentNode, tagName, className, defaultLocation, callback){
 			tag.classList.add(className);
 		}
 	}
-	if(defaultLocation){
+	if(parentNode){
 		parentNode.appendChild(tag);
 	}
 	if(callback){
